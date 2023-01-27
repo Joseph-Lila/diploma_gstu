@@ -9,6 +9,6 @@ class Department(Base):
 
     title = sa.Column(sa.String, primary_key=True)
     head = sa.Column(sa.String)
-    mentors = relationship('Mentor')
+    # mentors = relationship('Mentor')
 
-    __mapper_args__ = {'eager_defaults': True}
+    # __mapper_args__ = {'eager_defaults': True}

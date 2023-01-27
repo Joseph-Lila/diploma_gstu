@@ -1,10 +1,9 @@
-from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import as_declarative
 
 from src.config import get_postgres_uri
 
-engine = create_async_engine(get_postgres_uri())
+engine = create_engine(get_postgres_uri())
 metadata = MetaData(bind=engine)
 
 

@@ -1,6 +1,6 @@
 import pytest
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import create_engine, MetaData
 from tenacity import retry, stop_after_delay
 from src import config
 
@@ -12,11 +12,12 @@ def wait_for_postgres_to_come_up(engine):
 
 @pytest.fixture(scope="session")
 def postgres_db():
-    engine = create_async_engine(
+    engine = create_engine(
         config.get_test_postgres_uri(),
         isolation_level="SERIALIZABLE",
     )
     wait_for_postgres_to_come_up(engine)
+    metadata = MetaData(bind=engine)
     metadata.create_all(engine)
     return engine
 
