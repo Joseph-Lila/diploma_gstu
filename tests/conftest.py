@@ -1,8 +1,18 @@
 import pytest
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine
 from tenacity import retry, stop_after_delay
 from src import config
+from sqlalchemy.orm import clear_mappers
+
+from src.adapters.orm import metadata, start_mappers
+
+
+@pytest.fixture
+def mappers():
+    start_mappers()
+    yield
+    clear_mappers()
 
 
 @retry(stop=stop_after_delay(10))
@@ -17,7 +27,7 @@ def postgres_db():
         isolation_level="SERIALIZABLE",
     )
     wait_for_postgres_to_come_up(engine)
-    metadata = MetaData(bind=engine)
+    metadata.drop_all(engine)
     metadata.create_all(engine)
     return engine
 
