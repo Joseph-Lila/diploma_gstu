@@ -1,6 +1,6 @@
-from src.adapters.orm import DepartmentTable as DepartmentTable
+from src.adapters.orm import DepartmentTable
 from src.adapters.orm.base import mapper_registry
-from src.domain.entities.department import Department
+from src.domain.entities import Department
 
 
 def start_mappers():

@@ -1,6 +1,5 @@
 import pytest
 from sqlalchemy.orm import sessionmaker, clear_mappers
-from tenacity import retry, stop_after_delay
 from src import config
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncSession

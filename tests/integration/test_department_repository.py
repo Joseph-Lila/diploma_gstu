@@ -2,7 +2,7 @@ import pytest
 from src.adapters.orm.create_tables import create_tables
 from src.adapters.repositories.posgresql.department_repository import DepartmentRepository
 from src.domain.entities import Department
-
+from src.service_layer.unit_of_work.postgresql_unit_of_work import PostgresRepositoryManager
 
 pytestmark = pytest.mark.usefixtures("mappers")
 
@@ -16,13 +16,23 @@ async def test_department_repository_create(postgres_uri, postgres_session_facto
 
 
 @pytest.mark.asyncio
-async def test_department_repository_get_by_primary_key(postgres_uri, postgres_session_factory):
+async def test_department_repository_get_by_primary_key(postgres_uri):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session=postgres_session_factory)
+    repos_manager = PostgresRepositoryManager(connection_string=postgres_uri)
     new_item = Department(title='Наименование кафедры', head='ФИО зав. кафедры')
-    await repo.create(new_item)
-    got_item = await repo.get_by_primary_key(new_item.title)
-    assert got_item == new_item
+    await repos_manager.departments.create(new_item)
+    item = await repos_manager.departments.get_by_primary_key(new_item.title)
+    assert item == new_item
+
+
+# @pytest.mark.asyncio
+# async def test_department_repository_get_by_primary_key(postgres_uri, postgres_session_factory):
+#     await create_tables(postgres_uri)
+#     repo = DepartmentRepository(async_session=postgres_session_factory)
+#     new_item = Department(title='Наименование кафедры', head='ФИО зав. кафедры')
+#     await repo.create(new_item)
+#     got_item = await repo.get_by_primary_key(new_item.title)
+#     assert got_item == new_item
 
 
 # @pytest.mark.asyncio
