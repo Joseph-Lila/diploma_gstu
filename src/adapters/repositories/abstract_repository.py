@@ -3,21 +3,21 @@ import abc
 
 class AbstractRepository(abc.ABC):
     @abc.abstractmethod
-    def get_all(self):
+    async def get_all(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_by_id(self, item_id: int):
+    async def get_by_primary_key(self, key):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def create(self, item):
+    async def create(self, item):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def delete(self, item_id: int):
+    async def delete(self, item_id: int):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def update(self, item):
+    async def update(self, item):
         raise NotImplementedError

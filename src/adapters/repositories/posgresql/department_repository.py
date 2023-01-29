@@ -1,23 +1,33 @@
 import sqlalchemy.orm
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy import select
 
+from src.adapters.orm import DepartmentTable
+from src.domain.entities.department import Department
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
 
 class DepartmentRepository(AbstractRepository):
-    def __init__(self, session):
-        self.session: sqlalchemy.orm.Session = session
+    def __init__(self, async_session: async_sessionmaker[AsyncSession]):
+        self.async_session: async_sessionmaker[AsyncSession] = async_session
 
-    def get_all(self):
-        return self.session.query()
-
-    def get_by_id(self, item_id: int):
+    async def get_all(self):
         pass
 
-    def create(self, item):
-        pass
+    async def get_by_primary_key(self, key):
+        async with self.async_session() as session:
+            stmt = select(Department).filter_by(title=key)
+            result = await session.execute(stmt)
+        return result.scalar()
 
-    def delete(self, item_id: int):
-        pass
+    async def create(self, item):
+        async with self.async_session() as session:
+            async with session.begin():
+                session.add(item)
 
-    def update(self, item):
+    async def delete(self, item_id: int):
+        session: sqlalchemy.orm.Session = await self.async_session()
+
+
+    async def update(self, item):
         pass

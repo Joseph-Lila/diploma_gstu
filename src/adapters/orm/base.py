@@ -1,13 +1,11 @@
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.ext.declarative import as_declarative
-
-from src.config import get_postgres_uri
-
-engine = create_engine(get_postgres_uri())
-metadata = MetaData(bind=engine)
+from sqlalchemy.orm import DeclarativeBase, as_declarative
+from sqlalchemy.orm import registry
 
 
-@as_declarative(metadata=metadata)
+mapper_registry = registry()
+
+
+@as_declarative(metadata=mapper_registry.metadata)
 class Base:
     pass
 
