@@ -10,7 +10,10 @@ class DepartmentRepository(AbstractRepository):
         self.async_session: async_sessionmaker[AsyncSession] = async_session
 
     async def get_all(self):
-        pass
+        async with self.async_session() as session:
+            stmt = select(Department)
+            result = await session.execute(stmt)
+        return result.scalars()
 
     async def get_by_primary_key(self, key):
         async with self.async_session() as session:

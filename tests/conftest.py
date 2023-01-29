@@ -15,11 +15,6 @@ def mappers():
     clear_mappers()
 
 
-@retry(stop=stop_after_delay(10))
-def wait_for_postgres_to_come_up(engine):
-    return engine.connect()
-
-
 @pytest.fixture
 def postgres_db():
     engine = create_async_engine(config.get_test_postgres_uri())
@@ -33,6 +28,11 @@ def postgres_session_factory(postgres_db):
         expire_on_commit=False,
         class_=AsyncSession,
     )
+
+
+@pytest.fixture
+def postgres_uri():
+    return config.get_test_postgres_uri()
 
 
 @pytest.fixture

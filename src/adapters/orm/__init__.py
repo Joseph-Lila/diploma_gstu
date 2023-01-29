@@ -1,2 +1,2 @@
 from .base import Base
-from .departmenttable import DepartmentTable
+from .department_table import DepartmentTable
