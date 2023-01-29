@@ -1,7 +1,7 @@
 import pytest
 from src.adapters.orm.create_tables import create_tables
 from src.adapters.repositories.posgresql.department_repository import DepartmentRepository
-from src.domain.entities.department import Department
+from src.domain.entities import Department
 
 
 pytestmark = pytest.mark.usefixtures("mappers")
