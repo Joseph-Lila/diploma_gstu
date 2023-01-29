@@ -1,8 +1,6 @@
-import sqlalchemy.orm
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy import select
 
-from src.adapters.orm import DepartmentTable
 from src.domain.entities.department import Department
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -26,8 +24,7 @@ class DepartmentRepository(AbstractRepository):
                 session.add(item)
 
     async def delete(self, item_id: int):
-        session: sqlalchemy.orm.Session = await self.async_session()
-
+        pass
 
     async def update(self, item):
         pass
