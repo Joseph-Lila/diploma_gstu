@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.adapters.orm.start_mappers import start_mappers
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def mappers():
     start_mappers()
     yield
@@ -15,8 +15,8 @@ def mappers():
 
 
 @pytest.fixture
-def postgres_db():
-    engine = create_async_engine(config.get_test_postgres_uri())
+def postgres_db(postgres_uri):
+    engine = create_async_engine(postgres_uri)
     return engine
 
 

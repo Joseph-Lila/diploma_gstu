@@ -15,7 +15,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def delete(self, item_id: int):
+    async def delete(self, key):
         raise NotImplementedError
 
     @abc.abstractmethod

@@ -1,8 +1,17 @@
-from sqlalchemy.orm import DeclarativeBase, as_declarative
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, async_scoped_session, AsyncSession
+from sqlalchemy.orm import as_declarative, scoped_session
 from sqlalchemy.orm import registry
+from asyncio import current_task
+from src import config
 
 
 mapper_registry = registry()
+engine = create_async_engine(config.get_postgres_uri())
+async_session_factory = async_sessionmaker(
+    engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+)
 
 
 @as_declarative(metadata=mapper_registry.metadata)

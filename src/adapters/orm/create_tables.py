@@ -12,6 +12,9 @@ async def create_tables(connection_string=config.get_postgres_uri()):
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
+    # for AsyncEngine created in function scope, close and
+    # clean-up pooled connections
+    await engine.dispose()
 
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(create_tables())
