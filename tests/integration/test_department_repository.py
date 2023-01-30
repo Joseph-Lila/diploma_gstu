@@ -3,17 +3,18 @@ import pytest
 from src.adapters.orm import Department, create_tables
 from src.adapters.repositories.posgresql.department_repository import \
     DepartmentRepository
+from src.adapters.repositories.posgresql.mentor_repository import MentorRepository
 
 
 @pytest.mark.asyncio
 async def test_department_repository_create(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
 ):
     await create_tables(postgres_uri)
     repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = fake_department_factory(None)
+    new_item = get_fake_department_factory(None)
     await repo.create(new_item)
 
 
@@ -21,27 +22,35 @@ async def test_department_repository_create(
 async def test_department_repository_get_by_primary_key(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
+        get_fake_mentor_factory,
 ):
     await create_tables(postgres_uri)
     repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = fake_department_factory(None)
+    new_item = get_fake_department_factory(None)
     await repo.create(new_item)
+
+    mentors_quantity = 3
+    mentors = [get_fake_mentor_factory(new_item.title) for _ in range(mentors_quantity)]
+    mentors_repo = MentorRepository(async_session_factory_=postgres_session_factory)
+    for mentor in mentors:
+        await mentors_repo.create(mentor)
     got_item = await repo.get_by_primary_key(new_item.title)
-    assert got_item == new_item
+    assert got_item.title == new_item.title
+    assert len(got_item.mentors) == mentors_quantity
 
 
 @pytest.mark.asyncio
 async def test_department_repository_get_all(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
 ):
     await create_tables(postgres_uri)
     repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
 
     # add data
-    items = [fake_department_factory(None) for _ in range(3)]
+    items = [get_fake_department_factory(None) for _ in range(3)]
     for item in items:
         await repo.create(item)
 
@@ -54,12 +63,12 @@ async def test_department_repository_get_all(
 async def test_department_repository_update(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
         random_fio_factory,
 ):
     await create_tables(postgres_uri)
     repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = fake_department_factory(None)
+    new_item = get_fake_department_factory(None)
     changed_new_item = Department(title=new_item.title, head=random_fio_factory())
 
     await repo.create(new_item)
@@ -77,11 +86,11 @@ async def test_department_repository_update(
 async def test_department_repository_delete(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
 ):
     await create_tables(postgres_uri)
     repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = fake_department_factory(None)
+    new_item = get_fake_department_factory(None)
 
     await repo.create(new_item)
 

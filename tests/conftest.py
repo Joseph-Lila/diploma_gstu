@@ -46,7 +46,7 @@ def random_fio_factory(fake):
 
 
 @pytest.fixture
-def fake_department_factory(
+def get_fake_department_factory(
         fake,
         random_fio_factory,
 ):

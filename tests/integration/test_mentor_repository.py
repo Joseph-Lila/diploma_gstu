@@ -11,13 +11,13 @@ from src.adapters.repositories.posgresql.mentor_repository import \
 async def test_mentor_repository_create(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
         get_fake_mentor_factory,
 ):
     await create_tables(postgres_uri)
     departments_repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
     mentors_repo = MentorRepository(async_session_factory_=postgres_session_factory)
-    new_department = fake_department_factory(None)
+    new_department = get_fake_department_factory(None)
     await departments_repo.create(new_department)
     new_mentor = get_fake_mentor_factory(new_department.title)
     new_mentor.department = new_department
@@ -28,13 +28,13 @@ async def test_mentor_repository_create(
 async def test_mentor_repository_get_by_primary_key(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
         get_fake_mentor_factory,
 ):
     await create_tables(postgres_uri)
     departments_repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
     mentors_repo = MentorRepository(async_session_factory_=postgres_session_factory)
-    new_department = fake_department_factory(None)
+    new_department = get_fake_department_factory(None)
     await departments_repo.create(new_department)
     new_mentor = get_fake_mentor_factory(new_department.title)
     await mentors_repo.create(new_mentor)
@@ -46,13 +46,13 @@ async def test_mentor_repository_get_by_primary_key(
 async def test_mentor_repository_get_all(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
         get_fake_mentor_factory,
 ):
     await create_tables(postgres_uri)
     departments_repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
     mentors_repo = MentorRepository(async_session_factory_=postgres_session_factory)
-    new_department = fake_department_factory(None)
+    new_department = get_fake_department_factory(None)
     await departments_repo.create(new_department)
     new_mentors = [
         get_fake_mentor_factory(new_department.title)
@@ -67,7 +67,7 @@ async def test_mentor_repository_get_all(
 async def test_mentor_repository_update(
         postgres_uri,
         postgres_session_factory,
-        fake_department_factory,
+        get_fake_department_factory,
         get_fake_mentor_factory,
 ):
     await create_tables(postgres_uri)
@@ -75,8 +75,8 @@ async def test_mentor_repository_update(
     mentors_repo = MentorRepository(async_session_factory_=postgres_session_factory)
 
     # add two departments
-    first_department = fake_department_factory(None)
-    second_department = fake_department_factory(None)
+    first_department = get_fake_department_factory(None)
+    second_department = get_fake_department_factory(None)
     await departments_repo.create(first_department)
     await departments_repo.create(second_department)
 
