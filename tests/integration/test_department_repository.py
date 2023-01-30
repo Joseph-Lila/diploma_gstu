@@ -1,10 +1,7 @@
 import pytest
-from src.adapters.orm.create_tables import create_tables
+
+from src.adapters.orm import create_tables, Department
 from src.adapters.repositories.posgresql.department_repository import DepartmentRepository
-from src.domain.entities import Department
-
-
-pytestmark = pytest.mark.usefixtures("mappers")
 
 
 @pytest.mark.asyncio

@@ -1,17 +1,8 @@
 import pytest
-from sqlalchemy.orm import sessionmaker, clear_mappers
+from sqlalchemy.orm import sessionmaker
 from src import config
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.adapters.orm.start_mappers import start_mappers
-
-
-@pytest.fixture(scope="session")
-def mappers():
-    start_mappers()
-    yield
-    clear_mappers()
 
 
 @pytest.fixture

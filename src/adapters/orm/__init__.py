@@ -1,2 +1,3 @@
-from .base import Base, async_session_factory
-from .department_table import DepartmentTable
+from .base import mapper_registry, create_tables
+from .mentor import Mentor
+from .department import Department

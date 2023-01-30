@@ -1,8 +1,10 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy import select, delete
-from src.adapters.orm import async_session_factory
-from src.domain.entities.department import Department
+
+from src.adapters.orm import Department
+from src.adapters.orm.base import async_session_factory
 from src.adapters.repositories.abstract_repository import AbstractRepository
+from sqlalchemy.orm import selectinload
 
 
 class DepartmentRepository(AbstractRepository):
@@ -11,13 +13,13 @@ class DepartmentRepository(AbstractRepository):
 
     async def get_all(self):
         async with self.async_session() as session:
-            stmt = select(Department)
+            stmt = select(Department).options(selectinload(Department.mentors))
             items = await session.scalars(stmt)
         return [item for item in items]
 
     async def get_by_primary_key(self, key: str):
         async with self.async_session() as session:
-            stmt = select(Department).filter_by(title=key)
+            stmt = select(Department).filter_by(title=key).options(selectinload(Department.mentors))
             result = await session.scalar(stmt)
         return result
 

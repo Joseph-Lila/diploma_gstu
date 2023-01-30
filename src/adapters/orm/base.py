@@ -1,9 +1,6 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, async_scoped_session, AsyncSession
-from sqlalchemy.orm import as_declarative, scoped_session
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import registry
-from asyncio import current_task
 from src import config
-
 
 mapper_registry = registry()
 engine = create_async_engine(config.get_postgres_uri())
@@ -14,21 +11,17 @@ async_session_factory = async_sessionmaker(
 )
 
 
-@as_declarative(metadata=mapper_registry.metadata)
-class Base:
-    pass
+async def create_tables(connection_string=config.get_postgres_uri()):
+    engine_ = create_async_engine(connection_string)
 
+    async with engine_.begin() as conn:
+        await conn.run_sync(mapper_registry.metadata.drop_all)
+        await conn.run_sync(mapper_registry.metadata.create_all)
 
-# class Mentor(Base):
-#     __tablename__ = 'mentors'
-#
-#     fio = Column(String, primary_key=True)
-#     scientific_degree = Column(String)
-#     salary = Column(Float)
-#     experience = Column(Integer)
-#     department = Column(ForeignKey('departments.title'))
-#     requirements = Column(String)
-#     duties = Column(String)
+    # for AsyncEngine created in function scope, close and
+    # clean-up pooled connections
+    await engine_.dispose()
+
 #
 #
 # class Subject(Base):
