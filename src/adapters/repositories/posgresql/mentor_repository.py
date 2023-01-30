@@ -4,6 +4,8 @@ from sqlalchemy.orm import selectinload
 
 from src.adapters.orm import Mentor, async_session_factory
 from src.adapters.repositories.abstract_repository import AbstractRepository
+from src.adapters.repositories.posgresql.department_repository import \
+    DepartmentRepository
 
 
 class MentorRepository(AbstractRepository):
@@ -23,6 +25,8 @@ class MentorRepository(AbstractRepository):
         return result
 
     async def create(self, item: Mentor):
+        if item.department is None and item.department_title:
+            item.department = await DepartmentRepository(self.async_session).get_by_primary_key(item.department_title)
         async with self.async_session() as session:
             async with session.begin():
                 session.add(item)

@@ -15,4 +15,7 @@ class Mentor:
     department_title: Mapped[str] = mapped_column(ForeignKey("departments.title"))
     requirements: Mapped[str]
     duties: Mapped[str]
-    department: Mapped["Department"] = relationship(default=None)
+    department: Mapped["Department"] = relationship(
+        default=None,
+        lazy='joined',
+    )
