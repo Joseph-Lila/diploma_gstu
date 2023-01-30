@@ -1,10 +1,10 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
-from sqlalchemy import select, delete
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy.orm import selectinload
 
 from src.adapters.orm import Department
 from src.adapters.orm.base import async_session_factory
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from sqlalchemy.orm import selectinload
 
 
 class DepartmentRepository(AbstractRepository):

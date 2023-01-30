@@ -1,3 +1,3 @@
-from .base import mapper_registry, create_tables
-from .mentor import Mentor
+from .base import create_tables, mapper_registry
 from .department import Department
+from .mentor import Mentor

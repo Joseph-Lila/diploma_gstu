@@ -1,7 +1,7 @@
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from src.adapters.orm.base import async_session_factory, Mentor
+from src.adapters.orm.base import Mentor, async_session_factory
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
 

@@ -1,6 +1,8 @@
 from typing import List
-from src.adapters.orm import mapper_registry
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.adapters.orm import mapper_registry
 
 
 @mapper_registry.mapped_as_dataclass

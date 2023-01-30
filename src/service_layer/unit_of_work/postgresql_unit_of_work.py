@@ -1,6 +1,8 @@
 from src.adapters.orm import async_session_factory
-from src.adapters.repositories.posgresql.department_repository import DepartmentRepository
-from src.service_layer.unit_of_work.abstract_unit_of_work import AbstractRepositoryManager
+from src.adapters.repositories.posgresql.department_repository import \
+    DepartmentRepository
+from src.service_layer.unit_of_work.abstract_unit_of_work import \
+    AbstractRepositoryManager
 
 
 class PostgresRepositoryManager(AbstractRepositoryManager):
