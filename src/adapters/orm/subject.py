@@ -4,8 +4,8 @@ from src.adapters.orm import mapper_registry
 
 
 @mapper_registry.mapped_as_dataclass
-class Department:
-    __tablename__ = 'departments'
+class Subject:
+    __tablename__ = 'subjects'
 
     title: Mapped[str] = mapped_column(primary_key=True)
-    head: Mapped[str]
+    description: Mapped[str]

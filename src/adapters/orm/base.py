@@ -24,15 +24,7 @@ async def create_tables(connection_string=config.get_postgres_uri()):
     # clean-up pooled connections
     await engine_.dispose()
 
-#
-#
-# class Subject(Base):
-#     __tablename__ = 'subjects'
-#
-#     title = Column(String, primary_key=True)
-#     description = Column(String)
-#
-#
+
 # class Group(Base):
 #     __tablename__ = 'groups'
 #
