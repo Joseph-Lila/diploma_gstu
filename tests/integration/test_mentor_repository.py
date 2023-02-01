@@ -20,7 +20,6 @@ async def test_mentor_repository_create(
     new_department = get_fake_department_factory(None)
     await departments_repo.create(new_department)
     new_mentor = get_fake_mentor_factory(new_department.title)
-    new_mentor.department = new_department
     await mentors_repo.create(new_mentor)
 
 
@@ -39,7 +38,7 @@ async def test_mentor_repository_get_by_primary_key(
     new_mentor = get_fake_mentor_factory(new_department.title)
     await mentors_repo.create(new_mentor)
     got_item = await mentors_repo.get_by_primary_key(new_mentor.fio)
-    assert got_item.fio == new_mentor.fio
+    assert got_item == new_mentor
 
 
 @pytest.mark.asyncio
@@ -87,4 +86,4 @@ async def test_mentor_repository_update(
     mentor.department_title = second_department.title
     await mentors_repo.update(mentor)
     got_mentor = await mentors_repo.get_by_primary_key(mentor.fio)
-    assert got_mentor.department.title == second_department.title
+    assert got_mentor.department_title == second_department.title

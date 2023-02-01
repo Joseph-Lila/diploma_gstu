@@ -12,13 +12,13 @@ class DepartmentRepository(AbstractRepository):
 
     async def get_all(self):
         async with self.async_session() as session:
-            stmt = select(Department).options(selectinload(Department.mentors))
+            stmt = select(Department)
             items = await session.scalars(stmt)
         return [item for item in items]
 
     async def get_by_primary_key(self, key: str):
         async with self.async_session() as session:
-            stmt = select(Department).filter_by(title=key).options(selectinload(Department.mentors))
+            stmt = select(Department).filter_by(title=key)
             result = await session.scalar(stmt)
         return result
 

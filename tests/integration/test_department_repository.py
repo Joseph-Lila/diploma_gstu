@@ -36,8 +36,12 @@ async def test_department_repository_get_by_primary_key(
     for mentor in mentors:
         await mentors_repo.create(mentor)
     got_item = await repo.get_by_primary_key(new_item.title)
-    assert got_item.title == new_item.title
-    assert len(got_item.mentors) == mentors_quantity
+    assert got_item == new_item
+
+    got_mentors = await mentors_repo.get_all()
+    got_mentors = [mentor for mentor in mentors if mentor.department_title == got_item.title]
+
+    assert len(got_mentors) == mentors_quantity
 
 
 @pytest.mark.asyncio

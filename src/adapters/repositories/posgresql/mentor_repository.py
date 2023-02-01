@@ -14,19 +14,17 @@ class MentorRepository(AbstractRepository):
 
     async def get_all(self):
         async with self.async_session() as session:
-            stmt = select(Mentor).options(selectinload(Mentor.department))
+            stmt = select(Mentor)
             items = await session.scalars(stmt)
         return [item for item in items]
 
     async def get_by_primary_key(self, key: str):
         async with self.async_session() as session:
-            stmt = select(Mentor).filter_by(fio=key).options(selectinload(Mentor.department))
+            stmt = select(Mentor).filter_by(fio=key)
             result = await session.scalar(stmt)
         return result
 
     async def create(self, item: Mentor):
-        if item.department is None and item.department_title:
-            item.department = await DepartmentRepository(self.async_session).get_by_primary_key(item.department_title)
         async with self.async_session() as session:
             async with session.begin():
                 session.add(item)

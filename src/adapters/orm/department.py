@@ -11,8 +11,4 @@ class Department:
 
     title: Mapped[str] = mapped_column(primary_key=True)
     head: Mapped[str]
-    mentors: Mapped[List["Mentor"]] = relationship(
-        default_factory=list,
-        back_populates="department",
-        lazy='joined',
-    )
+
