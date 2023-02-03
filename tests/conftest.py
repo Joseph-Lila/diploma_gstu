@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from src import config
-from src.adapters.orm import Department, Mentor
+from src.adapters.orm import Department, Mentor, Subject
 
 
 @pytest.fixture
@@ -55,6 +55,15 @@ def get_fake_department_factory(
         head=random_fio_factory(),
     )
 
+
+@pytest.fixture
+def get_fake_subject_factory(
+        get_fake_text_factory,
+):
+    return lambda: Subject(
+        title=get_fake_text_factory(),
+        description=get_fake_text_factory(),
+    )
 
 @pytest.fixture
 def get_fake_salary_factory():

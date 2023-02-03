@@ -1,32 +1,30 @@
 import pytest
 
-from src.adapters.orm import Department, create_tables
-from src.adapters.repositories.posgresql.department_repository import \
-    DepartmentRepository
+from src.adapters.orm import create_tables, Subject
+from src.adapters.repositories.posgresql.subject_repository import SubjectRepository
 
 
 @pytest.mark.asyncio
-async def test_department_repository_create(
+async def test_subject_repository_create(
         postgres_uri,
         postgres_session_factory,
-        get_fake_department_factory,
+        get_fake_subject_factory,
 ):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = get_fake_department_factory(None)
+    repo = SubjectRepository(async_session_factory_=postgres_session_factory)
+    new_item = get_fake_subject_factory()
     await repo.create(new_item)
 
 
 @pytest.mark.asyncio
-async def test_department_repository_get_by_primary_key(
+async def test_subject_repository_get_by_primary_key(
         postgres_uri,
         postgres_session_factory,
-        get_fake_department_factory,
-        get_fake_mentor_factory,
+        get_fake_subject_factory,
 ):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = get_fake_department_factory(None)
+    repo = SubjectRepository(async_session_factory_=postgres_session_factory)
+    new_item = get_fake_subject_factory()
     await repo.create(new_item)
 
     got_item = await repo.get_by_primary_key(new_item.title)
@@ -34,16 +32,16 @@ async def test_department_repository_get_by_primary_key(
 
 
 @pytest.mark.asyncio
-async def test_department_repository_get_all(
+async def test_subject_repository_get_all(
         postgres_uri,
         postgres_session_factory,
-        get_fake_department_factory,
+        get_fake_subject_factory,
 ):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
+    repo = SubjectRepository(async_session_factory_=postgres_session_factory)
 
     # add data
-    items = [get_fake_department_factory(None) for _ in range(3)]
+    items = [get_fake_subject_factory() for _ in range(3)]
     for item in items:
         await repo.create(item)
 
@@ -53,16 +51,16 @@ async def test_department_repository_get_all(
 
 
 @pytest.mark.asyncio
-async def test_department_repository_update(
+async def test_subject_repository_update(
         postgres_uri,
         postgres_session_factory,
-        get_fake_department_factory,
-        random_fio_factory,
+        get_fake_subject_factory,
+        get_fake_text_factory,
 ):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = get_fake_department_factory(None)
-    changed_new_item = Department(title=new_item.title, head=random_fio_factory())
+    repo = SubjectRepository(async_session_factory_=postgres_session_factory)
+    new_item = get_fake_subject_factory()
+    changed_new_item = Subject(title=new_item.title, description=get_fake_text_factory())
 
     await repo.create(new_item)
 
@@ -76,14 +74,14 @@ async def test_department_repository_update(
 
 
 @pytest.mark.asyncio
-async def test_department_repository_delete(
+async def test_subject_repository_delete(
         postgres_uri,
         postgres_session_factory,
-        get_fake_department_factory,
+        get_fake_subject_factory,
 ):
     await create_tables(postgres_uri)
-    repo = DepartmentRepository(async_session_factory_=postgres_session_factory)
-    new_item = get_fake_department_factory(None)
+    repo = SubjectRepository(async_session_factory_=postgres_session_factory)
+    new_item = get_fake_subject_factory()
 
     await repo.create(new_item)
 
