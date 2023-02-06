@@ -10,7 +10,7 @@ Loader.loading_image = f"{images_path}transparent.png"
 
 
 class KivyApp(MDApp):
-    title = 'Scheduler'
+    title = 'Составитель расписания'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -26,7 +26,7 @@ class KivyApp(MDApp):
         def on_start(interval):
             Window.maximize()
 
-        Clock.schedule_once(on_start, 3)
+        Clock.schedule_once(on_start, 2)
 
 
 if __name__ == '__main__':

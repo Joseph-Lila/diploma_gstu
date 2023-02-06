@@ -1,8 +1,66 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
-#:set root_color get_color_from_hex("#747474")
+#:import effect kivy.uix.effectwidget.EffectWidget
+
 
 <MainScreenView>:
+    content_manager: content_manager
 
     FitImage:
         id: image
-        source: "assets/images/island-0.jpg"
+        source: "assets/images/abstract_picture.jpg"
+
+    VerticalLabel:
+        text: "СОСТАВИТЕЛЬ РАСПИСАНИЯ"
+        font_size: '40sp'
+        pos_hint: {"center_y": .5}
+        rotate_value_angle: 90
+        adaptive_size: True
+        bold: True
+        x: root.width - (self.width - sp(262))
+        color: 1, 1, 1, 1
+
+    MDBoxLayout:
+        adaptive_height: True
+        pos_hint: {"top": 1}
+        padding: "60dp", "6dp", "60dp", 0
+
+        CustomMDFlatButton:
+            text: "[b]СЛЕДУЙ ЗА НАМИ[/b]"
+
+        CustomMDIconButton:
+            icon: "whatsapp"
+
+        CustomMDIconButton:
+            icon: "instagram"
+
+        CustomMDIconButton:
+            icon: "youtube"
+
+        CustomMDIconButton:
+            icon: "twitter"
+
+        Widget:
+
+        Widget:
+
+        MDBoxLayout:
+            adaptive_height: True
+            spacing: "24dp"
+
+            CustomMDFlatButton:
+                text: "[b]ГЛАВНАЯ[/b]"
+
+            CustomMDFlatButton:
+                text: "[b]О ПРИЛОЖЕНИИ[/b]"
+
+            CustomMDFlatButton:
+                text: "[b]О НАС[/b]"
+
+    MDAnchorLayout:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: .75, .75
+
+            MDScreenManager:
+                id: content_manager
