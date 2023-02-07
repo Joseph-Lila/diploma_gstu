@@ -1,6 +1,7 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 #:import effect kivy.uix.effectwidget.EffectWidget
 #: import ak asynckivy
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
 
 
 <MainScreenView>:
@@ -82,14 +83,21 @@
 
                 CustomMDFlatButton:
                     text: "[b]СОХРАНИТЬ[/b]"
-                    text_color: 195/255, 147/255, 158/255, 1
+                    text_color: 'white'
                     font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+
+                CustomMDFlatButton:
+                    text: "[b]ЗАКРЫТЬ[/b]"
+                    text_color: 'white'
+                    font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+                    on_release: ak.start(root.controller.close_configuration())
 
             MDCard:
                 orientation: 'vertical'
 
-                MDScreenManager:
+                ScreenManager:
                     id: content_manager
+                    transition: FadeTransition()
 
                     StartScreenView:
                         id: start_screen

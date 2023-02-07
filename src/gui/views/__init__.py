@@ -5,6 +5,7 @@ from .vertical_label import VerticalLabel
 from .start_screen import StartScreenView
 from .configuration_screen import ConfigurationScreenView
 
+
 Factory.register("MainScreenView", cls=MainScreenView)
 Factory.register("VerticalLabel", cls=VerticalLabel)
 Factory.register("StartScreenView", cls=StartScreenView)

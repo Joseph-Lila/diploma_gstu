@@ -7,3 +7,6 @@ class MainScreenView(MDScreen):
 
     async def set_configuration_screen(self):
         self.content_manager.current = 'configuration screen'
+
+    async def set_start_screen(self):
+        self.content_manager.current = 'start screen'

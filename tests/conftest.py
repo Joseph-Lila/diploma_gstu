@@ -1,5 +1,6 @@
+import os
 import random
-
+import tempfile
 import pytest
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -65,6 +66,7 @@ def get_fake_subject_factory(
         description=get_fake_text_factory(),
     )
 
+
 @pytest.fixture
 def get_fake_salary_factory():
     return lambda: random.uniform(1000, 5000)
@@ -111,3 +113,11 @@ def get_fake_mentor_factory(
         requirements=get_fake_text_factory(),
         duties=get_fake_text_factory(),
     )
+
+
+@pytest.fixture
+def csv_file_path():
+    temp = tempfile.NamedTemporaryFile(suffix='.csv', delete=False)
+    yield temp.name
+    temp.close()
+    os.unlink(temp.name)
