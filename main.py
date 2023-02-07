@@ -6,12 +6,8 @@ from kivy.core.window import Window
 Window.minimum_width, Window.minimum_height = (1450, 800)
 
 import asyncio
-from kivy.loader import Loader
 from src.gui.screens import ScreenGenerator
 from kivymd.app import MDApp
-from kivymd import images_path
-
-Loader.loading_image = f"{images_path}transparent.png"
 
 
 class KivyApp(MDApp):
@@ -23,7 +19,8 @@ class KivyApp(MDApp):
 
     def build(self):
         self.theme_cls.theme_style = "Light"
-        self.theme_cls.primary_palette = "Teal"
+        self.theme_cls.primary_palette = "Pink"
+        self.theme_cls.primary_hue = "300"
         self.theme_cls.material_style = "M3"
         return ScreenGenerator().build_app_view()
 

@@ -1,7 +1,7 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 #:import effect kivy.uix.effectwidget.EffectWidget
 #: import ak asynckivy
-#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#: import NoTransition kivy.uix.screenmanager.NoTransition
 
 
 <MainScreenView>:
@@ -97,7 +97,7 @@
 
                 ScreenManager:
                     id: content_manager
-                    transition: FadeTransition()
+                    transition: NoTransition()
 
                     StartScreenView:
                         id: start_screen

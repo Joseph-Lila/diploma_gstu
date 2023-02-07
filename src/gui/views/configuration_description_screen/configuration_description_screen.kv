@@ -3,9 +3,31 @@
     MDBoxLayout:
 
         MDBoxLayout:
+            orientation: 'vertical'
             size_hint_x: 1
+            padding: 45
 
-            Button:
+            AnchorLayout:
+
+                CustomTextInput:
+                    hint_text: 'НАИМЕНОВАНИЕ'
+
+            AnchorLayout:
+
+                CustomTextInput:
+                    hint_text: 'ГОД'
+
+            AnchorLayout:
+
+                CustomTextInput:
+                    hint_text: 'АВТОР'
+
+            AnchorLayout:
+
+                MyRectangleFlatIconButton:
+                    icon: 'timetable'
+                    text: 'Перейти к расписанию'
+
 
         MDBoxLayout:
             size_hint_x: .2
