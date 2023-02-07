@@ -16,7 +16,7 @@
         rotate_value_angle: 90
         adaptive_size: True
         bold: True
-        x: root.width - (self.width - sp(262))
+        x: root.width - (self.width - sp(255))
         color: 1, 1, 1, 1
 
     MDBoxLayout:
@@ -60,7 +60,33 @@
 
         MDBoxLayout:
             orientation: 'vertical'
-            size_hint: .75, .75
+            size_hint: .80, .80
+            spacing: "8dp"
 
-            MDScreenManager:
-                id: content_manager
+            MDBoxLayout:
+                adaptive_height: True
+                spacing: "24dp"
+
+                CustomMDFlatButton:
+                    text: "[b]СОЗДАТЬ[/b]"
+                    text_color: 166/255, 60/255, 82/255, 1
+                    font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+
+                CustomMDFlatButton:
+                    text: "[b]ОТКРЫТЬ[/b]"
+                    text_color: 'white'
+                    font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+
+                CustomMDFlatButton:
+                    text: "[b]СОХРАНИТЬ[/b]"
+                    text_color: 195/255, 147/255, 158/255, 1
+                    font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+
+            MDCard:
+                orientation: 'vertical'
+
+                MDScreenManager:
+                    id: content_manager
+
+                    StartScreenView:
+                        name: 'start screen'

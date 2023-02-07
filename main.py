@@ -1,6 +1,11 @@
-import asyncio
-from kivy.clock import Clock
+from kivy.config import Config
+Config.set("graphics", "window_state", "maximized")
+
 from kivy.core.window import Window
+
+Window.minimum_width, Window.minimum_height = (1200, 600)
+
+import asyncio
 from kivy.loader import Loader
 from src.gui.screens import ScreenGenerator
 from kivymd.app import MDApp
@@ -21,12 +26,6 @@ class KivyApp(MDApp):
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.material_style = "M3"
         return ScreenGenerator().build_app_view()
-
-    def on_start(self):
-        def on_start(interval):
-            Window.maximize()
-
-        Clock.schedule_once(on_start, 2)
 
 
 if __name__ == '__main__':
