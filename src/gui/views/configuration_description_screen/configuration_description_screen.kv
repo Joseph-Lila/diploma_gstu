@@ -1,4 +1,7 @@
 <ConfigurationDescriptionScreenView>:
+    year_input: year_input
+    title_input: title_input
+    author_input: author_input
 
     MDBoxLayout:
 
@@ -10,16 +13,20 @@
             AnchorLayout:
 
                 CustomTextInput:
+                    id: title_input
                     hint_text: 'НАИМЕНОВАНИЕ'
 
             AnchorLayout:
 
                 CustomTextInput:
+                    id: year_input
                     hint_text: 'ГОД'
+                    input_filter: 'int'
 
             AnchorLayout:
 
                 CustomTextInput:
+                    id: author_input
                     hint_text: 'АВТОР'
 
             AnchorLayout:
@@ -27,10 +34,93 @@
                 MyRectangleFlatIconButton:
                     icon: 'timetable'
                     text: 'Перейти к расписанию'
+                    disabled: True
 
 
         MDBoxLayout:
             size_hint_x: .2
+            orientation: 'vertical'
+            padding: 0, 100, 40, 0
+            spacing: '24dp'
 
-            Button:
-                text: 'hi'
+
+            MDCard:
+                orientation: 'vertical'
+                line_color: app.theme_cls.primary_light
+                style: 'outlined'
+                md_bg_color: 57/255, 97/255, 133/255, 30/255
+                spacing: '10dp'
+
+                CustomMDLabel:
+                    text: 'Нагрузка'
+                    theme_text_color: "Custom"
+                    text_color: 'red'
+                    halign: 'center'
+                    valign: 'center'
+
+                CustomMDLabel:
+                    text: '0'
+                    theme_text_color: "Custom"
+                    text_color: 'red'
+                    halign: 'center'
+                    valign: 'center'
+
+                GridLayout:
+                    cols: 3
+
+                    AnchorLayout:
+
+                        TooltipMDIconButton:
+                            icon: 'file-import'
+                            tooltip_text: 'Загрузить нагрузку'
+                            theme_icon_color: "Custom"
+                            icon_color: 166/255, 60/255, 82/255, 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+                    AnchorLayout:
+
+                        TooltipMDIconButton:
+                            icon: 'eye-check'
+                            tooltip_text: 'Посмотреть нагрузку'
+                            theme_icon_color: "Custom"
+                            icon_color: 166/255, 60/255, 82/255, 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+                    AnchorLayout:
+
+                        TooltipMDIconButton:
+                            icon: 'file-export'
+                            tooltip_text: 'Экспортировать нагрузку'
+                            theme_icon_color: "Custom"
+                            icon_color: 166/255, 60/255, 82/255, 1
+                            pos_hint: {"center_x": .5, "center_y": .5}
+
+            MDCard:
+                orientation: 'vertical'
+                line_color: app.theme_cls.primary_light
+                style: 'outlined'
+                md_bg_color: 57/255, 97/255, 133/255, 30/255
+
+                CustomMDLabel:
+                    text: 'Общая информация'
+                    theme_text_color: "Custom"
+                    text_color: 'black' if all([title_input.text, year_input.text, author_input.text]) else 'red'
+                    halign: 'center'
+                    valign: 'center'
+
+                CustomMDLabel:
+                    text:
+                        '3/3' if all([title_input.text, year_input.text, author_input.text]) \
+                        else '2/3' \
+                        if [title_input.text != '', year_input.text != '', author_input.text != ''].count(True) == 2 \
+                        else '1/3' \
+                        if [title_input.text != '', year_input.text != '', author_input.text != ''].count(True) == 1 \
+                        else '0/3'
+                    theme_text_color: "Custom"
+                    text_color: 'black' if all([title_input.text, year_input.text, author_input.text]) else 'red'
+                    halign: 'center'
+                    valign: 'center'
+
+                Widget:
+
+            Widget:

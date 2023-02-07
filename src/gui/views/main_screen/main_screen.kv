@@ -5,8 +5,8 @@
 
 
 <MainScreenView>:
+    id: main_screen
     content_manager: content_manager
-    start_screen: start_screen
 
     FitImage:
         id: image
@@ -14,13 +14,9 @@
 
     VerticalLabel:
         text: "СОСТАВИТЕЛЬ РАСПИСАНИЯ"
-        font_size: '40sp'
         pos_hint: {"center_y": .5}
-        rotate_value_angle: 90
         adaptive_size: True
-        bold: True
-        x: root.width - (self.width - sp(255))
-        color: 1, 1, 1, 1
+        x: root.width - (self.width - sp(292))
 
     MDBoxLayout:
         adaptive_height: True
@@ -97,12 +93,5 @@
 
                 ScreenManager:
                     id: content_manager
+                    main_screen: main_screen
                     transition: NoTransition()
-
-                    StartScreenView:
-                        id: start_screen
-                        name: 'start screen'
-
-                    ConfigurationDescriptionScreenView:
-                        id: configuration_screen
-                        name: 'configuration description screen'
