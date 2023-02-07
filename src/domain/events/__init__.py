@@ -1,1 +1,2 @@
+from .workload_is_exported import WorkloadIsExported
 from .workload_is_imported import WorkloadIsImported

@@ -13,3 +13,7 @@ class Configuration:
     @property
     def mentor_load_items(self) -> List[MentorLoadItem]:
         return self._mentor_load_items
+
+    @mentor_load_items.setter
+    def mentor_load_items(self, value: List[MentorLoadItem]):
+        self._mentor_load_items = value

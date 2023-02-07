@@ -2,6 +2,9 @@
     year_input: year_input
     title_input: title_input
     author_input: author_input
+    workload_title: workload_title
+    workload_quantity: workload_quantity
+    go_to_timetable_btn: go_to_timetable_btn
 
     MDBoxLayout:
 
@@ -32,10 +35,9 @@
             AnchorLayout:
 
                 MyRectangleFlatIconButton:
+                    id: go_to_timetable_btn
                     icon: 'timetable'
                     text: 'Перейти к расписанию'
-                    disabled: True
-
 
         MDBoxLayout:
             size_hint_x: .2
@@ -52,16 +54,15 @@
                 spacing: '10dp'
 
                 CustomMDLabel:
+                    id: workload_title
                     text: 'Нагрузка'
                     theme_text_color: "Custom"
-                    text_color: 'red'
                     halign: 'center'
                     valign: 'center'
 
                 CustomMDLabel:
-                    text: '0'
+                    id: workload_quantity
                     theme_text_color: "Custom"
-                    text_color: 'red'
                     halign: 'center'
                     valign: 'center'
 
@@ -76,6 +77,7 @@
                             theme_icon_color: "Custom"
                             icon_color: 166/255, 60/255, 82/255, 1
                             pos_hint: {"center_x": .5, "center_y": .5}
+                            on_release: root.controller.get_view().open_file_manager_for_importing()
 
                     AnchorLayout:
 
@@ -94,6 +96,7 @@
                             theme_icon_color: "Custom"
                             icon_color: 166/255, 60/255, 82/255, 1
                             pos_hint: {"center_x": .5, "center_y": .5}
+                            on_release: root.controller.get_view().open_file_manager_for_exporting()
 
             MDCard:
                 orientation: 'vertical'

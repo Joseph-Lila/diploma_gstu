@@ -4,7 +4,7 @@ from loguru import logger
 
 from src.adapters.repositories.abstract_repositories_manager import \
     AbstractRepositoriesManager
-from src.domain.commands import Command
+from src.domain.commands.command import Command
 
 
 class MessageBus:

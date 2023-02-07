@@ -29,3 +29,91 @@
     CustomMDLabel:
         text: 'Пусто...'
         halign: 'center'
+
+
+<SuccessExportDialog@MDCard>:
+
+    MDCard:
+        orientation: 'vertical'
+        size_hint_x: .3
+        md_bg_color: 0, .6, 0, 1
+        radius: [15, 0, 0, 15]
+
+        AnchorLayout:
+
+            MDIcon:
+                icon: 'check-circle-outline'
+                font_size : 48
+                color: 'white'
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(40)
+
+        MDLabel:
+            text: "Успешно!"
+            size_hint_y: None
+            height: self.texture_size[1]
+            halign: "center"
+            valign: "center"
+            bold: True
+            theme_text_color: "Custom"
+            text_color: 0, .7, 0, 1
+
+        MDLabel:
+            text: "Нагрузка преподавателей загружена в файл!"
+            halign: "center"
+            valign: "top"
+            theme_text_color: "Custom"
+            text_color: 0, .7, 0, 1
+            font_style: "Caption"
+
+        MDFillRoundFlatButton:
+            id: button
+            text: "Подтвердить"
+            md_bg_color: 0, .7, 0, 1
+            pos_hint: {"center_x": .5}
+
+
+<SuccessImportDialog@MDCard>:
+
+    MDCard:
+        orientation: 'vertical'
+        size_hint_x: .3
+        md_bg_color: 0, .6, 0, 1
+        radius: [15, 0, 0, 15]
+
+        AnchorLayout:
+
+            MDIcon:
+                icon: 'check-circle-outline'
+                font_size : 48
+                color: 'white'
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(40)
+
+        MDLabel:
+            text: "Успешно!"
+            size_hint_y: None
+            height: self.texture_size[1]
+            halign: "center"
+            valign: "center"
+            bold: True
+            theme_text_color: "Custom"
+            text_color: 0, .7, 0, 1
+
+        MDLabel:
+            text: "Нагрузка преподавателей импортирована!"
+            halign: "center"
+            valign: "top"
+            theme_text_color: "Custom"
+            text_color: 0, .7, 0, 1
+            font_style: "Caption"
+
+        MDFillRoundFlatButton:
+            id: button
+            text: "Подтвердить"
+            md_bg_color: 0, .7, 0, 1
+            pos_hint: {"center_x": .5}
