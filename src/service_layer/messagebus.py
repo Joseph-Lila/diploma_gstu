@@ -2,7 +2,8 @@ from typing import Callable, Dict, Type
 
 from loguru import logger
 
-from src.adapters.repositories.abstract_repositories_manager import AbstractRepositoriesManager
+from src.adapters.repositories.abstract_repositories_manager import \
+    AbstractRepositoriesManager
 from src.domain.commands import Command
 
 

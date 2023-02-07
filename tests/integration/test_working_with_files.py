@@ -3,7 +3,8 @@ import asyncio
 import pytest
 
 from src.domain.entities import MentorLoadItem
-from src.service_layer.handlers import write_mentor_load_items_to_csv, load_mentor_load_items_from_csv
+from src.service_layer.handlers import (load_mentor_load_items_from_csv,
+                                        write_mentor_load_items_to_csv)
 
 
 @pytest.mark.asyncio

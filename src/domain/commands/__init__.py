@@ -1,1 +1,1 @@
-from .command import Command
+from .import_workload import ImportWorkload

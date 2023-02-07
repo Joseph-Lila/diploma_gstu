@@ -1,1 +1,1 @@
-from .event import Event
+from .workload_is_imported import WorkloadIsImported

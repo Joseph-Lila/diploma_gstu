@@ -1,6 +1,7 @@
+from datetime import date
+
 from kivy.properties import ObjectProperty
 from kivymd.uix.screen import MDScreen
-from datetime import date
 
 
 class ConfigurationDescriptionScreenView(MDScreen):

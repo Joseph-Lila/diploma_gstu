@@ -1,6 +1,8 @@
 from src.domain.entities import Configuration
-from src.gui.controllers.abstract_controller import AbstractController, use_loop
-from src.gui.views import MainScreenView, StartScreenView, ConfigurationDescriptionScreenView
+from src.gui.controllers.abstract_controller import (AbstractController,
+                                                     use_loop)
+from src.gui.views import (ConfigurationDescriptionScreenView, MainScreenView,
+                           StartScreenView)
 
 
 class MainScreenController(AbstractController):

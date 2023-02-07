@@ -1,1 +1,2 @@
-from .configuration_description_screen import ConfigurationDescriptionScreenView
+from .configuration_description_screen import \
+    ConfigurationDescriptionScreenView

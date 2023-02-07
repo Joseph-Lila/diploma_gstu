@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from . import DepartmentRepository, MentorRepository, SubjectRepository
-from ..abstract_repositories_manager import AbstractRepositoriesManager
 from ...orm import async_session_factory
+from ..abstract_repositories_manager import AbstractRepositoriesManager
+from . import DepartmentRepository, MentorRepository, SubjectRepository
 
 
 class RepositoriesManager(AbstractRepositoriesManager):

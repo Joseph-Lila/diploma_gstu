@@ -1,7 +1,8 @@
 import pytest
 
-from src.adapters.orm import create_tables, Subject
-from src.adapters.repositories.posgresql.subject_repository import SubjectRepository
+from src.adapters.orm import Subject, create_tables
+from src.adapters.repositories.posgresql.subject_repository import \
+    SubjectRepository
 
 
 @pytest.mark.asyncio

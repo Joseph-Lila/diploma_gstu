@@ -1,4 +1,5 @@
 from kivy.config import Config
+
 Config.set("graphics", "window_state", "maximized")
 
 from kivy.core.window import Window
@@ -6,8 +7,10 @@ from kivy.core.window import Window
 Window.minimum_width, Window.minimum_height = (1450, 800)
 
 import asyncio
-from src.gui.screens import ScreenGenerator
+
 from kivymd.app import MDApp
+
+from src.gui.screens import ScreenGenerator
 
 
 class KivyApp(MDApp):

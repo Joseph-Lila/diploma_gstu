@@ -2,9 +2,11 @@ import asyncio
 import concurrent.futures
 import inspect
 
-from src.adapters.repositories.abstract_repositories_manager import AbstractRepositoriesManager
-from src.adapters.repositories.posgresql.repositories_manager import RepositoriesManager
 from src.adapters.orm.base import create_tables
+from src.adapters.repositories.abstract_repositories_manager import \
+    AbstractRepositoriesManager
+from src.adapters.repositories.posgresql.repositories_manager import \
+    RepositoriesManager
 from src.service_layer import handlers
 from src.service_layer.messagebus import MessageBus
 

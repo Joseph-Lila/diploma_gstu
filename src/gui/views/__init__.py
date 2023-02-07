@@ -1,11 +1,11 @@
 from kivy.factory import Factory
 
-from .main_screen import MainScreenView
-from .vertical_label import VerticalLabel
-from .start_screen import StartScreenView
-from .configuration_description_screen import ConfigurationDescriptionScreenView
+from .configuration_description_screen import \
+    ConfigurationDescriptionScreenView
 from .custom_text_input import CustomTextInput
-
+from .main_screen import MainScreenView
+from .start_screen import StartScreenView
+from .vertical_label import VerticalLabel
 
 Factory.register("MainScreenView", cls=MainScreenView)
 Factory.register("VerticalLabel", cls=VerticalLabel)

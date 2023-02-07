@@ -1,11 +1,20 @@
 from dataclasses import astuple
-from typing import Dict, Type, Callable, List
+from typing import Callable, Dict, List, Type
 
 import aiofiles
 from aiocsv import AsyncReader, AsyncWriter
 
-from src.domain.commands import Command
+from src.domain.commands import ImportWorkload
+from src.domain.commands.command import Command
 from src.domain.entities import MentorLoadItem
+from src.domain.events import WorkloadIsImported
+
+
+async def import_workload(
+        cmd: ImportWorkload,
+):
+    mentor_load_items = await load_mentor_load_items_from_csv(cmd.path)
+    return WorkloadIsImported(mentor_load_items=mentor_load_items)
 
 
 async def load_mentor_load_items_from_csv(path: str) -> List[MentorLoadItem]:
@@ -42,5 +51,5 @@ async def write_mentor_load_items_to_csv(path: str, items: List[MentorLoadItem])
 
 
 COMMAND_HANDLERS = {
-
+    ImportWorkload: import_workload,
 }  # type: Dict[Type[Command], Callable]
