@@ -1,4 +1,4 @@
-from src.gui.controllers.abstract_controller import AbstractController
+from src.gui.controllers.abstract_controller import AbstractController, use_loop
 from src.gui.views import MainScreenView
 
 
@@ -9,3 +9,7 @@ class MainScreenController(AbstractController):
 
     def get_view(self):
         return self._view
+
+    @use_loop
+    async def create_configuration(self):
+        await self._view.set_configuration_screen()

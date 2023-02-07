@@ -1,9 +1,11 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 #:import effect kivy.uix.effectwidget.EffectWidget
+#: import ak asynckivy
 
 
 <MainScreenView>:
     content_manager: content_manager
+    start_screen: start_screen
 
     FitImage:
         id: image
@@ -71,6 +73,7 @@
                     text: "[b]СОЗДАТЬ[/b]"
                     text_color: 166/255, 60/255, 82/255, 1
                     font_name: "assets/fonts/MontserratAlternates-ExtraBold.otf"
+                    on_release: ak.start(root.controller.create_configuration())
 
                 CustomMDFlatButton:
                     text: "[b]ОТКРЫТЬ[/b]"
@@ -89,4 +92,9 @@
                     id: content_manager
 
                     StartScreenView:
+                        id: start_screen
                         name: 'start screen'
+
+                    ConfigurationScreenView:
+                        id: configuration_screen
+                        name: 'configuration screen'

@@ -3,7 +3,7 @@ Config.set("graphics", "window_state", "maximized")
 
 from kivy.core.window import Window
 
-Window.minimum_width, Window.minimum_height = (1200, 600)
+Window.minimum_width, Window.minimum_height = (1450, 800)
 
 import asyncio
 from kivy.loader import Loader
