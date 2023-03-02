@@ -14,6 +14,7 @@ from src.gui.screens import ScreenGenerator
 
 
 class KivyApp(MDApp):
+    icon = 'assets/images/logo_new.png'
     title = 'Составитель расписания'
 
     def __init__(self, **kwargs):

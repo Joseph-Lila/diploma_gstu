@@ -1,6 +1,5 @@
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy.orm import selectinload
 
 from src.adapters.orm import Department, async_session_factory
 from src.adapters.repositories.abstract_repository import AbstractRepository
