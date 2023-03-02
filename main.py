@@ -1,5 +1,9 @@
 import asyncio
 
+from kivy.config import Config
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '550')
+
 from kivy.core.window import Window
 from kivymd.app import MDApp
 from src.gui.screens import ScreenGenerator
@@ -11,6 +15,7 @@ class KivyApp(MDApp):
 
     def build(self):
         Window.borderless = True
+        print(Window.size)
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.primary_hue = "300"
