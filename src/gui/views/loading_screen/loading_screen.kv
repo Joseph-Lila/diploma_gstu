@@ -1,0 +1,128 @@
+<LoadingScreenView>:
+
+    FitImage:
+        size_hint_y: 1
+        source: 'assets/images/wallhaven-3z91ey.jpg'
+
+    FitImage:
+        source: 'assets/icons/Rasp.png'
+        halign: 'left'
+        size_hint: .7, .7
+        pos_hint: {"center_x": .31, "center_y": .77}
+
+    FitImage:
+        source: 'assets/icons/HiReST mk3.png'
+        size_hint: .4, .4
+        pos_hint: {"center_x": .85, "center_y": .85}
+
+
+    MDBoxLayout:
+        adaptive_height: True
+        pos_hint: {"top": .55}
+        padding: 30, 0, 0, 0
+
+        MDLabel:
+            text: 'СОСТАВИТЕЛЬ РАСПИСАНИЯ'
+            theme_text_color: "Custom"
+            text_color: 1, 1, 1, 1
+            font_size: 70
+
+
+    MDBoxLayout:
+        adaptive_height: True
+        pos_hint: {"top": 1}
+        padding: 0, 18, 0, 0
+
+        BoxLayout:
+            padding: 11, 0, 25, 0
+
+            MDLabel:
+                text: '©2023-2035'
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: 15
+
+            MDLabel:
+                text: 'Powered by HIREST Design™'
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: 15
+                halign: 'right'
+
+    MDBoxLayout:
+        adaptive_height: True
+        pos_hint: {"top": .3}
+        orientation: 'vertical'
+
+        BoxLayout:
+            padding: 11, 18, 11, 35
+
+            MDLabel:
+                text: 'Все права защищены. ©LLK.ink™'
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: 17
+                valign: 'center'
+
+            MDLabel:
+                text: 'v0.0.1'
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_size: 15
+                valign: 'bottom'
+                halign: 'right'
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        Widget:
+
+        MDCard:
+            orientation: 'vertical'
+            size_hint_y: .25
+            md_bg_color: 25/255, 25/255, 25/255, 1
+            padding: 11, 18, 18, 18
+
+            BoxLayout:
+
+                MDLabel:
+                    text: 'Ожидайте завершения загрузки...'
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_size: 17
+
+                MDLabel:
+                    text: 'Приложение следующего поколения.'
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_size: 17
+                    italic: True
+                    halign: 'right'
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                MDLabel:
+                    text: 'Загрузка объектов...'
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_size: 13
+
+                BoxLayout:
+
+                    MDProgressBar:
+                        id: progress
+                        color: 1, 1, 1, 1
+                        type: "determinate"
+                        value: 0
+
+                    MDLabel:
+                        id: progress_label
+                        size_hint_x: .2
+                        text: '0%'
+                        halign: "right"
+                        font_size: 14
+                        valign: "center"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+

@@ -1,14 +1,14 @@
 from src.bootstrap import bootstrap
-from src.gui.controllers import MainScreenController
-from src.gui.views import ConfigurationDescriptionScreenView, StartScreenView
+from src.gui.controllers import ScreenMasterController
+from src.gui.controllers.loading_screen import LoadingScreenController
 
-MAIN_SCREEN_KEY = "main_screen"
-MAIN_SCREEN_CLS = MainScreenController
+SCREEN_MASTER_NAME = 'screen master'
 
-SCREENS = (
-    ('start_screen', StartScreenView),
-    ('configuration_description_screen', ConfigurationDescriptionScreenView),
-)
+
+SCREENS = {
+    SCREEN_MASTER_NAME: ScreenMasterController,
+    "loading screen": LoadingScreenController,
+}
 
 
 class ScreenGenerator:
@@ -17,17 +17,18 @@ class ScreenGenerator:
         self.bus = bootstrap()
 
     def build_app_view(self):
-        controller = MAIN_SCREEN_CLS(self.bus)
-        app_view = controller.get_view()
-        for key, cls in self.screens:
-            if key != MAIN_SCREEN_KEY:
-                view = self._generate_view(key, cls, controller)
-                app_view.content_manager.add_widget(view)
-                setattr(app_view, key, view)
-        return app_view
+        screen_master_view = self._generate_view(SCREEN_MASTER_NAME, None)
+        for key in self.screens.keys():
+            if key != SCREEN_MASTER_NAME:
+                view = self._generate_view(key, screen_master_view)
+                screen_master_view.add_widget(view)
+        return screen_master_view
 
-    @staticmethod
-    def _generate_view(key: str, cls, controller):
-        view = cls(controller=controller)
+    def _generate_view(self, key, screen_master_view):
+        if screen_master_view:
+            controller = self.screens[key](self.bus, screen_master_controller=screen_master_view.controller)
+        else:
+            controller = self.screens[key](self.bus)
+        view = controller.get_view()
         view.name = key
         return view

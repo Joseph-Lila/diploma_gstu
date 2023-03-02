@@ -29,3 +29,7 @@ def use_loop(func):
 class AbstractController(abc.ABC):
     def __init__(self, bus):
         self.bus = bus
+        self._view = None
+
+    def get_view(self):
+        return self._view
