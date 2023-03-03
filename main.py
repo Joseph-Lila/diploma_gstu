@@ -1,8 +1,12 @@
 import asyncio
 
 from kivy.config import Config
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '550')
+
+from src.config import get_common_window_size
+
+new_window_size_x, new_window_size_y = get_common_window_size()
+Config.set('graphics', 'width', f'{new_window_size_x}')
+Config.set('graphics', 'height', f'{new_window_size_y}')
 
 from kivy.core.window import Window
 from kivymd.app import MDApp

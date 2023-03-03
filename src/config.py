@@ -7,11 +7,21 @@ from dotenv import load_dotenv
 THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
 DOTENV_PATH = ROOT_DIR / '.env'
+COMMON_WINDOW_SIZE = 900, 550
+LEFT_DRAWER_SIZE = 220, COMMON_WINDOW_SIZE[1]
 
 
 # load secret data from .env
 if DOTENV_PATH.exists():
     load_dotenv(DOTENV_PATH)
+
+
+def get_common_window_size():
+    return COMMON_WINDOW_SIZE
+
+
+def get_left_drawer_size():
+    return LEFT_DRAWER_SIZE
 
 
 def get_test_postgres_uri() -> str:
