@@ -15,7 +15,6 @@ class KivyApp(MDApp):
 
     def build(self):
         Window.borderless = True
-        print(Window.size)
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.primary_hue = "300"

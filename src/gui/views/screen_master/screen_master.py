@@ -1,9 +1,10 @@
 from kivy.properties import ObjectProperty
-from kivymd.uix.screen import MDScreen
+from kivy.uix.screenmanager import ScreenManager, WipeTransition
 
 
-class ScreenMasterView(MDScreen):
-    def __draw_shadow__(self, origin, end, context=None):
-        pass
-
+class ScreenMasterView(ScreenManager):
     controller = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.transition = WipeTransition()
