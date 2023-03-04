@@ -1,1 +1,1 @@
-from .screen_master import ScreenMasterController
+from .screen_masters import ScreenMasterController, InnerScreenMasterController

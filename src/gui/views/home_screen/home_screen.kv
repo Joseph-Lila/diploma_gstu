@@ -1,19 +1,15 @@
 #: import get_left_drawer_size src.config.get_left_drawer_size
 
 <HomeScreenView>:
+    nav_layout: nav_layout
+
     on_enter:
         nav_drawer.set_state('open')
         nav_drawer.size_hint = (None, None)
         nav_drawer.size = get_left_drawer_size()
 
     MDNavigationLayout:
-
-        ScreenManager:
-
-            MDScreen:
-
-                BoxLayout:
-                    orientation: 'vertical'
+        id: nav_layout
 
         MDNavigationDrawer:
             id: nav_drawer
