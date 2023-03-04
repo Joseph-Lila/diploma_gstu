@@ -6,6 +6,7 @@ from src.config import get_common_window_size
 from src.gui.controllers.abstract_controller import AbstractController
 from src.gui.controllers.home_screen import HomeScreenController
 from src.gui.controllers.loading_screen import LoadingScreenController
+from src.gui.controllers.main_screen import MainScreenController
 from src.gui.views import ScreenMasterView, InnerScreenMasterView
 
 
@@ -16,10 +17,12 @@ class ScreenMasterController(AbstractController):
 
     def go_to_loading_screen(self):
         Window.size = get_common_window_size()
+        Window.borderless=True
         self._view.manager.current = OuterScreens.LOADING_SCREEN.name
 
     def go_to_home_screen(self):
         Window.size = get_common_window_size()
+        Window.borderless = False
         self._view.current = OuterScreens.HOME_SCREEN.name
 
 
@@ -38,3 +41,4 @@ class OuterScreens(enum.Enum):
 
 class InnerScreens(enum.Enum):
     INNER_SCREEN_MASTER = InnerScreenMasterController
+    MAIN_SCREEN = MainScreenController

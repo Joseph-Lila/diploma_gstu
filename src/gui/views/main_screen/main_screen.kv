@@ -1,0 +1,73 @@
+#: import time time
+
+<MainScreenView>:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDCard:
+            padding: 20, 0, 20, 0
+            md_bg_color: 1, 1, 1, 1
+            size_hint_y: .08
+
+            MDLabel:
+                text: 'Доброе утро!' if 4 < time.localtime().tm_hour < 12 else 'Добрый день!' if 12 < time.localtime().tm_hour < 18 else 'Добрый вечер!'
+                italic: True
+
+        MDCard:
+            orientation: 'vertical'
+            md_bg_color: 238/255, 238/255, 238/255, 1
+            padding: 20, 0, 20, 0
+
+            MDLabel:
+                text: 'Шаблоны звонков'
+                font_size: 24
+
+            MDCard:
+                size_hint_y: None
+                height: 2
+                md_bg_color: 92/255, 0/255, 115/255, 1
+                elevation: 0
+
+            BoxLayout:
+
+                ScrollView:
+                    size_hint_y: .7
+                    height: 150
+                    bar_inactive_color: 33/255, 33/255, 33/255, 1
+                    bar_color: 92/255, 0/255, 115/255, 1
+                    do_scroll_y: False
+                    bar_width: 4
+                    scroll_type: ['bars', 'content']
+
+                    MDGridLayout:
+                        rows: 1
+                        size_hint_x: None
+                        adaptive_size:True
+                        col_default_width: 300
+                        spacing: 5, 5
+                        padding: 10, 10, 10, 10
+
+                        AnchorLayout:
+
+                            MDCard:
+                                size_hint: None, None
+                                height: 130
+                                width: 300
+                                md_bg_color: 1, 0, 0, 1
+
+                        AnchorLayout:
+
+                            MDCard:
+                                size_hint: None, None
+                                height: 130
+                                width: 300
+                                md_bg_color: 1, 0, 0, 1
+
+                Button:
+                    size_hint_x: .25
+                    text: 'Другие шаблоны...'
+                    font_size: 11
+
+
+            Widget:
