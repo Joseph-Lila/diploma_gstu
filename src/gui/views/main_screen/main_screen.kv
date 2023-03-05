@@ -11,25 +11,28 @@
             size_hint_y: .08
 
             MDLabel:
-                text: 'Доброе утро!' if 4 < time.localtime().tm_hour < 12 else 'Добрый день!' if 12 < time.localtime().tm_hour < 18 else 'Добрый вечер!'
+                text: 'Доброе утро!' if 4 <= time.localtime().tm_hour < 12 else 'Добрый день!' if 12 <= time.localtime().tm_hour < 18 else 'Добрый вечер!'
                 italic: True
 
         MDCard:
             orientation: 'vertical'
             md_bg_color: 238/255, 238/255, 238/255, 1
             padding: 20, 0, 20, 0
+            spacing: 5
 
             MDLabel:
                 text: 'Шаблоны звонков'
                 font_size: 24
+                size_hint_y: .2
 
             MDCard:
                 size_hint_y: None
-                height: 2
+                height: 1
                 md_bg_color: 92/255, 0/255, 115/255, 1
                 elevation: 0
 
             BoxLayout:
+                spacing: 10
 
                 ScrollView:
                     size_hint_y: .7
@@ -64,10 +67,76 @@
                                 width: 300
                                 md_bg_color: 1, 0, 0, 1
 
-                Button:
+                AnchorLayout:
                     size_hint_x: .25
-                    text: 'Другие шаблоны...'
-                    font_size: 11
+
+                    MDFillRoundFlatButton:
+                        text: 'Другие шаблоны...'
+                        font_size: 11
+                        md_bg_color: 97/255, 20/255, 133/255, 1
 
 
-            Widget:
+            MDLabel:
+                text: 'Последние'
+                font_size: 24
+                size_hint_y: .2
+
+            MDCard:
+                size_hint_y: None
+                height: 1
+                md_bg_color: 92/255, 0/255, 115/255, 1
+                elevation: 0
+
+            ScrollView:
+                bar_width: 4
+                scroll_type: ['bars', 'content']
+                bar_inactive_color: 33/255, 33/255, 33/255, 1
+                bar_color: 92/255, 0/255, 115/255, 1
+
+                MDList:
+
+                    ThreeLineAvatarIconListItem:
+                        text: "Конфигурация расписания: Лето 2023-2024 4 курс"
+                        secondary_text: "Форма обучения: Дневная"
+                        tertiary_text: "Дата изменения: 11.11.2011"
+                        secondary_font_style: 'Caption'
+                        tertiary_font_style: 'Caption'
+
+                        ImageLeftWidget:
+                            source: "assets/icons/m80fn9pexvk00s880w8480gkoc4kwg.png"
+
+                    ThreeLineAvatarIconListItem:
+                        text: "Конфигурация расписания: Зима 2023-2024 4 курс"
+                        secondary_text: "Форма обучения: Дневная"
+                        tertiary_text: "Дата изменения: 11.11.2011"
+                        secondary_font_style: 'Caption'
+                        tertiary_font_style: 'Caption'
+
+                        ImageLeftWidget:
+                            source: "assets/icons/m80fn9pexvk00s880w8480gkoc4kwg.png"
+
+                    ThreeLineAvatarIconListItem:
+                        text: "Конфигурация расписания: Зима 2023-2024 4 курс"
+                        secondary_text: "Форма обучения: Дневная"
+                        tertiary_text: "Дата изменения: 11.11.2011"
+                        secondary_font_style: 'Caption'
+                        tertiary_font_style: 'Caption'
+
+                        ImageLeftWidget:
+                            source: "assets/icons/m80fn9pexvk00s880w8480gkoc4kwg.png"
+
+                    ThreeLineAvatarIconListItem:
+                        text: "Конфигурация расписания: Зима 2023-2024 4 курс"
+                        secondary_text: "Форма обучения: Дневная"
+                        tertiary_text: "Дата изменения: 11.11.2011"
+                        secondary_font_style: 'Caption'
+                        tertiary_font_style: 'Caption'
+
+                        ImageLeftWidget:
+                            source: "assets/icons/m80fn9pexvk00s880w8480gkoc4kwg.png"
+
+            MDLabel:
+                markup: True
+                size_hint_y: .3
+                text: 'Если у вас появились вопросы свяжитесь с нами: [u][color=#0000FF]llkink@gmail.com[/color][/u] или по номеру +375 29 123-45-67'
+                font_size: 12
