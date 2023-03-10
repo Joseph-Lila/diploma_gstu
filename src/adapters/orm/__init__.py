@@ -6,3 +6,6 @@ from .group import Group
 from .subject_type import SubjectType
 from .equipment_kind import EquipmentKind
 from .equipment import Equipment
+from .audience import Audience
+from .audience_equipment import AudienceEquipment
+from .equipment_kind_for_subjects_type import EquipmentKindForSubjectsType
