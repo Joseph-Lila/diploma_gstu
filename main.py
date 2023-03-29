@@ -18,6 +18,10 @@ class KivyApp(MDApp):
     icon = 'assets/images/logo_new.png'
     title = 'Составитель расписания'
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.load_all_kv_files(self.directory)
+
     def build(self):
         Window.borderless = True
         self.theme_cls.theme_style = "Light"
