@@ -1,128 +1,125 @@
 <LoadingScreenView>:
+    padding: 0
+    radius: 0
+    md_bg_color: 1, 1, 1, 1
 
-    FitImage:
-        size_hint_y: 1
-        source: 'assets/images/wallhaven-3z91ey.jpg'
+    MDFloatLayout:
+        padding: 0
+        radius: 0
+        md_bg_color: 1, 1, 1, 1
 
-    FitImage:
-        source: 'assets/icons/Rasp.png'
-        halign: 'left'
-        size_hint: .7, .7
-        pos_hint: {"center_x": .31, "center_y": .77}
+        FitImage:
+            source: 'assets/images/background.png'
+            pos: 0, 0
 
-    FitImage:
-        source: 'assets/icons/HiReST mk3.png'
-        size_hint: .4, .4
-        pos_hint: {"center_x": .85, "center_y": .85}
+        Image:
+            source: 'assets/images/картинка расп.png'
+            size_hint: None, None
+            size: 692, 364
+            pos: 0, 151
 
+        FitImage:
+            source: 'assets/images/HiReST mk3.png'
+            pos: 643, 360
+            size_hint: None, None
+            size: 224, 144
 
-    MDBoxLayout:
-        adaptive_height: True
-        pos_hint: {"top": .55}
-        padding: 30, 0, 0, 0
+        Label:
+            text: 'Powered by HIREST Design™'
+            color: 'white'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 15
+            pos: 644, 479
+            text_size: self.size
+            halign: 'left'
 
-        MDLabel:
-            text: 'СОСТАВИТЕЛЬ РАСПИСАНИЯ'
-            theme_text_color: "Custom"
-            text_color: 1, 1, 1, 1
-            font_size: 70
+        Label:
+            text: 'CОСТАВИТЕЛЬ [size=70]РАСПИСАНИЯ[/size]'
+            color: 'white'
+            size_hint: None, None
+            size: 648, 200
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 80
+            pos: 36, 147
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            line_height: .85
+            markup: True
 
+        Label:
+            text: 'Все права защищены.  ©LLK.ink™'
+            color: 'white'
+            size_hint: None, None
+            size: 298, 21
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 17
+            pos: 11, 118
+            text_size: self.size
 
-    MDBoxLayout:
-        adaptive_height: True
-        pos_hint: {"top": 1}
-        padding: 0, 18, 0, 0
+        Label:
+            text: 'v0.0.1'
+            color: 'white'
+            size_hint: None, None
+            size: 40, 18
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 15
+            pos: 827, 118
+            text_size: self.size
 
-        BoxLayout:
-            padding: 11, 0, 25, 0
-
-            MDLabel:
-                text: '©2023-2035'
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                font_size: 15
-
-            MDLabel:
-                text: 'Powered by HIREST Design™'
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                font_size: 15
-                halign: 'right'
-
-    MDBoxLayout:
-        adaptive_height: True
-        pos_hint: {"top": .3}
-        orientation: 'vertical'
-
-        BoxLayout:
-            padding: 11, 18, 11, 35
-
-            MDLabel:
-                text: 'Все права защищены. ©LLK.ink™'
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                font_size: 17
-                valign: 'center'
-
-            MDLabel:
-                text: 'v0.0.1'
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                font_size: 15
-                valign: 'bottom'
-                halign: 'right'
-
-    MDBoxLayout:
-        orientation: 'vertical'
-
-        Widget:
-
-        MDCard:
-            orientation: 'vertical'
-            size_hint_y: .25
+        MDFloatLayout:
             md_bg_color: 25/255, 25/255, 25/255, 1
-            padding: 11, 18, 18, 18
+            pos: 0, 0
+            size_hint: None, None
+            size: 878, 108
 
-            BoxLayout:
+            Label:
+                text: 'Ожидайте завершения загрузки...'
+                color: 'white'
+                size_hint: None, None
+                size: 301, 21
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 17
+                pos: 11, 65
+                text_size: self.size
 
-                MDLabel:
-                    text: 'Ожидайте завершения загрузки...'
-                    theme_text_color: "Custom"
-                    text_color: 1, 1, 1, 1
-                    font_size: 17
+            Label:
+                text: 'Приложение следующего поколения.'
+                color: 'white'
+                size_hint: None, None
+                size: 340, 21
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                font_size: 17
+                pos: 528, 65
+                text_size: self.size
 
-                MDLabel:
-                    text: 'Приложение следующего поколения.'
-                    theme_text_color: "Custom"
-                    text_color: 1, 1, 1, 1
-                    font_size: 17
-                    italic: True
-                    halign: 'right'
+            Label:
+                text: 'Загрузка недавних расписаний...'
+                color: 'white'
+                size_hint: None, None
+                size: 301, 16
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 13
+                pos: 11, 38
+                text_size: self.size
 
-            BoxLayout:
-                orientation: 'vertical'
+            ProgressBar:
+                id: progress
 
-                MDLabel:
-                    text: 'Загрузка объектов...'
-                    theme_text_color: "Custom"
-                    text_color: 1, 1, 1, 1
-                    font_size: 13
+                value: 0
+                size_hint: None, None
+                size: 700, 7
+                pos: 11, 19
 
-                BoxLayout:
+            Label:
+                id: progress_label
 
-                    MDProgressBar:
-                        id: progress
-                        color: 1, 1, 1, 1
-                        type: "determinate"
-                        value: 0
-
-                    MDLabel:
-                        id: progress_label
-                        size_hint_x: .2
-                        text: '0%'
-                        halign: "right"
-                        font_size: 14
-                        valign: "center"
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
+                text: '0%'
+                color: 'white'
+                size_hint: None, None
+                size: 36, 17
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 14
+                pos: 831, 16
+                halign: 'right'
+                text_size: self.size

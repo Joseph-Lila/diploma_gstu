@@ -9,7 +9,6 @@ Config.set('graphics', 'width', f'{new_window_size_x}')
 Config.set('graphics', 'height', f'{new_window_size_y}')
 Config.set('graphics', 'borderless', '1')
 
-from kivy.core.window import Window
 from kivymd.app import MDApp
 from src.gui.screens import ScreenGenerator
 
@@ -23,7 +22,6 @@ class KivyApp(MDApp):
         self.load_all_kv_files(self.directory)
 
     def build(self):
-        Window.borderless = True
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.primary_hue = "300"

@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
 DOTENV_PATH = ROOT_DIR / '.env'
-COMMON_WINDOW_SIZE = 900, 550
+COMMON_WINDOW_SIZE = 878, 515
 LEFT_DRAWER_SIZE = 220, COMMON_WINDOW_SIZE[1]
 
 

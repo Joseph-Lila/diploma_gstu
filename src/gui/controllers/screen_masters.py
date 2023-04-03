@@ -17,12 +17,10 @@ class ScreenMasterController(AbstractController):
 
     def go_to_loading_screen(self):
         Window.size = get_common_window_size()
-        Window.borderless=True
         self._view.manager.current = OuterScreens.LOADING_SCREEN.name
 
     def go_to_home_screen(self):
         Window.size = get_common_window_size()
-        Window.borderless = False
         self._view.current = OuterScreens.HOME_SCREEN.name
 
 
