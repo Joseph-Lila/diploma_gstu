@@ -8,7 +8,7 @@ THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
 DOTENV_PATH = ROOT_DIR / '.env'
 COMMON_WINDOW_SIZE = 878, 515
-LEFT_DRAWER_SIZE = 220, COMMON_WINDOW_SIZE[1]
+MAXIMIZED_SIZE = 1920, 1080
 
 
 # load secret data from .env
@@ -20,8 +20,8 @@ def get_common_window_size():
     return COMMON_WINDOW_SIZE
 
 
-def get_left_drawer_size():
-    return LEFT_DRAWER_SIZE
+def get_maximized_size():
+    return MAXIMIZED_SIZE
 
 
 def get_test_postgres_uri() -> str:

@@ -1,0 +1,255 @@
+#: import time time
+#: import Window kivy.core.window.Window
+
+<HomeScreenView>:
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        MDAnchorLayout:
+            size_hint: 0.25, 1
+
+            FitImage:
+                source: 'assets/images/картинка заднего фона.png'
+
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: 30
+
+                MDAnchorLayout:
+                    anchor_y: 'top'
+                    padding: 25
+                    size_hint_y: .35
+
+                    FitImage:
+                        source: 'assets/images/картинка расп 1.png'
+                        size_hint: None, None
+                        size: 200, 50
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: .85
+
+                    MDBoxLayout:
+                        id: main_tab_background
+                        md_bg_color: 255 / 255, 85 / 255, 125 / 255, 45 / 100
+
+                        AnchorLayout:
+                            anchor_x: 'right'
+                            size_hint_x: .3
+
+                            MDIconButton:
+                                icon: 'assets/images/home_icon 1.png'
+                                color: 'white'
+                                icon_size: "42sp"
+                                disabled: True
+
+                        AnchorLayout:
+                            anchor_x: 'left'
+
+                            MDTextButton:
+                                text: 'Главная'
+                                color: 'white'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                                font_size: 32
+                                on_press:
+                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
+                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+
+                    MDBoxLayout:
+                        id: create_tab_background
+
+                        AnchorLayout:
+                            anchor_x: 'right'
+                            size_hint_x: .3
+
+                            MDIconButton:
+                                icon: 'assets/images/create_icon 1.png'
+                                color: 'white'
+                                icon_size: "42sp"
+                                disabled: True
+
+                        AnchorLayout:
+                            anchor_x: 'left'
+
+                            MDTextButton:
+                                text: 'Создать'
+                                color: 'white'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                                font_size: 32
+                                on_press:
+                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
+                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+
+                    MDBoxLayout:
+                        id: open_tab_background
+
+                        AnchorLayout:
+                            anchor_x: 'right'
+                            size_hint_x: .3
+
+                            MDIconButton:
+                                icon: 'assets/images/open_folder_icon 1.png'
+                                color: 'white'
+                                icon_size: "42sp"
+                                disabled: True
+
+                        AnchorLayout:
+                            anchor_x: 'left'
+
+                            MDTextButton:
+                                text: 'Открыть'
+                                color: 'white'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                                font_size: 32
+                                on_press:
+                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
+                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: 2.2
+                    padding: 30
+
+                    Widget:
+                        size_hint_y: 1.5
+
+                    MDCard:
+                        orientation: 'vertical'
+                        md_bg_color: 1, 1, 1, 0
+                        style: 'outlined'
+                        line_color: 217 / 255, 217 / 255, 217 / 255, 1
+                        padding: 20
+
+                        AnchorLayout:
+                            anchor_x: 'left'
+
+                            MDTextButton:
+                                text: 'О нас...'
+                                color: 'white'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                                font_size: 20
+
+                        AnchorLayout:
+                            anchor_x: 'left'
+
+                            MDTextButton:
+                                text: 'О приложении...'
+                                color: 'white'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                                font_size: 20
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: 20
+
+                        Label:
+                            text: 'Следуй за нами:'
+                            color: 'white'
+                            font_name: 'assets/fonts/Montserrat/static/Montserrat-Medium.ttf'
+                            font_size: 25
+                            haligh: 'center'
+
+                        BoxLayout:
+
+                            AnchorLayout:
+
+                                MDIconButton:
+                                    icon: 'assets/images/vk_icon 1.png'
+                                    color: 'white'
+                                    icon_size: "42sp"
+
+                            AnchorLayout:
+
+                                MDIconButton:
+                                    icon: 'assets/images/telegram_icon 1.png'
+                                    color: 'white'
+                                    icon_size: "42sp"
+
+                            AnchorLayout:
+
+                                MDIconButton:
+                                    icon: 'assets/images/Vector.png'
+                                    color: 'white'
+                                    icon_size: "42sp"
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            md_bg_color: 238/255, 238/255, 238/255, 1
+
+            MDBoxLayout:
+                md_bg_color: 'white'
+                size_hint_y: None
+                height: 40
+                padding: 10
+                spacing: 40
+
+                Widget:
+                    size_hint_x: .05
+
+                Label:
+                    text: 'Составитель расписания'
+                    halign: 'center'
+                    color: 73 / 255, 6 / 255, 107 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                    font_size: 20
+
+                AnchorLayout:
+                    size_hint_x: .05
+
+                    MDIconButton:
+                        icon: 'assets/images/close_window_icon 1.png'
+                        color: 'white'
+                        icon_size: "26sp"
+                        on_press: app.stop()
+
+            MDBoxLayout:
+                md_bg_color: 'white'
+                size_hint_y: None
+                height: 40
+                padding: 30
+
+                MDLabel:
+                    text: 'Доброе утро!' if 4 <= time.localtime().tm_hour < 12 else 'Добрый день!' if 12 <= time.localtime().tm_hour < 18 else 'Добрый вечер!'
+                    color: 255 / 255, 84 / 255, 136 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-MediumItalic.ttf'
+                    font_size: 26
+
+            BoxLayout:
+                size_hint_y: None
+                height: 70
+
+                Label:
+                    text: 'Недавно открытые расписания'
+                    color: 26 / 255, 25 / 255, 25 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    font_size: 35
+
+            MDBoxLayout:
+
+                orientation: 'vertical'
+                md_bg_color: 'white'
+
+                MDScrollView:
+
+                    MDList:
+                        id: recent_items_list_instance
+
+                        TwoLineAvatarListItem:
+                            text: "Two-line item with avatar"
+                            secondary_text: "Secondary text here"
+
+                            ImageLeftWidget:
+                                source: "assets/images/open_icon 1.png"
+
+            BoxLayout:
+                size_hint_y: None
+                height: 70
+
+                Label:
+                    markup: True
+                    text: 'Email для связи: [u][color=#1111ff][font=assets/fonts/Montserrat/static/Montserrat-Regular.ttf]arturprokopenko01@gmail.com[/font][/color][/u]'
+                    color: 26 / 255, 25 / 255, 25 / 255, 100 / 100

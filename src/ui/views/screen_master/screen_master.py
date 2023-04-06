@@ -1,5 +1,5 @@
 from kivy.properties import ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, WipeTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 
 
 class ScreenMasterView(ScreenManager):
@@ -7,4 +7,4 @@ class ScreenMasterView(ScreenManager):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.transition = WipeTransition()
+        self.transition = NoTransition()

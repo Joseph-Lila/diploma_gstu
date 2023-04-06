@@ -1,5 +1,5 @@
-from src.gui.controllers.abstract_controller import AbstractController
-from src.gui.views import HomeScreenView
+from src.ui.controllers.abstract_controller import AbstractController
+from src.ui.views import HomeScreenView
 
 
 class HomeScreenController(AbstractController):
