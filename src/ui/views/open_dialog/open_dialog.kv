@@ -1,0 +1,126 @@
+#: import config src.config
+#: import ClickableTextFieldRound src.ui.views.ClickableTextFieldRound
+
+
+<OpenDialog>:
+    size_hint: None, None
+    size: config.get_common_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    auto_dismiss: False
+    orientation: 'vertical'
+
+    MDAnchorLayout:
+        size_hint: 1, None
+        height: 40
+
+        FitImage:
+            source: 'assets/images/background.png'
+
+        Label:
+            color: 'white'
+            text: 'Открыть расписание'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 24
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8
+        spacing: 10
+
+        MDIconButton:
+            icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
+            icon_size: "60sp"
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Hint"
+            on_press: root.dismiss()
+
+        MDCard:
+            style: 'outlined'
+            line_color: 185 / 255, 162 / 255, 255 / 255, 100 / 100
+
+            AnchorLayout:
+
+                ClickableTextFieldRound:
+                    text: 'Выберите год'
+                    left_icon: 'assets/images/home_icon 1.png'
+                    right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+
+            AnchorLayout:
+
+                ClickableTextFieldRound:
+                    text: 'Выберите семестр'
+                    width: 350
+                    left_icon: 'assets/images/icons8-autumntime-96 1.png'
+                    right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+
+            MDIconButton:
+                icon: 'assets/images/icons8-google-поиск 1.png'
+                icon_size: "60sp"
+                pos_hint: {"center_y": .5}
+                theme_text_color: "Hint"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        md_bg_color: 'white'
+
+        MDScrollView:
+
+            MDList:
+                id: recent_items_list_instance
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"
+
+                TwoLineAvatarListItem:
+                    text: "Two-line item with avatar"
+                    secondary_text: "Secondary text here"
+
+                    ImageLeftWidget:
+                        source: "assets/images/open_icon 1.png"

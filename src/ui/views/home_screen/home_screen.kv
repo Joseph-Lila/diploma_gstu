@@ -31,7 +31,6 @@
                     size_hint_y: .85
 
                     MDBoxLayout:
-                        id: main_tab_background
                         md_bg_color: 255 / 255, 85 / 255, 125 / 255, 45 / 100
 
                         AnchorLayout:
@@ -52,13 +51,8 @@
                                 color: 'white'
                                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
                                 font_size: 32
-                                on_press:
-                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
-                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
-                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
 
                     MDBoxLayout:
-                        id: create_tab_background
 
                         AnchorLayout:
                             anchor_x: 'right'
@@ -78,13 +72,8 @@
                                 color: 'white'
                                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
                                 font_size: 32
-                                on_press:
-                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
-                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
-                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
 
                     MDBoxLayout:
-                        id: open_tab_background
 
                         AnchorLayout:
                             anchor_x: 'right'
@@ -104,10 +93,7 @@
                                 color: 'white'
                                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
                                 font_size: 32
-                                on_press:
-                                    main_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
-                                    create_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 0 / 100
-                                    open_tab_background.md_bg_color = 255 / 255, 85 / 255, 125 / 255, 45 / 100
+                                on_press: root.show_open_dialog()
 
                 BoxLayout:
                     orientation: 'vertical'
