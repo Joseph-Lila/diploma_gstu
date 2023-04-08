@@ -1,0 +1,99 @@
+#: import config src.config
+#: import ClickableTextFieldRound src.ui.views.ClickableTextFieldRound
+
+
+<CreateDialog>:
+    size_hint: None, None
+    size: config.get_common_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    auto_dismiss: False
+    orientation: 'vertical'
+
+    MDAnchorLayout:
+        size_hint: 1, None
+        height: 40
+
+        FitImage:
+            source: 'assets/images/background.png'
+
+        Label:
+            color: 'white'
+            text: 'Создать расписание'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 24
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8
+        spacing: 10
+
+        MDIconButton:
+            icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
+            icon_size: "60sp"
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Hint"
+            on_press: root.dismiss()
+
+        MDLabel:
+            valign: 'center'
+            halign: 'center'
+            color: 'black'
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            text: 'Заполните, пожалуйста, все поля...'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 28
+
+    BoxLayout:
+        size_hint_y: .5
+
+        AnchorLayout:
+
+            ClickableTextFieldRound:
+                id: year_check
+                text: 'Выберите год'
+                left_icon: 'assets/images/home_icon 1.png'
+                right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+
+        AnchorLayout:
+
+            ClickableTextFieldRound:
+                id: term_check
+                text: 'Выберите семестр'
+                width: 350
+                left_icon: 'assets/images/icons8-autumntime-96 1.png'
+                right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+
+    BoxLayout:
+        padding: 50, 0, 50, 0
+
+        MDCard:
+            orientation: 'vertical'
+            padding: 10
+
+            MDLabel:
+                size_hint_y: .3
+                valign: 'center'
+                color: 'black'
+                text: 'Окно вывода:'
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                font_size: 24
+
+            TextInput:
+                multiline: True
+                font_size: 20
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                text:
+                    'Все хорошо.' if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else 'Выберите год и семестр!'
+                background_color: (0, 1, 0, .5) if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else (1, 0, 0, .5)
+
+    AnchorLayout:
+        size_hint_y: None
+        height: 80
+
+        MDFillRoundFlatButton:
+            md_bg_color: 3 / 255, 130 / 255, 0, 1
+            disabled: False if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else True
+            font_size: 24
+            text: 'Создать'
