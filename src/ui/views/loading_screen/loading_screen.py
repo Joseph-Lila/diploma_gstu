@@ -1,6 +1,7 @@
 from functools import partial
 
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivymd.uix.screen import MDScreen
 
@@ -18,4 +19,5 @@ class LoadingScreenView(MDScreen):
         if value + 1 < 100:
             Clock.schedule_once(partial(self.activate_progress_bar, timedelta), timedelta)
         else:
+            Window.maximize()
             self.controller.screen_master_controller.go_to_home_screen()

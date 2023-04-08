@@ -1,0 +1,72 @@
+<ScheduleScreenView>:
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDAnchorLayout:
+            size_hint: 1, None
+            height: 40
+
+            FitImage:
+                source: 'assets/images/background.png'
+
+            MDBoxLayout:
+
+                Widget:
+                    size_hint_x: .05
+
+                Label:
+                    color: 'white'
+                    text: f'Расписание занятий {root.term.lower()} семестр {root.year}-{root.year+1} учебный год'
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+                    font_size: 24
+
+                AnchorLayout:
+                    size_hint_x: .05
+
+                    MDIconButton:
+                        icon: 'assets/images/close_window_icon 1.png'
+                        color: 'white'
+                        icon_size: "26sp"
+                        on_press: app.stop()
+
+        MDBoxLayout:
+            size_hint: 1, None
+            height: 35
+            md_bg_color: 26 / 255, 25 / 255, 25 / 255, 100 / 100
+            padding: 20, 5, 0, 5
+            spacing: 20
+
+            MDTextButton:
+                id: file_tab
+
+                text: 'Файл'
+                color: 'white'
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 20
+                pos_hint: {"center_y": .5}
+                on_release: root.file_tab_menu.open()
+
+            MDSeparator:
+                orientation: 'vertical'
+                color: 'white'
+
+            MDTextButton:
+                text: 'Вид'
+                color: 'white'
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 20
+                pos_hint: {"center_y": .5}
+
+            MDSeparator:
+                orientation: 'vertical'
+                color: 'white'
+
+            MDTextButton:
+                text: 'Специальные параметры'
+                color: 'white'
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+                font_size: 20
+                pos_hint: {"center_y": .5}
+
+        Button:
