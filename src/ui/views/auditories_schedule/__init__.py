@@ -1,0 +1,1 @@
+from .auditories_schedule import AuditoriesSchedule

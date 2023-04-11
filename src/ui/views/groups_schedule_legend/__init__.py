@@ -1,0 +1,1 @@
+from .groups_schedule_legend import GroupsScheduleLegend

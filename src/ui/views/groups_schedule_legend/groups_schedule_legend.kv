@@ -1,0 +1,91 @@
+<GroupsScheduleLegend>:
+    spacing: 10
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+
+        AnchorLayout:
+
+            ClickableTextFieldRound:
+                id: department
+                text: 'Факультет'
+                size_hint_x: 1
+                left_icon: 'assets/images/icons8-отдел-96.png'
+                right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+
+        AnchorLayout:
+
+            MDTextField:
+                hint_text: 'Начните вводить название группы'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: .2
+
+        MDIconButton:
+            icon: 'assets/images/icons8-google-поиск 1.png'
+            icon_size: "30sp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            theme_text_color: "Hint"
+
+        MDIconButton:
+            icon: 'assets/images/icons8-очистить-фильтры-96.png'
+            icon_size: "30sp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            theme_text_color: "Hint"
+
+    MDCard:
+        size_hint_x: .5
+        style: 'outlined'
+        md_bg_color: 'gold'
+        padding: 10
+        line_color: 'silver'
+
+        GridLayout:
+            cols: 2
+
+            AnchorLayout:
+                size_hint_x: .3
+
+                MDSeparator:
+                    orientation: 'horizontal'
+                    color: 'red'
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    height: "3dp"
+
+            Label:
+                text: 'Лекции'
+                color: 'black'
+                halign: 'center'
+                valign: 'center'
+
+            AnchorLayout:
+                size_hint_x: .3
+
+                MDSeparator:
+                    orientation: 'horizontal'
+                    color: 'green'
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    height: "3dp"
+
+            Label:
+                text: 'Практические'
+                color: 'black'
+                halign: 'center'
+                valign: 'center'
+
+            AnchorLayout:
+                size_hint_x: .3
+
+                MDSeparator:
+                    orientation: 'horizontal'
+                    color: 'blue'
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    height: "3dp"
+
+            Label:
+                text: 'Лабораторные'
+                color: 'black'
+                halign: 'center'
+                valign: 'center'

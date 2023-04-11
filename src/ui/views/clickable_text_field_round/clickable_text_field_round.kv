@@ -3,7 +3,7 @@
     radius: 20, 20, 20, 20
     size_hint: None, None
     width: 300
-    height: 50
+    height: 35
     style: 'outlined'
     button_instance: right_icon_button
     line_color: 'black'
@@ -11,7 +11,7 @@
     MDIconButton:
         id: left_icon_button
         icon: root.left_icon
-        icon_size: "42sp"
+        icon_size: "32sp"
         disabled: True
         pos_hint: {"center_y": .5}
         theme_text_color: "Hint"
@@ -21,7 +21,7 @@
         text: root.text
         text_size: self.size
         font_name: 'assets/fonts/Montserrat/static/Montserrat-MediumItalic.ttf'
-        font_size: 20
+        font_size: 16
         color: 'white'
         valign: 'center'
         halign: 'center'
@@ -29,6 +29,6 @@
     MDIconButton:
         id: right_icon_button
         icon: root.right_icon
-        icon_size: "42sp"
+        icon_size: "32sp"
         pos_hint: {"center_y": .5}
         theme_text_color: "Hint"

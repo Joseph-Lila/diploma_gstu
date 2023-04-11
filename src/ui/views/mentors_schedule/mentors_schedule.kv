@@ -1,0 +1,33 @@
+<MentorsSchedule>:
+    orientation: 'vertical'
+    padding: 7
+    spacing: 7
+
+    BoxLayout:
+        size_hint_y: .17
+
+        MentorsScheduleLegend:
+
+    MDScrollView:
+        bar_inactive_color: 33/255, 33/255, 33/255, 1
+        bar_color: 92/255, 0/255, 115/255, 1
+        do_scroll_x: True
+        do_scroll_y: True
+
+        MDGridLayout:
+            rows: 2
+            cols: 1
+            size_hint: None, None
+            adaptive_size: True
+            spacing: 5, 5
+            padding: 10, 10, 10, 10
+
+            MDBoxLayout:
+                size_hint: None, None
+                md_bg_color: 'red'
+                size: 1920, 20
+
+            MDBoxLayout:
+                size_hint: None, None
+                md_bg_color: 'red'
+                size: 20, 1920

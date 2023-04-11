@@ -1,0 +1,1 @@
+from .auditories_schedule_legend import AuditoriesScheduleLegend
