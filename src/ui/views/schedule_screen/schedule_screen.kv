@@ -5,7 +5,7 @@
 
         MDAnchorLayout:
             size_hint: 1, None
-            height: 40
+            height: 32
 
             FitImage:
                 source: 'assets/images/background.png'
@@ -19,7 +19,7 @@
                     color: 'white'
                     text: f'Расписание занятий {root.term.lower()} семестр {root.year}-{root.year+1} учебный год'
                     font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
-                    font_size: 24
+                    font_size: 18
 
                 AnchorLayout:
                     size_hint_x: .05
@@ -27,12 +27,12 @@
                     MDIconButton:
                         icon: 'assets/images/close_window_icon 1.png'
                         color: 'white'
-                        icon_size: "26sp"
+                        icon_size: "20sp"
                         on_press: app.stop()
 
         MDBoxLayout:
             size_hint: 1, None
-            height: 35
+            height: 28
             md_bg_color: 26 / 255, 25 / 255, 25 / 255, 100 / 100
             padding: 20, 5, 0, 5
             spacing: 20
@@ -43,7 +43,7 @@
                 text: 'Файл'
                 color: 'white'
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-                font_size: 20
+                font_size: 16
                 pos_hint: {"center_y": .5}
                 on_release: root.file_tab_menu.open()
 
@@ -55,7 +55,7 @@
                 text: 'Вид'
                 color: 'white'
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-                font_size: 20
+                font_size: 16
                 pos_hint: {"center_y": .5}
 
             MDSeparator:
@@ -66,7 +66,65 @@
                 text: 'Специальные параметры'
                 color: 'white'
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-                font_size: 20
+                font_size: 16
                 pos_hint: {"center_y": .5}
 
-        Button:
+        BoxLayout:
+            padding: 5
+            spacing: 10
+
+            MDCard:
+                orientation: 'vertical'
+                md_bg_color: 52 / 255, 52 / 255, 52 / 255, 1
+
+                AnchorLayout:
+                    size_hint_y: .08
+
+                    MDSegmentedControl:
+                        md_bg_color: "brown"
+                        segment_color: "red"
+
+                        MDSegmentedControlItem:
+                            text: "Группы"
+
+                        MDSegmentedControlItem:
+                            text: "Преподаватели"
+
+                        MDSegmentedControlItem:
+                            text: "Аудитории"
+
+                        MDSegmentedControlItem:
+                            text: "Нагрузка"
+
+                MDCard:
+                    id: first_table
+
+                    md_bg_color: 'pink'
+
+            MDCard:
+                orientation: 'vertical'
+                md_bg_color: 52 / 255, 52 / 255, 52 / 255, 1
+
+                AnchorLayout:
+                    size_hint_y: .08
+
+                    MDSegmentedControl:
+                        md_bg_color: "brown"
+                        segment_color: "red"
+
+                        MDSegmentedControlItem:
+                            text: "Группы"
+
+                        MDSegmentedControlItem:
+                            text: "Преподаватели"
+
+                        MDSegmentedControlItem:
+                            text: "Аудитории"
+
+                        MDSegmentedControlItem:
+                            text: "Нагрузка"
+
+                MDCard:
+                    id: second_table
+
+                    md_bg_color: 'pink'
