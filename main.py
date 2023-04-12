@@ -5,7 +5,9 @@ from kivy.core.window import Window
 from src.config import get_common_window_size
 
 from kivymd.app import MDApp
-from src.ui.screens import ScreenGenerator
+
+from src.ui.controller import Controller
+from src.ui.screen_builder import get_main_screen
 
 
 class KivyApp(MDApp):
@@ -23,7 +25,7 @@ class KivyApp(MDApp):
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.primary_hue = "300"
         self.theme_cls.material_style = "M3"
-        return ScreenGenerator().build_app_view()
+        return get_main_screen(Controller())
 
 
 if __name__ == '__main__':

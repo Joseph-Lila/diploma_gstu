@@ -1,1 +1,1 @@
-from .controllers import ScreenMasterController
+from .screens_enum import Screens

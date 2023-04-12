@@ -1,4 +1,3 @@
-from .screen_master import ScreenMasterView
 from .loading_screen import LoadingScreenView
 from .home_screen import HomeScreenView
 from .clickable_text_field_round import ClickableTextFieldRound
@@ -9,4 +8,4 @@ from .groups_schedule import GroupsSchedule
 from .groups_schedule_legend import GroupsScheduleLegend
 from .auditories_schedule_legend import AuditoriesScheduleLegend
 from .auditories_schedule import AuditoriesSchedule
-from .schedule_list_item import ScheduleListItem
+from .loading_progressbar import LoadingProgressBar
