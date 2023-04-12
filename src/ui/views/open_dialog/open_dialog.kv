@@ -42,22 +42,34 @@
             AnchorLayout:
 
                 ClickableTextFieldRound:
-                    text: 'Выберите год'
+                    id: year
+
+                    text: root.default_year_menu_value
                     left_icon: 'assets/images/home_icon 1.png'
                     right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
 
             AnchorLayout:
 
                 ClickableTextFieldRound:
-                    text: 'Выберите семестр'
+                    id: term
+
+                    text: root.default_term_menu_value
                     left_icon: 'assets/images/icons8-autumntime-96 1.png'
                     right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
 
             MDIconButton:
-                icon: 'assets/images/icons8-google-поиск 1.png'
-                icon_size: "60sp"
-                pos_hint: {"center_y": .5}
+                icon: 'assets/images/icons8-очистить-фильтры-96.png'
+                icon_size: "40sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
                 theme_text_color: "Hint"
+                on_press: root.clear_filters()
+
+            MDIconButton:
+                icon: 'assets/images/icons8-google-поиск 1.png'
+                icon_size: "40sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Hint"
+                on_press: root.send_command_to_update_schedule_items()
 
     MDBoxLayout:
         orientation: 'vertical'

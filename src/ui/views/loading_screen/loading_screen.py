@@ -1,5 +1,5 @@
-from kivymd.uix.screen import MDScreen
 import asynckivy as ak
+from kivymd.uix.screen import MDScreen
 
 
 class LoadingScreenView(MDScreen):

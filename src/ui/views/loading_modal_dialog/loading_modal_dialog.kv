@@ -1,0 +1,12 @@
+#: import config src.config
+
+
+<LoadingModalDialog>:
+    size_hint: None, None
+    size: config.get_common_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    auto_dismiss: False
+    orientation: 'vertical'
+
+    Button:
+        text: 'Hi'

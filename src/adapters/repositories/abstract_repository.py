@@ -1,23 +1,16 @@
 import abc
+from typing import Optional
 
 
 class AbstractRepository(abc.ABC):
     @abc.abstractmethod
-    async def get_all(self):
+    async def get_schedules(self, year: Optional[int], term: Optional[str]):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def get_by_primary_key(self, key):
+    async def get_unique_years(self, term: Optional[str]):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def create(self, item):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    async def delete(self, key):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    async def update(self, item):
+    async def get_10_schedules(self):
         raise NotImplementedError

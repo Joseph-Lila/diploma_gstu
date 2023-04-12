@@ -1,5 +1,5 @@
 from kivy.properties import ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.uix.screenmanager import NoTransition, ScreenManager
 
 from src.ui import Screens
 

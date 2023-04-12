@@ -1,13 +1,14 @@
 import asyncio
 
 from kivy.core.window import Window
-
-from src.config import get_common_window_size
-
 from kivymd.app import MDApp
 
+from src.bootstrap import bootstrap
+from src.config import get_common_window_size
 from src.ui.controller import Controller
 from src.ui.screen_builder import get_main_screen
+
+bus = bootstrap()
 
 
 class KivyApp(MDApp):
@@ -25,8 +26,11 @@ class KivyApp(MDApp):
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.primary_hue = "300"
         self.theme_cls.material_style = "M3"
-        return get_main_screen(Controller())
+        return get_main_screen()
 
 
 if __name__ == '__main__':
-    asyncio.run(KivyApp().async_run(async_lib='asyncio'))
+    app = KivyApp()
+    app.bus = bus
+    app.controller = Controller(bus)
+    asyncio.run(app.async_run(async_lib='asyncio'))

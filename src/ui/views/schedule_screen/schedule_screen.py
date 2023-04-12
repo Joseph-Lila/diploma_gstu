@@ -1,4 +1,4 @@
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
+from kivy.properties import NumericProperty, ObjectProperty, StringProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
@@ -76,7 +76,7 @@ class ScheduleScreenView(MDScreen):
 
     def _show_open_dialog(self, *args):
         self.file_tab_menu.dismiss()
-        self.open_dialog.open()
+        self.open_dialog.open(self)
 
     def _show_create_dialog(self, *args):
         self.file_tab_menu.dismiss()

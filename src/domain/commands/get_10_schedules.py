@@ -4,5 +4,5 @@ from src.domain.commands.command import Command
 
 
 @dataclass
-class ImportWorkload(Command):
-    path: str
+class Get10Schedules(Command):
+    pass

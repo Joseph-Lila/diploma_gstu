@@ -1,12 +1,8 @@
 """ Module srс """
 import os
 import pathlib
-import time
-from typing import List, Tuple
 
 from dotenv import load_dotenv
-
-from src.domain.entities.pair_time import PairTime
 
 THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
@@ -25,17 +21,6 @@ def get_common_window_size():
 
 def get_pairs_quantity() -> int:
     return os.environ.get('PAIRS_QUANTITY', 6)
-
-
-def get_pairs_time(pairs_quantity=get_pairs_quantity()) -> Tuple[PairTime]:
-    return tuple([
-        PairTime(
-            i,
-            os.environ.get(f'PAIR_TIME_START_{i}', '8:20'),
-            os.environ.get(f'PAIR_TIME_END_{i}', '9:55'),
-        )
-        for i in range(1, pairs_quantity + 1)
-    ])
 
 
 def get_test_postgres_uri() -> str:

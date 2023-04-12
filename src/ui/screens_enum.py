@@ -1,6 +1,6 @@
 import enum
 
-from src.ui.views import LoadingScreenView, HomeScreenView, ScheduleScreenView
+from src.ui.views import HomeScreenView, LoadingScreenView, ScheduleScreenView
 
 
 class Screens(enum.Enum):

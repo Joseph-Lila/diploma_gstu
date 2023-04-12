@@ -1,63 +1,38 @@
-from dataclasses import astuple
 from typing import Callable, Dict, List, Type
 
-import aiofiles
-from aiocsv import AsyncReader, AsyncWriter
-
-from src.domain.commands import ExportWorkload, ImportWorkload
+from src.adapters.orm import Schedule
+from src.adapters.repositories.abstract_repository import AbstractRepository
+from src.domain.commands import Get10Schedules, GetSchedules, GetUniqueYears
 from src.domain.commands.command import Command
-from src.domain.entities import MentorLoadItem
-from src.domain.events import WorkloadIsExported, WorkloadIsImported
+from src.domain.events import GotSchedules, GotUniqueYears
 
 
-async def import_workload(
-        cmd: ImportWorkload,
-):
-    mentor_load_items = await load_mentor_load_items_from_csv(cmd.path)
-    return WorkloadIsImported(mentor_load_items=mentor_load_items)
+async def get_schedules(
+        cmd: GetSchedules,
+        repository: AbstractRepository,
+) -> GotSchedules:
+    schedules: List[Schedule] = await repository.get_schedules(year=cmd.year, term=cmd.term)
+    return GotSchedules(schedules)
 
 
-async def export_workload(
-        cmd: ExportWorkload,
-):
-    await write_mentor_load_items_to_csv(cmd.path, cmd.mentor_load_items)
-    return WorkloadIsExported()
+async def get_10_schedules(
+        cmd: Get10Schedules,
+        repository: AbstractRepository,
+) -> GotSchedules:
+    schedules: List[Schedule] = await repository.get_10_schedules()
+    return GotSchedules(schedules)
 
 
-async def load_mentor_load_items_from_csv(path: str) -> List[MentorLoadItem]:
-    mentor_load_items: List[MentorLoadItem] = []
-    async with aiofiles.open(
-        path,
-        mode='r',
-        encoding='utf-8',
-        newline='',
-    ) as afp:
-        async for row in AsyncReader(afp):
-            mentor, group, subject, subject_type, hours = row
-            item = MentorLoadItem(
-                mentor,
-                group,
-                subject,
-                subject_type,
-                int(hours),
-            )
-            mentor_load_items.append(item)
-    return mentor_load_items
-
-
-async def write_mentor_load_items_to_csv(path: str, items: List[MentorLoadItem]):
-    async with aiofiles.open(
-        path,
-        mode='w',
-        encoding='utf-8',
-        newline='',
-    ) as afp:
-        writer = AsyncWriter(afp, dialect='unix')
-        for item in items:
-            await writer.writerow(astuple(item))
+async def get_unique_years(
+        cmd: GetUniqueYears,
+        repository: AbstractRepository,
+) -> GotUniqueYears:
+    years: List[int] = await repository.get_unique_years(term=cmd.term)
+    return GotUniqueYears(years)
 
 
 COMMAND_HANDLERS = {
-    ImportWorkload: import_workload,
-    ExportWorkload: export_workload,
+    GetSchedules: get_schedules,
+    GetUniqueYears: get_unique_years,
+    Get10Schedules: get_10_schedules,
 }  # type: Dict[Type[Command], Callable]

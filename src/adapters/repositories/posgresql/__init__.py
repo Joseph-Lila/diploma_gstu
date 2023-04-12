@@ -1,3 +1,0 @@
-from .department_repository import DepartmentRepository
-from .mentor_repository import MentorRepository
-from .subject_repository import SubjectRepository
