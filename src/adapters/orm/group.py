@@ -6,9 +6,13 @@ from src.adapters.orm import mapper_registry
 
 @mapper_registry.mapped_as_dataclass
 class Group:
-    __tablename__ = 'groups'
+    __tablename__ = "groups"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        init=False,
+        primary_key=True,
+        autoincrement=True,
+    )
     title: Mapped[str]
     number_of_students: Mapped[int]
     faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))

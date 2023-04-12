@@ -5,8 +5,12 @@ from src.adapters.orm import mapper_registry
 
 @mapper_registry.mapped_as_dataclass
 class Schedule:
-    __tablename__ = 'schedules'
+    __tablename__ = "schedules"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        init=False,
+        primary_key=True,
+        autoincrement=True,
+    )
     year: Mapped[int]
     term: Mapped[str]

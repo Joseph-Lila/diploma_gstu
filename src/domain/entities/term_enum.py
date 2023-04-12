@@ -2,5 +2,5 @@ import enum
 
 
 class Term(enum.Enum):
-    SPRING = 'Весенний'
-    AUTUMN = 'Осенний'
+    SPRING = "Весенний"
+    AUTUMN = "Осенний"

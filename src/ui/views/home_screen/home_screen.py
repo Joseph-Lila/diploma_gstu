@@ -1,3 +1,4 @@
+from functools import partial
 from typing import List
 
 import asynckivy as ak
@@ -29,9 +30,11 @@ class HomeScreenView(MDScreen):
     async def update_latest_10_schedules(self, schedules: List[Schedule]):
         self.ids.recent_items_list_instance.clear_widgets()
         for item in schedules:
-            self.ids.recent_items_list_instance.add_widget(
-                ScheduleListItem(schedule_item=item)
+            new_item = ScheduleListItem(schedule_item=item)
+            new_item.bind(
+                on_press=partial(App.get_running_app().root.go_to_schedule_screen, item)
             )
+            self.ids.recent_items_list_instance.add_widget(new_item)
 
     def send_command_to_update_latest_10_schedules(self):
         ak.start(

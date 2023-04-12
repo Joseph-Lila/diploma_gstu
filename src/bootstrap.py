@@ -10,10 +10,9 @@ from src.service_layer.messagebus import MessageBus
 
 
 def bootstrap(
-        drop_create_tables: bool = False,
-        repository: AbstractRepository = PostgresRepository(),
+    drop_create_tables: bool = False,
+    repository: AbstractRepository = PostgresRepository(),
 ) -> MessageBus:
-
     if drop_create_tables:
         pool = concurrent.futures.ThreadPoolExecutor()
         pool.submit(asyncio.run, create_tables())
@@ -33,8 +32,6 @@ def bootstrap(
 def inject_dependencies(handler, dependencies):
     params = inspect.signature(handler).parameters
     deps = {
-        name: dependency
-        for name, dependency in dependencies.items()
-        if name in params
+        name: dependency for name, dependency in dependencies.items() if name in params
     }
     return lambda message: handler(message, **deps)

@@ -6,9 +6,13 @@ from src.adapters.orm import mapper_registry
 
 @mapper_registry.mapped_as_dataclass
 class Mentor:
-    __tablename__ = 'mentors'
+    __tablename__ = "mentors"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(
+        init=False,
+        primary_key=True,
+        autoincrement=True,
+    )
     fio: Mapped[str]
     scientific_degree: Mapped[str]
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))

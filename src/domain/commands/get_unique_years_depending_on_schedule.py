@@ -5,5 +5,5 @@ from src.domain.commands.command import Command
 
 
 @dataclasses.dataclass
-class GetUniqueYears(Command):
+class GetUniqueYearsDependingOnSchedule(Command):
     term: Optional[str]

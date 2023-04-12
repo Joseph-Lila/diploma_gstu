@@ -1,8 +1,13 @@
 import asyncio
 import functools
 
-from src.domain.commands import Get10Schedules, GetSchedules, GetUniqueYears
-from src.domain.events import GotSchedules, GotUniqueYears
+from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
+                                 GetUniqueTermsDependingOnSchedule,
+                                 GetUniqueTermsDependingOnWorkload,
+                                 GetUniqueYearsDependingOnSchedule,
+                                 GetUniqueYearsDependingOnWorkload)
+from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
+                               ScheduleIsCreated)
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -42,15 +47,49 @@ class Controller:
         await open_dialog.update_items(event.schedules)
 
     @use_loop
-    async def bind_dropdown_menu_for_years_selector(self, years_selector, term):
+    async def bind_dropdown_menu_for_years_selector_depending_on_workload(
+        self, years_selector, term
+    ):
         event: GotUniqueYears = await self.bus.handle_command(
-            GetUniqueYears(term=term)
+            GetUniqueYearsDependingOnWorkload(term=term)
         )
         await years_selector.bind_dropdown_menu(event.years)
 
     @use_loop
-    async def update_latest_10_schedules(self, home_screen):
-        event: GotSchedules = await self.bus.handle_command(
-            Get10Schedules()
+    async def bind_dropdown_menu_for_years_selector_depending_on_schedule(
+        self, years_selector, term
+    ):
+        event: GotUniqueYears = await self.bus.handle_command(
+            GetUniqueYearsDependingOnSchedule(term=term)
         )
+        await years_selector.bind_dropdown_menu(event.years)
+
+    @use_loop
+    async def bind_dropdown_menu_for_terms_selector_depending_on_workload(
+        self, terms_selector, year
+    ):
+        event: GotUniqueTerms = await self.bus.handle_command(
+            GetUniqueTermsDependingOnWorkload(year=year)
+        )
+        await terms_selector.bind_dropdown_menu(event.terms)
+
+    @use_loop
+    async def bind_dropdown_menu_for_terms_selector_depending_on_schedule(
+        self, terms_selector, year
+    ):
+        event: GotUniqueTerms = await self.bus.handle_command(
+            GetUniqueTermsDependingOnSchedule(year=year)
+        )
+        await terms_selector.bind_dropdown_menu(event.terms)
+
+    @use_loop
+    async def update_latest_10_schedules(self, home_screen):
+        event: GotSchedules = await self.bus.handle_command(Get10Schedules())
         await home_screen.update_latest_10_schedules(event.schedules)
+
+    @use_loop
+    async def try_to_create_schedule(self, create_dialog, year: int, term: str):
+        event: ScheduleIsCreated = await self.bus.handle_command(
+            CreateSchedule(year=year, term=term)
+        )
+        await create_dialog.check_if_new_schedule_is_created(event.schedule)

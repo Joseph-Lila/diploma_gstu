@@ -19,7 +19,7 @@ class ClickableTextFieldRound(MDCard):
         self.text = new_text
         self.menu.dismiss()
 
-    async def bind_dropdown_menu(self, items: List[int]):
+    async def bind_dropdown_menu(self, items: List[int], width_mult=2):
         options = [
             {
                 "text": str(item),
@@ -31,7 +31,7 @@ class ClickableTextFieldRound(MDCard):
         self.menu = MDDropdownMenu(
             caller=self.ids.right_icon_button,
             items=options,
-            width_mult=2,
+            width_mult=width_mult,
             max_height=250,
         )
         self.menu.open()

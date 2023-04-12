@@ -8,9 +8,9 @@ from src.domain.commands.command import Command
 
 class MessageBus:
     def __init__(
-            self,
-            repository: AbstractRepository,
-            command_handlers: Dict[Type[Command], Callable]
+        self,
+        repository: AbstractRepository,
+        command_handlers: Dict[Type[Command], Callable],
     ):
         self.repository = repository
         self.command_handlers = command_handlers

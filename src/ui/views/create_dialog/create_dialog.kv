@@ -51,16 +51,18 @@
         AnchorLayout:
 
             ClickableTextFieldRound:
-                id: year_check
-                text: 'Выберите год'
+                id: year
+
+                text: root.default_year_menu_value
                 left_icon: 'assets/images/home_icon 1.png'
                 right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
 
         AnchorLayout:
 
             ClickableTextFieldRound:
-                id: term_check
-                text: 'Выберите семестр'
+                id: term
+
+                text: root.default_term_menu_value
                 left_icon: 'assets/images/icons8-autumntime-96 1.png'
                 right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
 
@@ -80,12 +82,14 @@
                 font_size: 24
 
             TextInput:
+                id: outcome_text_input
+
                 multiline: True
                 font_size: 20
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
                 text:
-                    'Все хорошо.' if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else 'Выберите год и семестр!'
-                background_color: (0, 1, 0, .5) if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else (1, 0, 0, .5)
+                    'Все хорошо.' if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else 'Выберите год и семестр!'
+                background_color: (0, 1, 0, .5) if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else (1, 0, 0, .5)
 
     AnchorLayout:
         size_hint_y: None
@@ -93,6 +97,7 @@
 
         MDFillRoundFlatButton:
             md_bg_color: 3 / 255, 130 / 255, 0, 1
-            disabled: False if year_check.text != 'Выберите год' and term_check.text != 'Выберите семестр' else True
+            disabled: False if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else True
             font_size: 24
             text: 'Создать'
+            on_release: root.send_command_to_create_schedule()

@@ -16,8 +16,5 @@ def get_screen_master():
 
 
 def get_screens():
-    screens = [
-        screen.value(name=screen.name)
-        for screen in Screens
-    ]
+    screens = [screen.value(name=screen.name) for screen in Screens]
     return screens

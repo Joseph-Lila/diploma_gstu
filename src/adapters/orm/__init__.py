@@ -1,4 +1,3 @@
-from .audience import Audience
 from .base import async_session_factory, create_tables, mapper_registry
 from .department import Department
 from .faculty import Faculty

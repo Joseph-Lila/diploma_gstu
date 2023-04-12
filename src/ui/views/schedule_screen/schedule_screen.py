@@ -1,25 +1,25 @@
-from kivy.properties import NumericProperty, ObjectProperty, StringProperty
+from kivy.app import App
+from kivy.properties import NumericProperty, StringProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
+from src.adapters.orm import Schedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
 
 
 class ScheduleScreenView(MDScreen):
-    controller = ObjectProperty()
-    term = StringProperty()
-    year = NumericProperty()
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.schedule = None
         self._init_tabs_menu_items()
         self._init_tab_menus()
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
 
-    def __draw_shadow__(self, origin, end, context=None):
-        pass
+    def update_metadata(self, schedule: Schedule):
+        self.schedule = schedule
+        self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
 
     def _init_tabs_menu_items(self):
         self.file_tab_menu_items = [
@@ -40,8 +40,8 @@ class ScheduleScreenView(MDScreen):
             },
             {
                 "viewclass": "MDSeparator",
-                "orientation": 'horizontal',
-                "color": 'black',
+                "orientation": "horizontal",
+                "color": "black",
                 "height": 2,
             },
             {
@@ -51,15 +51,15 @@ class ScheduleScreenView(MDScreen):
             },
             {
                 "viewclass": "MDSeparator",
-                "orientation": 'horizontal',
-                "color": 'black',
+                "orientation": "horizontal",
+                "color": "black",
                 "height": 2,
             },
             {
                 "text": "Закрыть",
                 "viewclass": "OneLineListItem",
                 "on_release": lambda: self._close_screen(),
-            }
+            },
         ]
 
     def _init_tab_menus(self):
@@ -72,7 +72,7 @@ class ScheduleScreenView(MDScreen):
 
     def _close_screen(self, *args):
         self.file_tab_menu.dismiss()
-        self.controller.screen_master_controller.go_to_home_screen()
+        App.get_running_app().root.go_to_home_screen()
 
     def _show_open_dialog(self, *args):
         self.file_tab_menu.dismiss()
