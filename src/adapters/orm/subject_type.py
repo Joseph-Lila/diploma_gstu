@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.adapters.orm import mapper_registry
 
@@ -7,5 +7,5 @@ from src.adapters.orm import mapper_registry
 class SubjectType:
     __tablename__ = 'subject_types'
 
-    title: Mapped[str] = mapped_column(primary_key=True)
-    description: Mapped[str]
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str]

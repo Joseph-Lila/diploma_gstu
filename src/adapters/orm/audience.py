@@ -1,3 +1,4 @@
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.adapters.orm import mapper_registry
@@ -7,5 +8,7 @@ from src.adapters.orm import mapper_registry
 class Audience:
     __tablename__ = 'audiences'
 
-    number: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    number: Mapped[str]
     number_of_seats: Mapped[int]
+    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))

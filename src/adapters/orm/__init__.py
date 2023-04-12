@@ -4,8 +4,9 @@ from .mentor import Mentor
 from .subject import Subject
 from .group import Group
 from .subject_type import SubjectType
-from .equipment_kind import EquipmentKind
-from .equipment import Equipment
 from .audience import Audience
-from .audience_equipment import AudienceEquipment
-from .equipment_kind_for_subjects_type import EquipmentKindForSubjectsType
+from .faculty import Faculty
+from .schedule import Schedule
+from .schedule_record import ScheduleRecord
+from .subject_audience import SubjectAudience
+from .workload import Workload

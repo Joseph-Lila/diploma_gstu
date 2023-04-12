@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.adapters.orm import mapper_registry
 
@@ -7,5 +8,7 @@ from src.adapters.orm import mapper_registry
 class Group:
     __tablename__ = 'groups'
 
-    title: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str]
     number_of_students: Mapped[int]
+    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))

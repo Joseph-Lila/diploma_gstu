@@ -7,5 +7,5 @@ from src.adapters.orm import mapper_registry
 class Subject:
     __tablename__ = 'subjects'
 
-    title: Mapped[str] = mapped_column(primary_key=True)
-    description: Mapped[str]
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    title: Mapped[str]

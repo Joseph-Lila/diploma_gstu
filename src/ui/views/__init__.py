@@ -9,3 +9,4 @@ from .groups_schedule import GroupsSchedule
 from .groups_schedule_legend import GroupsScheduleLegend
 from .auditories_schedule_legend import AuditoriesScheduleLegend
 from .auditories_schedule import AuditoriesSchedule
+from .schedule_list_item import ScheduleListItem

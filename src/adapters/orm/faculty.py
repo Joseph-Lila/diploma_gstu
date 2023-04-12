@@ -1,14 +1,12 @@
-from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.adapters.orm import mapper_registry
 
 
 @mapper_registry.mapped_as_dataclass
-class Department:
-    __tablename__ = 'departments'
+class Faculty:
+    __tablename__ = 'faculties'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str]
-    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
     head: Mapped[str]

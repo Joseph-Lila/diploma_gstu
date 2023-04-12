@@ -23,12 +23,3 @@ async def create_tables(connection_string=config.get_postgres_uri()):
     # for AsyncEngine created in function scope, close and
     # clean-up pooled connections
     await engine_.dispose()
-
-
-# class EquipmentKindForSubjectsType(Base):
-#     __tablename__ = 'equipment_for_subjects_types'
-#
-#     id = Column(Integer, primary_key=True)
-#     subject_title = Column(ForeignKey('subjects.title'))
-#     subject_type_title = Column(ForeignKey('subject_types.title'))
-#     equipment_kind = Column(ForeignKey('equipment_kinds.title'))

@@ -8,10 +8,7 @@ from src.adapters.orm import mapper_registry
 class Mentor:
     __tablename__ = 'mentors'
 
-    fio: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    fio: Mapped[str]
     scientific_degree: Mapped[str]
-    salary: Mapped[float]
-    experience: Mapped[int]
-    department_title: Mapped[str] = mapped_column(ForeignKey("departments.title"))
-    requirements: Mapped[str]
-    duties: Mapped[str]
+    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))
