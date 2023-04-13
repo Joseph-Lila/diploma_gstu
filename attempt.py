@@ -1,90 +1,92 @@
+from typing import Callable, List
+
 from kivy.lang import Builder
-from kivy.properties import StringProperty
+from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen
 
 from kivymd.icon_definitions import md_icons
 from kivymd.app import MDApp
-from kivymd.uix.list import OneLineIconListItem
-
+from kivymd.uix.boxlayout import MDBoxLayout
 
 Builder.load_string(
 '''
 #:import images_path kivymd.images_path
-    
-<CustomOneLineIconListItem>:
-    
-    IconLeftWidget:
-        icon: root.icon
 
+<AutoCompleteTextField>:
+    orientation: 'vertical'
     
+    MDTextField:
+        id: search_field
+        adaptive_size: True
+        hint_text: 'Search icon'
+        on_text: root.get_variants(self.text)
+        on_focus: root.get_variants(self.text)
+    
+    MDRecycleView:
+        id: rv
+        key_viewclass: 'viewclass'
+        key_size: 'height'
+    
+        MDRecycleGridLayout:
+            padding: dp(10)
+            default_size: None, dp(48)
+            default_size_hint: 1, None
+            adaptive_height: True
+            cols: 1
+            md_bg_color: 'pink'
+                 
+                    
 <PreviousMDIcons>:
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
-        spacing: dp(10)
-        padding: dp(20)
-
-        BoxLayout:
-            size_hint_y: None
-            height: self.minimum_height
-
-            MDTextField:
-                id: search_field
-                hint_text: 'Search icon'
-                on_text: root.set_list_md_icons(self.text)
-                on_focus: root.clear_list(True)
-    
-        Widget:
+        padding: 10
+        spacing: 10
+            
+        AutoCompleteTextField:
         
-        MDRecycleView:
-            id: rv
-            key_viewclass: 'viewclass'
-            key_size: 'height'
-    
-            MDRecycleGridLayout:
-                adaptive_height: True
-                padding: dp(10)
-                default_size: None, dp(48)
-                cols: 1
-                default_size_hint: 1, None
+        Button:
  '''
 )
 
 
-class CustomOneLineIconListItem(OneLineIconListItem):
-    icon = StringProperty()
+def my_request_method(auto_complete_widget_instance, text, *args):
+    answer = [r for r in md_icons.keys() if text in r]
+    auto_complete_widget_instance.update_variants(answer)
+
+
+class AutoCompleteTextField(MDBoxLayout):
+    request_method = my_request_method
+
+    def get_variants(self, instance_text_field, text=''):
+        if self.ids.search_field.focus is False:
+            self._clear_variants()
+        else:
+            self.request_method(instance_text_field, text)
+
+    def _clear_variants(self):
+        self.ids.rv.data = []
+
+    def _change_text_value(self, new_value: str):
+        self.ids.search_field.text = new_value
+
+    def _add_variant(self, variant: str):
+        self.ids.rv.data.append(
+            {
+                "viewclass": "OneLineListItem",
+                "text": variant,
+                "on_press": lambda x=variant: self._change_text_value(x),
+            }
+        )
+
+    def update_variants(self, collection: List[str]):
+        self._clear_variants()
+        for element in collection:
+            self._add_variant(element)
 
 
 class PreviousMDIcons(Screen):
-
-    def clear_list(self, check_focus=False):
-        if check_focus:
-            if not self.ids.search_field.focus:
-                self.ids.rv.data = []
-        else:
-            self.ids.rv.data = []
-
-    def set_text_value(self, text, *args):
-        self.ids.search_field.text = text
-
-    def set_list_md_icons(self, text):
-
-        def add_icon_item(name_icon):
-            self.ids.rv.data.append(
-                {
-                    "viewclass": "CustomOneLineIconListItem",
-                    "icon": 'plus',
-                    "text": name_icon,
-                    "on_press": lambda x=name_icon: self.set_text_value(x),
-                }
-            )
-
-        self.clear_list()
-        print('cleared')
-        print(text)
-        for name_icon in md_icons.keys():
-            if text in name_icon:
-                add_icon_item(name_icon)
+    pass
 
 
 class MainApp(MDApp):
