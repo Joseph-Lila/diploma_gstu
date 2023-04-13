@@ -1,5 +1,4 @@
 from kivy.app import App
-from kivy.properties import NumericProperty, StringProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
