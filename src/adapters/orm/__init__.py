@@ -1,4 +1,5 @@
 from .base import async_session_factory, create_tables, mapper_registry
+from .audience import Audience
 from .department import Department
 from .faculty import Faculty
 from .group import Group

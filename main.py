@@ -8,8 +8,6 @@ from src.config import get_common_window_size
 from src.ui.controller import Controller
 from src.ui.screen_builder import get_main_screen
 
-bus = bootstrap()
-
 
 class KivyApp(MDApp):
     icon = 'assets/images/logo_new.png'
@@ -29,8 +27,13 @@ class KivyApp(MDApp):
         return get_main_screen()
 
 
-if __name__ == '__main__':
+async def main():
+    bus = await bootstrap()
     app = KivyApp()
     app.bus = bus
     app.controller = Controller(bus)
-    asyncio.run(app.async_run(async_lib='asyncio'))
+    await app.async_run(async_lib='asyncio')
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

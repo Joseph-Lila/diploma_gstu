@@ -1,7 +1,6 @@
-import asyncio
-import concurrent.futures
 import inspect
 
+from src import config
 from src.adapters.orm.base import create_tables
 from src.adapters.repositories.abstract_repository import AbstractRepository
 from src.adapters.repositories.postgres_repository import PostgresRepository
@@ -9,13 +8,13 @@ from src.service_layer import handlers
 from src.service_layer.messagebus import MessageBus
 
 
-def bootstrap(
+async def bootstrap(
     drop_create_tables: bool = False,
     repository: AbstractRepository = PostgresRepository(),
+    connection_string=config.get_postgres_uri(),
 ) -> MessageBus:
     if drop_create_tables:
-        pool = concurrent.futures.ThreadPoolExecutor()
-        pool.submit(asyncio.run, create_tables())
+        await create_tables(connection_string=connection_string)
 
     dependencies = {"repository": repository}
     injected_command_handlers = {
@@ -24,7 +23,6 @@ def bootstrap(
     }
 
     return MessageBus(
-        repository=repository,
         command_handlers=injected_command_handlers,
     )
 

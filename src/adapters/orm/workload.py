@@ -17,5 +17,6 @@ class Workload:
     subject_id: Mapped[int] = mapped_column(ForeignKey("subjects.id"))
     subject_type_id: Mapped[int] = mapped_column(ForeignKey("subject_types.id"))
     mentor_id: Mapped[int] = mapped_column(ForeignKey("mentors.id"))
+    hours: Mapped[int]
     year: Mapped[int]
     term: Mapped[str]
