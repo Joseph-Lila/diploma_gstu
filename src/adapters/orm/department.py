@@ -14,5 +14,11 @@ class Department:
         autoincrement=True,
     )
     title: Mapped[str]
-    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
+    faculty_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "faculties.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        ),
+    )
     head: Mapped[str]

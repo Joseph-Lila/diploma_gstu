@@ -15,4 +15,10 @@ class Group:
     )
     title: Mapped[str]
     number_of_students: Mapped[int]
-    faculty_id: Mapped[int] = mapped_column(ForeignKey("faculties.id"))
+    faculty_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "faculties.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        ),
+    )

@@ -15,4 +15,10 @@ class Audience:
     )
     number: Mapped[str]
     number_of_seats: Mapped[int]
-    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))
+    department_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "departments.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        ),
+    )

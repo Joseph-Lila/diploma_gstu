@@ -15,4 +15,10 @@ class Mentor:
     )
     fio: Mapped[str]
     scientific_degree: Mapped[str]
-    department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"))
+    department_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "departments.id",
+            onupdate="CASCADE",
+            ondelete="CASCADE",
+        ),
+    )
