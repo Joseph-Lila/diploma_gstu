@@ -6,6 +6,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 
 class AutoCompleteLabel(MDBoxLayout):
     request_method = ObjectProperty()
+    text = StringProperty()
     hint_text = StringProperty()
     total_width = NumericProperty()
 
@@ -16,15 +17,24 @@ class AutoCompleteLabel(MDBoxLayout):
     def get_variants(self):
         if not self.opened:
             self.opened = True
-            self.request_method(self, '')
+            self.ids.rv.height = 100
+            self.pos = self.pos[0], self.pos[1] - 100
+            self.request_method(self)
         else:
             self.opened = False
             self._clear_variants()
 
     def _clear_variants(self):
+        self.ids.rv.height = 0
+        self.pos = self.pos[0], self.pos[1] + 100
         self.ids.rv.data = []
 
-    def _change_text_value(self, new_value: str):
+    def change_text_value_and_hide_options(self, new_value: str):
+        self.opened = False
+        self._clear_variants()
+        self.change_text_value(new_value)
+
+    def change_text_value(self, new_value: str):
         self.ids.label.text = new_value
 
     def _add_variant(self, variant: str):
@@ -32,11 +42,10 @@ class AutoCompleteLabel(MDBoxLayout):
             {
                 "viewclass": "OneLineListItem",
                 "text": variant,
-                "on_press": lambda x=variant: self._change_text_value(x),
+                "on_press": lambda x=variant: self.change_text_value_and_hide_options(x),
             }
         )
 
-    def update_variants(self, collection: List[str]):
-        self._clear_variants()
+    async def update_variants(self, collection: List[str]):
         for element in collection:
             self._add_variant(element)

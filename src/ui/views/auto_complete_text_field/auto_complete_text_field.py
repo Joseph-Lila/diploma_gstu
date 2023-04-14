@@ -31,7 +31,7 @@ class AutoCompleteTextField(MDBoxLayout):
             }
         )
 
-    def update_variants(self, collection: List[str]):
+    async def update_variants(self, collection: List[str]):
         self._clear_variants()
         for element in collection:
             self._add_variant(element)

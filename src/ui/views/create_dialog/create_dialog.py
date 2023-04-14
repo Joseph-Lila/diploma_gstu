@@ -29,7 +29,7 @@ class CreateDialog(MDCard, ModalView):
         )
         ak.start(
             do_with_loading_modal_view(
-                App.get_running_app().controller.bind_dropdown_menu_for_years_selector_depending_on_workload,
+                App.get_running_app().controller.fill_years_selector_depending_on_workload,
                 self.ids.year,
                 term,
             )
@@ -43,7 +43,7 @@ class CreateDialog(MDCard, ModalView):
         )
         ak.start(
             do_with_loading_modal_view(
-                App.get_running_app().controller.bind_dropdown_menu_for_terms_selector_depending_on_workload,
+                App.get_running_app().controller.fill_terms_selector_depending_on_workload,
                 self.ids.term,
                 year,
             )

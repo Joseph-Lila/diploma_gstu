@@ -1,5 +1,5 @@
 #: import config src.config
-#: import ClickableTextFieldRound src.ui.views.ClickableTextFieldRound
+#: import AutoCompleteLabel src.ui.views.AutoCompleteLabel
 
 
 <OpenDialog>:
@@ -38,24 +38,15 @@
         MDCard:
             style: 'outlined'
             line_color: 185 / 255, 162 / 255, 255 / 255, 100 / 100
+            padding: 30, 0, 0, 0
 
-            AnchorLayout:
+            Widget:
+                size_hint_x: None
+                width: 300
 
-                ClickableTextFieldRound:
-                    id: year
-
-                    text: root.default_year_menu_value
-                    left_icon: 'assets/images/home_icon 1.png'
-                    right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
-
-            AnchorLayout:
-
-                ClickableTextFieldRound:
-                    id: term
-
-                    text: root.default_term_menu_value
-                    left_icon: 'assets/images/icons8-autumntime-96 1.png'
-                    right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+            Widget:
+                size_hint_x: None
+                width: 300
 
             MDIconButton:
                 icon: 'assets/images/icons8-очистить-фильтры-96.png'
@@ -79,3 +70,28 @@
 
             MDList:
                 id: list_container
+
+    MDBoxLayout:
+        size_hint_y: None
+        height: 0
+        pos_hint: {"top": 1}
+        size_hint_x: .83
+        padding: 110, 0, 0, 0
+
+        RelativeLayout:
+
+            AutoCompleteLabel:
+                id: year
+                request_method: root.send_command_to_get_years_values
+                hint_text: root.year_hint
+                total_width: 300
+                pos: 0, 410
+
+        RelativeLayout:
+
+            AutoCompleteLabel:
+                id: term
+                request_method: root.send_command_to_get_terms_values
+                hint_text: root.term_hint
+                total_width: 300
+                pos: 0, 410

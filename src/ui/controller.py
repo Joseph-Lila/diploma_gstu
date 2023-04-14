@@ -47,40 +47,40 @@ class Controller:
         await open_dialog.update_items(event.schedules)
 
     @use_loop
-    async def bind_dropdown_menu_for_years_selector_depending_on_workload(
+    async def fill_years_selector_depending_on_workload(
         self, years_selector, term
     ):
         event: GotUniqueYears = await self.bus.handle_command(
             GetUniqueYearsDependingOnWorkload(term=term)
         )
-        await years_selector.bind_dropdown_menu(event.years)
+        await years_selector.update_variants([str(year) for year in event.years])
 
     @use_loop
-    async def bind_dropdown_menu_for_years_selector_depending_on_schedule(
+    async def fill_years_selector_depending_on_schedule(
         self, years_selector, term
     ):
         event: GotUniqueYears = await self.bus.handle_command(
             GetUniqueYearsDependingOnSchedule(term=term)
         )
-        await years_selector.bind_dropdown_menu(event.years)
+        await years_selector.update_variants([str(year) for year in event.years])
 
     @use_loop
-    async def bind_dropdown_menu_for_terms_selector_depending_on_workload(
+    async def fill_terms_selector_depending_on_workload(
         self, terms_selector, year
     ):
         event: GotUniqueTerms = await self.bus.handle_command(
             GetUniqueTermsDependingOnWorkload(year=year)
         )
-        await terms_selector.bind_dropdown_menu(event.terms)
+        await terms_selector.update_variants(event.terms)
 
     @use_loop
-    async def bind_dropdown_menu_for_terms_selector_depending_on_schedule(
+    async def fill_terms_selector_depending_on_schedule(
         self, terms_selector, year
     ):
         event: GotUniqueTerms = await self.bus.handle_command(
             GetUniqueTermsDependingOnSchedule(year=year)
         )
-        await terms_selector.bind_dropdown_menu(event.terms)
+        await terms_selector.update_variants(event.terms)
 
     @use_loop
     async def update_latest_10_schedules(self, home_screen):

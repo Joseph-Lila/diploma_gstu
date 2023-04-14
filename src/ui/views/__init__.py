@@ -9,3 +9,5 @@ from .loading_screen import LoadingScreenView
 from .mentors_schedule import MentorsSchedule
 from .mentors_schedule_legend import MentorsScheduleLegend
 from .schedule_screen import ScheduleScreenView
+from .auto_complete_label import AutoCompleteLabel
+from .auto_complete_text_field import AutoCompleteTextField
