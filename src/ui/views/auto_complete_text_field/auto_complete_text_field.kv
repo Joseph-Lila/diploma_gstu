@@ -1,0 +1,65 @@
+<AutoCompleteTextField>:
+    orientation: 'vertical'
+
+    MDCard:
+        md_bg_color: 185 / 255, 162 / 255, 255 / 255, 100 / 100
+        radius: 0, 0, 0, 0
+        size_hint: None, None
+        pos_hint: {"center_x": .5, "center_y": .5}
+        width: root.total_width
+        height: search_field.height - 15
+        style: 'outlined'
+        line_color: 'black'
+        spacing: 5
+
+        MDIconButton:
+            icon: 'assets/images/icons8-редактировать-128.png'
+            icon_size: "32sp"
+            disabled: True
+            pos_hint: {"center_x": .5, "center_y": .5}
+            theme_text_color: "Hint"
+
+        MDTextField:
+            id: search_field
+            adaptive_size: True
+            pos_hint: {"center_x": .5, "center_y": .45}
+            hint_text: root.hint_text
+            hint_text_color_normal: "white"
+            hint_text_color_focus: "white"
+            text_color_normal: "white"
+            text_color_normal: "white"
+            text_color_focus: "white"
+            line_anim: False
+            line_color_normal: 1, 0, 0, 0
+            line_color_focus: 1, 0, 0, 0
+            on_text: root.get_variants(self.text)
+            on_focus: root.get_variants(self.text)
+            input_filter: root.input_filter
+
+            text_size: self.size
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-MediumItalic.ttf'
+            font_size: 18
+
+        MDIconButton:
+            icon: 'assets/images/icons8-отмена-128.png'
+            icon_size: "32sp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            theme_text_color: "Hint"
+            on_press: search_field.text = ''
+
+    MDRecycleView:
+        id: rv
+        key_viewclass: 'viewclass'
+        key_size: 'height'
+        size_hint: None, None
+        width: root.total_width
+        height: 200
+        pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDRecycleGridLayout:
+            padding: dp(10)
+            default_size: None, dp(48)
+            default_size_hint: 1, None
+            adaptive_height: True
+            cols: 1
+            md_bg_color: 'pink'
