@@ -9,6 +9,7 @@ class AutoCompleteLabel(MDBoxLayout):
     text = StringProperty()
     hint_text = StringProperty()
     total_width = NumericProperty()
+    recycle_view_height = NumericProperty()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -17,8 +18,8 @@ class AutoCompleteLabel(MDBoxLayout):
     def get_variants(self):
         if not self.opened:
             self.opened = True
-            self.ids.rv.height = 100
-            self.pos = self.pos[0], self.pos[1] - 100
+            self.ids.rv.height = self.recycle_view_height
+            self.pos = self.pos[0], self.pos[1] - self.recycle_view_height
             self.request_method(self)
         else:
             self.opened = False
@@ -26,7 +27,7 @@ class AutoCompleteLabel(MDBoxLayout):
 
     def _clear_variants(self):
         self.ids.rv.height = 0
-        self.pos = self.pos[0], self.pos[1] + 100
+        self.pos = self.pos[0], self.pos[1] + self.recycle_view_height
         self.ids.rv.data = []
 
     def change_text_value_and_hide_options(self, new_value: str):

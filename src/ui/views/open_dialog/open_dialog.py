@@ -75,4 +75,4 @@ class OpenDialog(MDCard, ModalView):
                 on_press=partial(App.get_running_app().root.go_to_schedule_screen, item)
             )
             new_item.bind(on_release=self.dismiss)
-            self.ids.list_container.add_widget(new_item, -100)
+            self.ids.list_container.add_widget(new_item)

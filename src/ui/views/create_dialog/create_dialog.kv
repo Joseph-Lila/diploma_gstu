@@ -48,23 +48,9 @@
     BoxLayout:
         size_hint_y: .5
 
-        AnchorLayout:
+        Widget:
 
-            ClickableTextFieldRound:
-                id: year
-
-                text: root.default_year_menu_value
-                left_icon: 'assets/images/home_icon 1.png'
-                right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
-
-        AnchorLayout:
-
-            ClickableTextFieldRound:
-                id: term
-
-                text: root.default_term_menu_value
-                left_icon: 'assets/images/icons8-autumntime-96 1.png'
-                right_icon: 'assets/images/icons8-вниз-в-квадрате-96 1.png'
+        Widget:
 
     BoxLayout:
         padding: 50, 0, 50, 0
@@ -88,8 +74,8 @@
                 font_size: 20
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
                 text:
-                    'Все хорошо.' if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else 'Выберите год и семестр!'
-                background_color: (0, 1, 0, .5) if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else (1, 0, 0, .5)
+                    'Все хорошо.' if year.text != '' and term.text != '' else 'Выберите год и семестр!'
+                background_color: (0, 1, 0, .5) if year.text != '' and term.text != '' else (1, 0, 0, .5)
 
     AnchorLayout:
         size_hint_y: None
@@ -97,7 +83,32 @@
 
         MDFillRoundFlatButton:
             md_bg_color: 3 / 255, 130 / 255, 0, 1
-            disabled: False if year.text != root.default_year_menu_value and term.text != root.default_term_menu_value else True
+            disabled: False if year.text != '' and term.text != '' else True
             font_size: 24
             text: 'Создать'
             on_release: root.send_command_to_create_schedule()
+
+    MDBoxLayout:
+        size_hint_y: None
+        height: 0
+        pos_hint: {"top": 1}
+
+        RelativeLayout:
+
+            AutoCompleteLabel:
+                id: year
+                request_method: root.send_command_to_get_years_values
+                recycle_view_height: 100
+                hint_text: root.year_hint
+                total_width: 300
+                pos: 0, 330
+
+        RelativeLayout:
+
+            AutoCompleteLabel:
+                id: term
+                request_method: root.send_command_to_get_terms_values
+                recycle_view_height: 100
+                hint_text: root.term_hint
+                total_width: 300
+                pos: 0, 330

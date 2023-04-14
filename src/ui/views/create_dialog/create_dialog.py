@@ -5,31 +5,19 @@ from kivy.app import App
 from kivy.uix.modalview import ModalView
 from kivymd.uix.card import MDCard
 
-from src.ui.controller import do_with_loading_modal_view
-
 
 class CreateDialog(MDCard, ModalView):
-    default_year_menu_value = "Выберите год"
-    default_term_menu_value = "Выберите семестр"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.ids.year.ids.right_icon_button.bind(
-            on_press=self.send_command_to_get_years_values
-        )
-        self.ids.term.ids.right_icon_button.bind(
-            on_press=self.send_command_to_get_terms_values
-        )
+    year_hint = "Выберите год"
+    term_hint = "Выберите семестр"
 
     def send_command_to_get_years_values(self, *args):
         term = (
             None
-            if self.ids.term.text == self.default_term_menu_value
+            if self.ids.term.text == ''
             else self.ids.term.text
         )
         ak.start(
-            do_with_loading_modal_view(
-                App.get_running_app().controller.fill_years_selector_depending_on_workload,
+            App.get_running_app().controller.fill_years_selector_depending_on_workload(
                 self.ids.year,
                 term,
             )
@@ -38,12 +26,11 @@ class CreateDialog(MDCard, ModalView):
     def send_command_to_get_terms_values(self, *args):
         year = (
             None
-            if self.ids.year.text == self.default_year_menu_value
+            if self.ids.year.text == ''
             else int(self.ids.year.text)
         )
         ak.start(
-            do_with_loading_modal_view(
-                App.get_running_app().controller.fill_terms_selector_depending_on_workload,
+            App.get_running_app().controller.fill_terms_selector_depending_on_workload(
                 self.ids.term,
                 year,
             )
@@ -52,17 +39,16 @@ class CreateDialog(MDCard, ModalView):
     def send_command_to_create_schedule(self, *args):
         year = (
             None
-            if self.ids.year.text == self.default_year_menu_value
+            if self.ids.year.text == ''
             else int(self.ids.year.text)
         )
         term = (
             None
-            if self.ids.term.text == self.default_term_menu_value
+            if self.ids.term.text == ''
             else self.ids.term.text
         )
         ak.start(
-            do_with_loading_modal_view(
-                App.get_running_app().controller.try_to_create_schedule,
+            App.get_running_app().controller.try_to_create_schedule(
                 self,
                 year,
                 term,
