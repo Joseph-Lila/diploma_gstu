@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from src.adapters.orm import Schedule, Workload, async_session_factory, Mentor
+from src.adapters.orm import Schedule, Workload, async_session_factory, Mentor, Group
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
 
@@ -29,6 +29,12 @@ class PostgresRepository(AbstractRepository):
 
     async def get_unique_mentors_fios(self, fio_substring: str):
         stmt = select(Mentor.fio).distinct().order_by(Mentor.fio).filter(Mentor.fio.ilike(f"%{fio_substring}%"))
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_groups_titles(self, title_substring: str):
+        stmt = select(Group.title).distinct().order_by(Group.title).filter(Group.title.ilike(f"%{title_substring}%"))
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()

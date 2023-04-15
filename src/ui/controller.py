@@ -5,9 +5,9 @@ from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
                                  GetUniqueTermsDependingOnSchedule,
                                  GetUniqueTermsDependingOnWorkload,
                                  GetUniqueYearsDependingOnSchedule,
-                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors)
+                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors, GetUniqueGroups)
 from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
-                               ScheduleIsCreated, GotUniqueMentors)
+                               ScheduleIsCreated, GotUniqueMentors, GotUniqueGroups)
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -102,3 +102,12 @@ class Controller:
             GetUniqueMentors(fio_substring)
         )
         await mentors_selector.update_variants(event.mentors)
+
+    @use_loop
+    async def fill_groups_selector(
+            self, groups_selector, title_substring
+    ):
+        event: GotUniqueGroups = await self.bus.handle_command(
+            GetUniqueGroups(title_substring)
+        )
+        await groups_selector.update_variants(event.groups)
