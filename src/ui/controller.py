@@ -5,9 +5,9 @@ from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
                                  GetUniqueTermsDependingOnSchedule,
                                  GetUniqueTermsDependingOnWorkload,
                                  GetUniqueYearsDependingOnSchedule,
-                                 GetUniqueYearsDependingOnWorkload)
+                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors)
 from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
-                               ScheduleIsCreated)
+                               ScheduleIsCreated, GotUniqueMentors)
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -93,3 +93,12 @@ class Controller:
             CreateSchedule(year=year, term=term)
         )
         await create_dialog.check_if_new_schedule_is_created(event.schedule)
+
+    @use_loop
+    async def fill_mentors_selector(
+            self, mentors_selector, fio_substring
+    ):
+        event: GotUniqueMentors = await self.bus.handle_command(
+            GetUniqueMentors(fio_substring)
+        )
+        await mentors_selector.update_variants(event.mentors)

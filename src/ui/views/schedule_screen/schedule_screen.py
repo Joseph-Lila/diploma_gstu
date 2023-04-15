@@ -5,6 +5,7 @@ from kivymd.uix.screen import MDScreen
 from src.adapters.orm import Schedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
+from src.ui.views.workloads_manager_dialog import WorkloadsManagerDialog
 
 
 class ScheduleScreenView(MDScreen):
@@ -15,6 +16,10 @@ class ScheduleScreenView(MDScreen):
         self._init_tab_menus()
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
+        self.workloads_manager_dialog = WorkloadsManagerDialog()
+
+    def show_workloads_manager_dialog(self, *args):
+        self.workloads_manager_dialog.open()
 
     def update_metadata(self, schedule: Schedule):
         self.schedule = schedule

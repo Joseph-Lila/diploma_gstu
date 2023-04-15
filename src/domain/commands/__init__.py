@@ -9,3 +9,4 @@ from .get_unique_years_depending_on_schedule import \
     GetUniqueYearsDependingOnSchedule
 from .get_unique_years_depending_on_workload import \
     GetUniqueYearsDependingOnWorkload
+from .get_unique_mentors import GetUniqueMentors

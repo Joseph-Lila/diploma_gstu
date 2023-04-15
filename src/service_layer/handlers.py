@@ -6,10 +6,10 @@ from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
                                  GetUniqueTermsDependingOnSchedule,
                                  GetUniqueTermsDependingOnWorkload,
                                  GetUniqueYearsDependingOnSchedule,
-                                 GetUniqueYearsDependingOnWorkload)
+                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors)
 from src.domain.commands.command import Command
 from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
-                               ScheduleIsCreated)
+                               ScheduleIsCreated, GotUniqueMentors)
 
 
 async def get_schedules(
@@ -88,6 +88,16 @@ async def create_schedule(
         return ScheduleIsCreated(None)
 
 
+async def get_unique_mentors(
+    cmd: GetUniqueMentors,
+    repository: AbstractRepository,
+) -> GotUniqueMentors:
+    mentors_fios: List[str] = await repository.get_unique_mentors_fios(
+        cmd.fio_substring
+    )
+    return GotUniqueMentors(mentors_fios)
+
+
 COMMAND_HANDLERS = {
     GetSchedules: get_schedules,
     GetUniqueYearsDependingOnWorkload: get_unique_years_depending_on_workload,
@@ -96,4 +106,5 @@ COMMAND_HANDLERS = {
     GetUniqueTermsDependingOnSchedule: get_unique_terms_depending_on_schedule,
     Get10Schedules: get_10_schedules,
     CreateSchedule: create_schedule,
+    GetUniqueMentors: get_unique_mentors,
 }  # type: Dict[Type[Command], Callable]

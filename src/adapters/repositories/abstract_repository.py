@@ -24,6 +24,10 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    async def get_unique_mentors_fios(self, fio_substring: str):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     async def get_10_schedules(self):
         raise NotImplementedError
 
