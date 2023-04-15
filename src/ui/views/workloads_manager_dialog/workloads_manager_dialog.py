@@ -1,10 +1,10 @@
 from kivy.app import App
 from kivy.uix.modalview import ModalView
-from kivymd.uix.screenmanager import MDScreenManager
+from kivymd.uix.card import MDCard
 import asynckivy as ak
 
 
-class WorkloadsManagerDialog(MDScreenManager, ModalView):
+class WorkloadsManagerDialog(MDCard, ModalView):
     mentor_hint = "Выберите преподавателя"
 
     def open(self, *args, **kwargs):

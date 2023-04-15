@@ -4,64 +4,71 @@
 
 <WorkloadsManagerDialog>:
     size_hint: None, None
-    size: config.get_common_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    size: config.get_big_window_size()
     auto_dismiss: False
+    orientation: 'vertical'
 
-    MDScreen:
+    MDAnchorLayout:
+        size_hint: 1, None
+        height: 40
+
+        FitImage:
+            source: 'assets/images/background.png'
+
+        Label:
+            color: 'white'
+            text: 'Менеджер нагрузки'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 24
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8, 8, 8, 0
+        spacing: 10
+
+        MDIconButton:
+            icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
+            icon_size: "60sp"
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Hint"
+            on_press: root.dismiss()
 
         MDCard:
-            md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
-            orientation: 'vertical'
-            radius: 0, 0, 0, 0
+            style: 'outlined'
+            padding: 30, 0, 0, 0
+            radius: 15, 15, 0, 0
+            md_bg_color: 'pink'
 
-            MDAnchorLayout:
-                size_hint: 1, None
-                height: 40
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8, 0, 8, 8
+        spacing: 10
 
-                FitImage:
-                    source: 'assets/images/background.png'
+        MDCard:
+            style: 'outlined'
+            padding: 30, 0, 0, 0
+            radius: 15, 0, 15, 15
+            md_bg_color: 'pink'
 
-                Label:
-                    color: 'white'
-                    text: 'Менеджер нагрузки'
-                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-                    font_size: 24
+    Widget:
 
-            BoxLayout:
-                size_hint: 1, None
-                height: 80
-                padding: 8
-                spacing: 10
+    MDBoxLayout:
+        size_hint_y: None
+        height: 0
+        pos_hint: {"top": 1}
+        padding: -50, 0, 0, 0
 
-                MDIconButton:
-                    icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
-                    icon_size: "60sp"
-                    pos_hint: {"center_y": .5}
-                    theme_text_color: "Hint"
-                    on_press: root.dismiss()
+        RelativeLayout:
 
-                MDCard:
-                    style: 'outlined'
-                    line_color: 185 / 255, 162 / 255, 255 / 255, 100 / 100
-                    padding: 30, 0, 0, 0
+            AutoCompleteTextField:
+                id: mentor
+                request_method: root.send_command_to_get_mentors_fios
+                recycle_view_height: 100
+                hint_text: root.mentor_hint
+                total_width: 300
+                pos: 0, 593
 
-            Widget:
-
-            MDBoxLayout:
-                size_hint_y: None
-                height: 0
-                pos_hint: {"top": 1}
-                size_hint_x: .83
-                padding: 110, 0, 0, 0
-
-                RelativeLayout:
-
-                    AutoCompleteTextField:
-                        id: mentor
-                        request_method: root.send_command_to_get_mentors_fios
-                        recycle_view_height: 100
-                        hint_text: root.mentor_hint
-                        total_width: 300
-                        pos: 0, 410
-
-                RelativeLayout:
+        RelativeLayout:

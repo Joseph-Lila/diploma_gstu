@@ -8,6 +8,7 @@ THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
 DOTENV_PATH = ROOT_DIR / ".env"
 COMMON_WINDOW_SIZE = 878, 515
+BIG_WINDOW_SIZE = 1200, 704
 
 
 # load secret data from .env
@@ -17,6 +18,10 @@ if DOTENV_PATH.exists():
 
 def get_common_window_size():
     return COMMON_WINDOW_SIZE
+
+
+def get_big_window_size():
+    return BIG_WINDOW_SIZE
 
 
 def get_pairs_quantity() -> int:
