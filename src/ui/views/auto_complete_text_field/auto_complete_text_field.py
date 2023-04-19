@@ -17,7 +17,7 @@ class AutoCompleteTextField(MDBoxLayout):
         self.opened = False
         self.skip_manipulation = False
 
-    def get_variants_using_focus(self, text=''):
+    def get_variants_using_focus(self, text=""):
         if self.ids.search_field.focus:
             self.request_method(self, text)
             self.opened = True
@@ -25,7 +25,7 @@ class AutoCompleteTextField(MDBoxLayout):
             self._clear_variants()
             self.opened = False
 
-    def get_variants_using_text(self, text=''):
+    def get_variants_using_text(self, text=""):
         if self.skip_manipulation:
             self.skip_manipulation = False
             return

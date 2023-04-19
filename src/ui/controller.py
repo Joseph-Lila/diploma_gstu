@@ -1,13 +1,25 @@
 import asyncio
 import functools
 
-from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
-                                 GetUniqueTermsDependingOnSchedule,
-                                 GetUniqueTermsDependingOnWorkload,
-                                 GetUniqueYearsDependingOnSchedule,
-                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors, GetUniqueGroups)
-from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
-                               ScheduleIsCreated, GotUniqueMentors, GotUniqueGroups)
+from src.domain.commands import (
+    CreateSchedule,
+    Get10Schedules,
+    GetSchedules,
+    GetUniqueTermsDependingOnSchedule,
+    GetUniqueTermsDependingOnWorkload,
+    GetUniqueYearsDependingOnSchedule,
+    GetUniqueYearsDependingOnWorkload,
+    GetUniqueMentors,
+    GetUniqueGroups,
+)
+from src.domain.events import (
+    GotSchedules,
+    GotUniqueTerms,
+    GotUniqueYears,
+    ScheduleIsCreated,
+    GotUniqueMentors,
+    GotUniqueGroups,
+)
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -47,36 +59,28 @@ class Controller:
         await open_dialog.update_items(event.schedules)
 
     @use_loop
-    async def fill_years_selector_depending_on_workload(
-        self, years_selector, term
-    ):
+    async def fill_years_selector_depending_on_workload(self, years_selector, term):
         event: GotUniqueYears = await self.bus.handle_command(
             GetUniqueYearsDependingOnWorkload(term=term)
         )
         await years_selector.update_variants([str(year) for year in event.years])
 
     @use_loop
-    async def fill_years_selector_depending_on_schedule(
-        self, years_selector, term
-    ):
+    async def fill_years_selector_depending_on_schedule(self, years_selector, term):
         event: GotUniqueYears = await self.bus.handle_command(
             GetUniqueYearsDependingOnSchedule(term=term)
         )
         await years_selector.update_variants([str(year) for year in event.years])
 
     @use_loop
-    async def fill_terms_selector_depending_on_workload(
-        self, terms_selector, year
-    ):
+    async def fill_terms_selector_depending_on_workload(self, terms_selector, year):
         event: GotUniqueTerms = await self.bus.handle_command(
             GetUniqueTermsDependingOnWorkload(year=year)
         )
         await terms_selector.update_variants(event.terms)
 
     @use_loop
-    async def fill_terms_selector_depending_on_schedule(
-        self, terms_selector, year
-    ):
+    async def fill_terms_selector_depending_on_schedule(self, terms_selector, year):
         event: GotUniqueTerms = await self.bus.handle_command(
             GetUniqueTermsDependingOnSchedule(year=year)
         )
@@ -95,18 +99,14 @@ class Controller:
         await create_dialog.check_if_new_schedule_is_created(event.schedule)
 
     @use_loop
-    async def fill_mentors_selector(
-            self, mentors_selector, fio_substring
-    ):
+    async def fill_mentors_selector(self, mentors_selector, fio_substring):
         event: GotUniqueMentors = await self.bus.handle_command(
             GetUniqueMentors(fio_substring)
         )
         await mentors_selector.update_variants(event.mentors)
 
     @use_loop
-    async def fill_groups_selector(
-            self, groups_selector, title_substring
-    ):
+    async def fill_groups_selector(self, groups_selector, title_substring):
         event: GotUniqueGroups = await self.bus.handle_command(
             GetUniqueGroups(title_substring)
         )

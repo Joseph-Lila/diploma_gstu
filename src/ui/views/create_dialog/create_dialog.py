@@ -11,11 +11,7 @@ class CreateDialog(MDCard, ModalView):
     term_hint = "Выберите семестр"
 
     def send_command_to_get_years_values(self, *args):
-        term = (
-            None
-            if self.ids.term.text == ''
-            else self.ids.term.text
-        )
+        term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
             App.get_running_app().controller.fill_years_selector_depending_on_workload(
                 self.ids.year,
@@ -24,11 +20,7 @@ class CreateDialog(MDCard, ModalView):
         )
 
     def send_command_to_get_terms_values(self, *args):
-        year = (
-            None
-            if self.ids.year.text == ''
-            else int(self.ids.year.text)
-        )
+        year = None if self.ids.year.text == "" else int(self.ids.year.text)
         ak.start(
             App.get_running_app().controller.fill_terms_selector_depending_on_workload(
                 self.ids.term,
@@ -37,16 +29,8 @@ class CreateDialog(MDCard, ModalView):
         )
 
     def send_command_to_create_schedule(self, *args):
-        year = (
-            None
-            if self.ids.year.text == ''
-            else int(self.ids.year.text)
-        )
-        term = (
-            None
-            if self.ids.term.text == ''
-            else self.ids.term.text
-        )
+        year = None if self.ids.year.text == "" else int(self.ids.year.text)
+        term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
             App.get_running_app().controller.try_to_create_schedule(
                 self,

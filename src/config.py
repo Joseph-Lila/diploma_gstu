@@ -1,12 +1,14 @@
 """ Module srс """
 import os
 import pathlib
+from typing import List
 
 from dotenv import load_dotenv
 
 THIS_DIR = pathlib.Path(__file__).parent.resolve().absolute()
 ROOT_DIR = THIS_DIR.parent
 DOTENV_PATH = ROOT_DIR / ".env"
+INITIAL_DATA_FILE_PATH = ROOT_DIR / "assets" / "sql" / "initial_data.sql"
 COMMON_WINDOW_SIZE = 878, 515
 BIG_WINDOW_SIZE = 1200, 704
 
@@ -26,6 +28,10 @@ def get_big_window_size():
 
 def get_pairs_quantity() -> int:
     return os.environ.get("PAIRS_QUANTITY", 6)
+
+
+def get_initial_data_file_path() -> str:
+    return str(INITIAL_DATA_FILE_PATH)
 
 
 def get_test_postgres_uri() -> str:

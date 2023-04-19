@@ -15,27 +15,37 @@ class WorkloadsManagerDialog(MDCard, ModalView):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sound = SoundLoader.load('assets/music/notification.mp3')
+        self.sound = SoundLoader.load("assets/music/notification.mp3")
         self.mentors = set()
         self.groups = set()
         self.subjects = set()
         self.hours = set()
-        self.subject_types = ['Лекция', 'Лабораторная']
+        self.subject_types = ["Лекция", "Лабораторная"]
 
     async def fill_mentors_selector(self, selector, text):
-        await selector.update_variants(sorted([r for r in self.mentors if text.lower() in r.lower()]))
+        await selector.update_variants(
+            sorted([r for r in self.mentors if text.lower() in r.lower()])
+        )
 
     async def fill_hours_selector(self, selector, text):
-        await selector.update_variants(sorted([r for r in self.hours if text.lower() in r.lower()]))
+        await selector.update_variants(
+            sorted([r for r in self.hours if text.lower() in r.lower()])
+        )
 
     async def fill_subject_types_selector(self, selector, text):
-        await selector.update_variants(sorted([r for r in self.subject_types if text.lower() in r.lower()]))
+        await selector.update_variants(
+            sorted([r for r in self.subject_types if text.lower() in r.lower()])
+        )
 
     async def fill_subjects_selector(self, selector, text):
-        await selector.update_variants(sorted([r for r in self.subjects if text.lower() in r.lower()]))
+        await selector.update_variants(
+            sorted([r for r in self.subjects if text.lower() in r.lower()])
+        )
 
     async def fill_groups_selector(self, selector, text):
-        await selector.update_variants(sorted([r for r in self.groups if text.lower() in r.lower()]))
+        await selector.update_variants(
+            sorted([r for r in self.groups if text.lower() in r.lower()])
+        )
 
     def open(self, *args, **kwargs):
         super().open(*args, **kwargs)
@@ -95,12 +105,12 @@ class WorkloadsManagerDialog(MDCard, ModalView):
             self.ids.group.text,
             self.ids.subject.text,
             self.ids.subject_type.text,
-            self.ids.hour.text
+            self.ids.hour.text,
         ]
         if all(fields):
             if self.sound:
                 self.sound.play()
-            with open('assets/csv/all.csv', 'a', newline='') as f:
+            with open("assets/csv/all.csv", "a", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 writer.writerow(fields)
         self.ids.add_btn.disabled = False

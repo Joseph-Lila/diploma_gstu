@@ -35,11 +35,7 @@ class Workload:
         ),
     )
     mentor_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "mentors.id",
-            onupdate="CASCADE",
-            ondelete="CASCADE"
-        ),
+        ForeignKey("mentors.id", onupdate="CASCADE", ondelete="CASCADE"),
     )
     hours: Mapped[int]
     year: Mapped[int]

@@ -43,7 +43,9 @@ class AutoCompleteLabel(MDBoxLayout):
             {
                 "viewclass": "OneLineListItem",
                 "text": variant,
-                "on_press": lambda x=variant: self.change_text_value_and_hide_options(x),
+                "on_press": lambda x=variant: self.change_text_value_and_hide_options(
+                    x
+                ),
             }
         )
 

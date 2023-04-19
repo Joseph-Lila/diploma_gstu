@@ -19,15 +19,11 @@ class OpenDialog(MDCard, ModalView):
         self.send_command_to_update_schedule_items()
 
     def clear_filters(self, *args):
-        self.ids.year.change_text_value('')
-        self.ids.term.change_text_value('')
+        self.ids.year.change_text_value("")
+        self.ids.term.change_text_value("")
 
     def send_command_to_get_years_values(self, *args):
-        term = (
-            None
-            if self.ids.term.text == ''
-            else self.ids.term.text
-        )
+        term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
             App.get_running_app().controller.fill_years_selector_depending_on_schedule(
                 self.ids.year,
@@ -36,11 +32,7 @@ class OpenDialog(MDCard, ModalView):
         )
 
     def send_command_to_get_terms_values(self, *args):
-        year = (
-            None
-            if self.ids.year.text == ''
-            else int(self.ids.year.text)
-        )
+        year = None if self.ids.year.text == "" else int(self.ids.year.text)
         ak.start(
             App.get_running_app().controller.fill_terms_selector_depending_on_schedule(
                 self.ids.term,
@@ -49,16 +41,8 @@ class OpenDialog(MDCard, ModalView):
         )
 
     def send_command_to_update_schedule_items(self):
-        year = (
-            None
-            if self.ids.year.text == ''
-            else int(self.ids.year.text)
-        )
-        term = (
-            None
-            if self.ids.term.text == ''
-            else self.ids.term.text
-        )
+        year = None if self.ids.year.text == "" else int(self.ids.year.text)
+        term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
             App.get_running_app().controller.update_open_dialog_schedules(
                 self,

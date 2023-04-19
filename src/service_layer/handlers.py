@@ -2,14 +2,26 @@ from typing import Callable, Dict, List, Type
 
 from src.adapters.orm import Schedule
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from src.domain.commands import (CreateSchedule, Get10Schedules, GetSchedules,
-                                 GetUniqueTermsDependingOnSchedule,
-                                 GetUniqueTermsDependingOnWorkload,
-                                 GetUniqueYearsDependingOnSchedule,
-                                 GetUniqueYearsDependingOnWorkload, GetUniqueMentors, GetUniqueGroups)
+from src.domain.commands import (
+    CreateSchedule,
+    Get10Schedules,
+    GetSchedules,
+    GetUniqueTermsDependingOnSchedule,
+    GetUniqueTermsDependingOnWorkload,
+    GetUniqueYearsDependingOnSchedule,
+    GetUniqueYearsDependingOnWorkload,
+    GetUniqueMentors,
+    GetUniqueGroups,
+)
 from src.domain.commands.command import Command
-from src.domain.events import (GotSchedules, GotUniqueTerms, GotUniqueYears,
-                               ScheduleIsCreated, GotUniqueMentors, GotUniqueGroups)
+from src.domain.events import (
+    GotSchedules,
+    GotUniqueTerms,
+    GotUniqueYears,
+    ScheduleIsCreated,
+    GotUniqueMentors,
+    GotUniqueGroups,
+)
 
 
 async def get_schedules(

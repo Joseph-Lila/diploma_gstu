@@ -1,5 +1,6 @@
 import asyncio
 
+from kivy import Logger
 from kivy.core.window import Window
 from kivymd.app import MDApp
 
@@ -28,7 +29,11 @@ class KivyApp(MDApp):
 
 
 async def main():
-    bus = await bootstrap()
+    try:
+        bus = await bootstrap()
+    except:
+        Logger.info("Application: Can't create bus...")
+        return
     app = KivyApp()
     app.bus = bus
     app.controller = Controller(bus)

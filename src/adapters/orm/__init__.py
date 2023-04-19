@@ -1,4 +1,9 @@
-from .base import async_session_factory, create_tables, mapper_registry
+from .base import (
+    async_session_factory,
+    create_tables,
+    init_database_with_data,
+    mapper_registry,
+)
 from .audience import Audience
 from .department import Department
 from .faculty import Faculty
