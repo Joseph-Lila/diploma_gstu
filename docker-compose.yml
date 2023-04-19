@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  useless_daemon:
+    build: .
+    command: python useless_daemon.py
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=student
+      - POSTGRES_PASSWORD=student
+      - POSTGRES_DB=prod
+    ports:
+      - '5432:5432'
+    networks:
+      - net
+
+networks:
+ net:
+  driver: bridge
+
+volumes:
+  postgres_data:
