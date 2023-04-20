@@ -1,5 +1,5 @@
 from kivymd.uix.card import MDCard
 
 
-class MentorsSchedule(MDCard):
+class WorkloadArea(MDCard):
     pass

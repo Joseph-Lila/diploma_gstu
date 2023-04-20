@@ -1,3 +1,4 @@
+from .workload_area import WorkloadArea
 from .auditories_schedule import AuditoriesSchedule
 from .auditories_schedule_legend import AuditoriesScheduleLegend
 from .clickable_text_field_round import ClickableTextFieldRound
