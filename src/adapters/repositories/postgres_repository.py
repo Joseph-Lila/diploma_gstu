@@ -10,12 +10,6 @@ from src.adapters.orm import (
     async_session_factory,
     Mentor,
     Group,
-    Audience,
-    Department,
-    Faculty,
-    Subject,
-    SubjectAudience,
-    SubjectType,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 

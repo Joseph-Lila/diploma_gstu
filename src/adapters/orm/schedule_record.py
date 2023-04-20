@@ -59,3 +59,4 @@ class ScheduleRecord:
     )
     week_type: Mapped[str]
     subgroup: Mapped[str]
+    mentor_free: Mapped[bool]
