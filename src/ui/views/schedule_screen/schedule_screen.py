@@ -1,10 +1,8 @@
-from kivy.uix.screenmanager import NoTransition, WipeTransition
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
-from kivymd.uix.screenmanager import MDScreenManager
 
 from src.adapters.orm import Schedule
 from src.ui.views.create_dialog import CreateDialog

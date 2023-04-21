@@ -6,6 +6,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 
 class AutoCompleteLabel(MDBoxLayout):
     request_method = ObjectProperty()
+    change_text_request = ObjectProperty()
     text = StringProperty()
     hint_text = StringProperty()
     total_width = NumericProperty()
@@ -37,6 +38,9 @@ class AutoCompleteLabel(MDBoxLayout):
 
     def change_text_value(self, new_value: str):
         self.ids.label.text = new_value
+
+        if self.change_text_request is not None:
+            self.change_text_request()
 
     def _add_variant(self, variant: str):
         self.ids.rv.data.append(

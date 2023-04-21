@@ -8,3 +8,5 @@ from .get_unique_years_depending_on_workload import GetUniqueYearsDependingOnWor
 from .get_unique_mentors import GetUniqueMentors
 from .get_unique_groups import GetUniqueGroups
 from .delete_schedule import DeleteSchedule
+from .get_unique_faculties import GetUniqueFaculties
+from .get_unique_groups_depending_on_faculty import GetUniqueGroupsDependingOnFaculty

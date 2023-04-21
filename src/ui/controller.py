@@ -1,5 +1,6 @@
 import asyncio
 import functools
+from typing import Optional
 
 from src.domain.commands import (
     CreateSchedule,
@@ -10,7 +11,7 @@ from src.domain.commands import (
     GetUniqueYearsDependingOnSchedule,
     GetUniqueYearsDependingOnWorkload,
     GetUniqueMentors,
-    GetUniqueGroups, DeleteSchedule,
+    GetUniqueGroups, DeleteSchedule, GetUniqueFaculties, GetUniqueGroupsDependingOnFaculty,
 )
 from src.domain.events import (
     GotSchedules,
@@ -18,7 +19,7 @@ from src.domain.events import (
     GotUniqueYears,
     ScheduleIsCreated,
     GotUniqueMentors,
-    GotUniqueGroups, ScheduleIsDeleted,
+    GotUniqueGroups, ScheduleIsDeleted, GotUniqueFaculties,
 )
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
@@ -106,6 +107,13 @@ class Controller:
         return event.success
 
     @use_loop
+    async def fill_faculties_selector(self, faculties_selector, title_substring):
+        event: GotUniqueFaculties = await self.bus.handle_command(
+            GetUniqueFaculties(title_substring)
+        )
+        await faculties_selector.update_variants(event.faculties)
+
+    @use_loop
     async def fill_mentors_selector(self, mentors_selector, fio_substring):
         event: GotUniqueMentors = await self.bus.handle_command(
             GetUniqueMentors(fio_substring)
@@ -116,5 +124,15 @@ class Controller:
     async def fill_groups_selector(self, groups_selector, title_substring):
         event: GotUniqueGroups = await self.bus.handle_command(
             GetUniqueGroups(title_substring)
+        )
+        await groups_selector.update_variants(event.groups)
+
+    @use_loop
+    async def fill_groups_selector_depending_on_faculty(self, groups_selector, title_substring, faculty: Optional[str]):
+        event: GotUniqueGroups = await self.bus.handle_command(
+            GetUniqueGroupsDependingOnFaculty(
+                title_substring,
+                faculty,
+            )
         )
         await groups_selector.update_variants(event.groups)

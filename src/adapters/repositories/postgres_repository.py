@@ -8,7 +8,7 @@ from src.adapters.orm import (
     Workload,
     async_session_factory,
     Mentor,
-    Group,
+    Group, Faculty,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -50,6 +50,39 @@ class PostgresRepository(AbstractRepository):
             .distinct()
             .order_by(Group.title)
             .filter(Group.title.ilike(f"%{title_substring}%"))
+        )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_groups_titles_depending_on_faculty(self, title_substring: str, faculty_title: Optional[str]):
+        if faculty_title is not None:
+            stmt = select(Faculty).filter_by(title=faculty_title)
+            async with self.async_session() as session:
+                faculty = await session.scalar(stmt)
+            stmt = (
+                select(Group.title)
+                .distinct()
+                .filter_by(faculty_id=faculty.id)
+                .filter(Group.title.ilike(f"%{title_substring}%"))
+                .order_by(Group.title)
+            )
+        else:
+            stmt = (
+                select(Group.title)
+                .distinct()
+                .order_by(Group.title)
+                .filter(Group.title.ilike(f"%{title_substring}%"))
+            )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_faculties_titles(self, title_substring: str):
+        stmt = (
+            select(Faculty.title)
+            .order_by(Faculty.title)
+            .filter(Faculty.title.ilike(f"%{title_substring}%"))
         )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
