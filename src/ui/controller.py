@@ -10,7 +10,7 @@ from src.domain.commands import (
     GetUniqueYearsDependingOnSchedule,
     GetUniqueYearsDependingOnWorkload,
     GetUniqueMentors,
-    GetUniqueGroups,
+    GetUniqueGroups, DeleteSchedule,
 )
 from src.domain.events import (
     GotSchedules,
@@ -18,7 +18,7 @@ from src.domain.events import (
     GotUniqueYears,
     ScheduleIsCreated,
     GotUniqueMentors,
-    GotUniqueGroups,
+    GotUniqueGroups, ScheduleIsDeleted,
 )
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
@@ -97,6 +97,13 @@ class Controller:
             CreateSchedule(year=year, term=term)
         )
         await create_dialog.check_if_new_schedule_is_created(event.schedule)
+
+    @use_loop
+    async def delete_schedule(self, schedule_id: int):
+        event: ScheduleIsDeleted = await self.bus.handle_command(
+            DeleteSchedule(schedule_id=schedule_id)
+        )
+        return event.success
 
     @use_loop
     async def fill_mentors_selector(self, mentors_selector, fio_substring):

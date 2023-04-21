@@ -42,3 +42,7 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     async def create_schedule(self, year, term):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    async def delete_schedule(self, id_):
+        raise NotImplementedError

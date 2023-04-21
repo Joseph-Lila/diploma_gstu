@@ -2,6 +2,8 @@ from kivy.app import App
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
+import asynckivy as ak
+from kivy.app import App
 from src.adapters.orm import Schedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
@@ -51,7 +53,7 @@ class ScheduleScreenView(MDScreen):
             {
                 "text": "Автозаполнение",
                 "viewclass": "OneLineListItem",
-                "on_release": lambda: self._autofilling(),
+                "on_release": lambda: self._auto_filling(),
             },
             {
                 "viewclass": "MDSeparator",
@@ -88,8 +90,13 @@ class ScheduleScreenView(MDScreen):
 
     def _delete_schedule(self, *args):
         self.file_tab_menu.dismiss()
-        # TODO  save changes in database
+        ak.start(
+            App.get_running_app().controller.delete_schedule(
+                self.schedule.id,
+            )
+        )
+        App.get_running_app().root.go_to_home_screen()
 
-    def _autofilling(self, *args):
+    def _auto_filling(self, *args):
         self.file_tab_menu.dismiss()
         # TODO  save changes in database

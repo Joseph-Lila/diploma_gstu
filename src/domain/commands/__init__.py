@@ -7,3 +7,4 @@ from .get_unique_years_depending_on_schedule import GetUniqueYearsDependingOnSch
 from .get_unique_years_depending_on_workload import GetUniqueYearsDependingOnWorkload
 from .get_unique_mentors import GetUniqueMentors
 from .get_unique_groups import GetUniqueGroups
+from .delete_schedule import DeleteSchedule

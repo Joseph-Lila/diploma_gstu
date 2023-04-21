@@ -11,7 +11,7 @@ from src.domain.commands import (
     GetUniqueYearsDependingOnSchedule,
     GetUniqueYearsDependingOnWorkload,
     GetUniqueMentors,
-    GetUniqueGroups,
+    GetUniqueGroups, DeleteSchedule,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -20,7 +20,7 @@ from src.domain.events import (
     GotUniqueYears,
     ScheduleIsCreated,
     GotUniqueMentors,
-    GotUniqueGroups,
+    GotUniqueGroups, ScheduleIsDeleted,
 )
 
 
@@ -100,6 +100,16 @@ async def create_schedule(
         return ScheduleIsCreated(None)
 
 
+async def delete_schedule(
+    cmd: DeleteSchedule,
+    repository: AbstractRepository,
+) -> ScheduleIsDeleted:
+    await repository.delete_schedule(
+        id_=cmd.schedule_id,
+    )
+    return ScheduleIsDeleted(True)
+
+
 async def get_unique_mentors(
     cmd: GetUniqueMentors,
     repository: AbstractRepository,
@@ -128,6 +138,7 @@ COMMAND_HANDLERS = {
     GetUniqueTermsDependingOnSchedule: get_unique_terms_depending_on_schedule,
     Get10Schedules: get_10_schedules,
     CreateSchedule: create_schedule,
+    DeleteSchedule: delete_schedule,
     GetUniqueMentors: get_unique_mentors,
     GetUniqueGroups: get_unique_groups,
 }  # type: Dict[Type[Command], Callable]

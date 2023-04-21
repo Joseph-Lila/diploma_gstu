@@ -1,4 +1,3 @@
-import csv
 from typing import Optional
 
 from sqlalchemy import select
@@ -110,3 +109,9 @@ class PostgresRepository(AbstractRepository):
             session.add(new_elem)
             await session.flush()
         return new_elem
+
+    async def delete_schedule(self, id_):
+        stmt = select(Schedule).filter_by(id=id_)
+        async with self.async_session() as session, session.begin():
+            schedule = await session.scalar(stmt)
+            await session.delete(schedule)

@@ -10,6 +10,10 @@ class CreateDialog(MDCard, ModalView):
     year_hint = "Выберите год"
     term_hint = "Выберите семестр"
 
+    def on_pre_open(self):
+        self.ids.year.change_text_value('')
+        self.ids.term.change_text_value('')
+
     def send_command_to_get_years_values(self, *args):
         term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
@@ -43,8 +47,8 @@ class CreateDialog(MDCard, ModalView):
         if new_schedule is not None:
             self.ids.outcome_text_input.text = "Расписание успешно создано!"
             await asyncio.sleep(1)
-            App.get_running_app().root.go_to_schedule_screen(new_schedule)
             self.dismiss()
+            App.get_running_app().root.go_to_schedule_screen(new_schedule)
         else:
             self.ids.outcome_text_input.text = (
                 "Расписание с заданными параметрами уже существует."
