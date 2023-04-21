@@ -11,8 +11,8 @@ class CreateDialog(MDCard, ModalView):
     term_hint = "Выберите семестр"
 
     def on_pre_open(self):
-        self.ids.year.change_text_value('')
-        self.ids.term.change_text_value('')
+        self.ids.year.change_text_value("")
+        self.ids.term.change_text_value("")
 
     def send_command_to_get_years_values(self, *args):
         term = None if self.ids.term.text == "" else self.ids.term.text

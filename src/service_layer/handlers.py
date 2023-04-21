@@ -11,7 +11,10 @@ from src.domain.commands import (
     GetUniqueYearsDependingOnSchedule,
     GetUniqueYearsDependingOnWorkload,
     GetUniqueMentors,
-    GetUniqueGroups, DeleteSchedule, GetUniqueFaculties, GetUniqueGroupsDependingOnFaculty,
+    GetUniqueGroups,
+    DeleteSchedule,
+    GetUniqueFaculties,
+    GetUniqueGroupsDependingOnFaculty,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -20,7 +23,9 @@ from src.domain.events import (
     GotUniqueYears,
     ScheduleIsCreated,
     GotUniqueMentors,
-    GotUniqueGroups, ScheduleIsDeleted, GotUniqueFaculties,
+    GotUniqueGroups,
+    ScheduleIsDeleted,
+    GotUniqueFaculties,
 )
 
 
@@ -134,7 +139,9 @@ async def get_unique_groups_depending_on_faculty(
     cmd: GetUniqueGroupsDependingOnFaculty,
     repository: AbstractRepository,
 ) -> GotUniqueGroups:
-    groups_titles: List[str] = await repository.get_unique_groups_titles_depending_on_faculty(
+    groups_titles: List[
+        str
+    ] = await repository.get_unique_groups_titles_depending_on_faculty(
         cmd.title_substring,
         cmd.faculty,
     )

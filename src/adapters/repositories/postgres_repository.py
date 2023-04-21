@@ -8,7 +8,8 @@ from src.adapters.orm import (
     Workload,
     async_session_factory,
     Mentor,
-    Group, Faculty,
+    Group,
+    Faculty,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -55,7 +56,9 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_groups_titles_depending_on_faculty(self, title_substring: str, faculty_title: Optional[str]):
+    async def get_unique_groups_titles_depending_on_faculty(
+        self, title_substring: str, faculty_title: Optional[str]
+    ):
         if faculty_title is not None:
             stmt = (
                 select(Group.title)
@@ -142,9 +145,6 @@ class PostgresRepository(AbstractRepository):
         return new_elem
 
     async def delete_schedule(self, id_):
-        stmt = (
-            delete(Schedule)
-            .where(Schedule.id == id_)
-        )
+        stmt = delete(Schedule).where(Schedule.id == id_)
         async with self.async_session() as session, session.begin():
             await session.execute(stmt)

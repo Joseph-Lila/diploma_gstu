@@ -17,7 +17,7 @@ async def bootstrap(
     connection_string=config.get_postgres_uri(),
 ) -> MessageBus:
     if drop_create_tables:
-        Logger.info('Application: Creating tables...')
+        Logger.info("Application: Creating tables...")
         try:
             await create_tables(connection_string=connection_string)
         except:
@@ -25,7 +25,7 @@ async def bootstrap(
             raise
 
     if init_database_data:
-        Logger.info('Application: Filling tables with initial data...')
+        Logger.info("Application: Filling tables with initial data...")
         try:
             await init_database_with_data(connection_string=connection_string)
         except:

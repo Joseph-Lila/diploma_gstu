@@ -25,7 +25,7 @@ class GroupsScheduleLegend(MDCard):
         )
 
     def send_command_to_get_groups_titles_depending_on_faculty(self, *args):
-        faculty = None if self.ids.faculty.text == '' else self.ids.faculty.text
+        faculty = None if self.ids.faculty.text == "" else self.ids.faculty.text
         ak.start(
             App.get_running_app().controller.fill_groups_selector_depending_on_faculty(
                 self.ids.group,

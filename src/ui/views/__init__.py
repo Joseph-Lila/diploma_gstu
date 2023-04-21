@@ -1,3 +1,4 @@
+from .file_tab_options import FileTabOptions
 from .workload_area import WorkloadArea
 from .auditories_schedule import AuditoriesSchedule
 from .auditories_schedule_legend import AuditoriesScheduleLegend

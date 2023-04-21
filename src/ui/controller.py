@@ -11,7 +11,10 @@ from src.domain.commands import (
     GetUniqueYearsDependingOnSchedule,
     GetUniqueYearsDependingOnWorkload,
     GetUniqueMentors,
-    GetUniqueGroups, DeleteSchedule, GetUniqueFaculties, GetUniqueGroupsDependingOnFaculty,
+    GetUniqueGroups,
+    DeleteSchedule,
+    GetUniqueFaculties,
+    GetUniqueGroupsDependingOnFaculty,
 )
 from src.domain.events import (
     GotSchedules,
@@ -19,7 +22,9 @@ from src.domain.events import (
     GotUniqueYears,
     ScheduleIsCreated,
     GotUniqueMentors,
-    GotUniqueGroups, ScheduleIsDeleted, GotUniqueFaculties,
+    GotUniqueGroups,
+    ScheduleIsDeleted,
+    GotUniqueFaculties,
 )
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
@@ -128,7 +133,9 @@ class Controller:
         await groups_selector.update_variants(event.groups)
 
     @use_loop
-    async def fill_groups_selector_depending_on_faculty(self, groups_selector, title_substring, faculty: Optional[str]):
+    async def fill_groups_selector_depending_on_faculty(
+        self, groups_selector, title_substring, faculty: Optional[str]
+    ):
         event: GotUniqueGroups = await self.bus.handle_command(
             GetUniqueGroupsDependingOnFaculty(
                 title_substring,
