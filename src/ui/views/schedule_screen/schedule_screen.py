@@ -1,13 +1,14 @@
-from kivy.app import App
+from kivy.uix.screenmanager import NoTransition, WipeTransition
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
+from kivymd.uix.screenmanager import MDScreenManager
+
 from src.adapters.orm import Schedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
-from src.ui.views.workloads_manager_dialog import WorkloadsManagerDialog
 
 
 class ScheduleScreenView(MDScreen):
@@ -16,12 +17,21 @@ class ScheduleScreenView(MDScreen):
         self.schedule = None
         self._init_tabs_menu_items()
         self._init_tab_menus()
+
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
-        self.workloads_manager_dialog = WorkloadsManagerDialog()
 
-    def show_workloads_manager_dialog(self, *args):
-        self.workloads_manager_dialog.open()
+    def change_schedule_view(self, segmented_control_instance, item_instance):
+        manager = self.ids.first_scr_mng if segmented_control_instance == self.ids.first_segm_control\
+            else self.ids.second_scr_mng
+        if item_instance.text == 'Группы':
+            manager.current = 'groups'
+        elif item_instance.text == 'Преподаватели':
+            manager.current = 'mentors'
+        elif item_instance.text == 'Аудитории':
+            manager.current = 'auditories'
+        elif item_instance.text == 'Нагрузка':
+            manager.current = 'workloads'
 
     def update_metadata(self, schedule: Schedule):
         self.schedule = schedule

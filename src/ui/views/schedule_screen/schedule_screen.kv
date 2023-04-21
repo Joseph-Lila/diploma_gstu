@@ -70,18 +70,6 @@
                 font_size: 16
                 pos_hint: {"center_y": .5}
 
-            MDSeparator:
-                orientation: 'vertical'
-                color: 'white'
-
-            MDTextButton:
-                text: 'Менеджер нагрузки'
-                color: 'white'
-                font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-                font_size: 16
-                pos_hint: {"center_y": .5}
-                on_press: root.show_workloads_manager_dialog()
-
         BoxLayout:
             padding: 5
             spacing: 10
@@ -94,8 +82,11 @@
                     size_hint_y: .08
 
                     MDSegmentedControl:
+                        id: first_segm_control
+
                         md_bg_color: "brown"
                         segment_color: "red"
+                        on_active: root.change_schedule_view(*args)
 
                         MDSegmentedControlItem:
                             text: "Группы"
@@ -114,7 +105,28 @@
 
                     md_bg_color: 'pink'
 
-                    MentorsSchedule:
+                    MDScreenManager:
+                        id: first_scr_mng
+
+                        MDScreen:
+                            name: 'groups'
+
+                            GroupsSchedule:
+
+                        MDScreen:
+                            name: 'mentors'
+
+                            MentorsSchedule:
+
+                        MDScreen:
+                            name: 'auditories'
+
+                            AuditoriesSchedule:
+
+                        MDScreen:
+                            name: 'workloads'
+
+                            WorkloadArea:
 
             MDCard:
                 orientation: 'vertical'
@@ -124,8 +136,11 @@
                     size_hint_y: .08
 
                     MDSegmentedControl:
+                        id: second_segm_control
+
                         md_bg_color: "brown"
                         segment_color: "red"
+                        on_active: root.change_schedule_view(*args)
 
                         MDSegmentedControlItem:
                             text: "Группы"
@@ -144,4 +159,25 @@
 
                     md_bg_color: 'pink'
 
-                    GroupsSchedule:
+                    MDScreenManager:
+                        id: second_scr_mng
+
+                        MDScreen:
+                            name: 'groups'
+
+                            GroupsSchedule:
+
+                        MDScreen:
+                            name: 'mentors'
+
+                            MentorsSchedule:
+
+                        MDScreen:
+                            name: 'auditories'
+
+                            AuditoriesSchedule:
+
+                        MDScreen:
+                            name: 'workloads'
+
+                            WorkloadArea:
