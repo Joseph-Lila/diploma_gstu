@@ -142,7 +142,6 @@ class PostgresRepository(AbstractRepository):
         return new_elem
 
     async def delete_schedule(self, id_):
-        print('delete')
         stmt = (
             delete(Schedule)
             .where(Schedule.id == id_)
