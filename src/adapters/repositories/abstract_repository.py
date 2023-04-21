@@ -38,6 +38,12 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    async def get_unique_audiences_numbers_depending_on_department(
+        self, number_substring: str, department_title: Optional[str]
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     async def get_unique_mentors_fios_depending_on_department(
         self, fio_substring: str, department_title: Optional[str]
     ):

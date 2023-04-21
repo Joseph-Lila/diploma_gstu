@@ -14,7 +14,10 @@ from src.domain.commands import (
     GetUniqueGroups,
     DeleteSchedule,
     GetUniqueFaculties,
-    GetUniqueGroupsDependingOnFaculty, GetUniqueDepartments, GetUniqueMentorsDependingOnDepartment,
+    GetUniqueGroupsDependingOnFaculty,
+    GetUniqueDepartments,
+    GetUniqueMentorsDependingOnDepartment,
+    GetUniqueAudiencesDependingOnDepartment,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -26,6 +29,7 @@ from src.domain.events import (
     GotUniqueGroups,
     ScheduleIsDeleted,
     GotUniqueFaculties,
+    GotUniqueAudiences,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -173,11 +177,26 @@ async def get_unique_mentors_depending_on_department(
     cmd: GetUniqueMentorsDependingOnDepartment,
     repository: AbstractRepository,
 ) -> GotUniqueMentors:
-    mentors_titles: List[str] = await repository.get_unique_mentors_fios_depending_on_department(
+    mentors_titles: List[
+        str
+    ] = await repository.get_unique_mentors_fios_depending_on_department(
         cmd.fio_substring,
         cmd.department,
     )
     return GotUniqueMentors(mentors_titles)
+
+
+async def get_unique_audiences_depending_on_department(
+    cmd: GetUniqueAudiencesDependingOnDepartment,
+    repository: AbstractRepository,
+) -> GotUniqueAudiences:
+    audiences_numbers: List[
+        str
+    ] = await repository.get_unique_audiences_numbers_depending_on_department(
+        cmd.number_substring,
+        cmd.department,
+    )
+    return GotUniqueAudiences(audiences_numbers)
 
 
 COMMAND_HANDLERS = {
@@ -195,4 +214,5 @@ COMMAND_HANDLERS = {
     GetUniqueFaculties: get_unique_faculties,
     GetUniqueDepartments: get_unique_departments,
     GetUniqueMentorsDependingOnDepartment: get_unique_mentors_depending_on_department,
+    GetUniqueAudiencesDependingOnDepartment: get_unique_audiences_depending_on_department,
 }  # type: Dict[Type[Command], Callable]

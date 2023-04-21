@@ -11,4 +11,9 @@ from .delete_schedule import DeleteSchedule
 from .get_unique_faculties import GetUniqueFaculties
 from .get_unique_groups_depending_on_faculty import GetUniqueGroupsDependingOnFaculty
 from .get_unique_departments import GetUniqueDepartments
-from .get_unique_mentors_depending_on_department import GetUniqueMentorsDependingOnDepartment
+from .get_unique_mentors_depending_on_department import (
+    GetUniqueMentorsDependingOnDepartment,
+)
+from .get_unique_audiences_depending_on_department import (
+    GetUniqueAudiencesDependingOnDepartment,
+)

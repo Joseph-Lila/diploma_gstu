@@ -14,7 +14,10 @@ from src.domain.commands import (
     GetUniqueGroups,
     DeleteSchedule,
     GetUniqueFaculties,
-    GetUniqueGroupsDependingOnFaculty, GetUniqueDepartments, GetUniqueMentorsDependingOnDepartment,
+    GetUniqueGroupsDependingOnFaculty,
+    GetUniqueDepartments,
+    GetUniqueMentorsDependingOnDepartment,
+    GetUniqueAudiencesDependingOnDepartment,
 )
 from src.domain.events import (
     GotSchedules,
@@ -25,6 +28,7 @@ from src.domain.events import (
     GotUniqueGroups,
     ScheduleIsDeleted,
     GotUniqueFaculties,
+    GotUniqueAudiences,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -163,3 +167,15 @@ class Controller:
             )
         )
         await mentors_selector.update_variants(event.mentors)
+
+    @use_loop
+    async def fill_audiences_selector_depending_on_department(
+        self, audiences_selector, number_substring, department: Optional[str]
+    ):
+        event: GotUniqueAudiences = await self.bus.handle_command(
+            GetUniqueAudiencesDependingOnDepartment(
+                number_substring,
+                department,
+            )
+        )
+        await audiences_selector.update_variants(event.audiences)

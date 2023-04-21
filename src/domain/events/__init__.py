@@ -6,3 +6,4 @@ from .got_unique_mentors import GotUniqueMentors
 from .got_unique_groups import GotUniqueGroups
 from .schedule_is_deleted import ScheduleIsDeleted
 from .got_unique_faculties import GotUniqueFaculties
+from .got_unique_audiences import GotUniqueAudiences

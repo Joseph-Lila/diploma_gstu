@@ -9,7 +9,9 @@ from src.adapters.orm import (
     async_session_factory,
     Mentor,
     Group,
-    Faculty, Department,
+    Faculty,
+    Department,
+    Audience,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -177,6 +179,29 @@ class PostgresRepository(AbstractRepository):
                 .distinct()
                 .order_by(Mentor.fio)
                 .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
+            )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_audiences_numbers_depending_on_department(
+        self, number_substring: str, department_title: Optional[str]
+    ):
+        if department_title is not None:
+            stmt = (
+                select(Audience.number)
+                .join(Department)
+                .where(Department.title == department_title)
+                .distinct()
+                .filter(Audience.number.ilike(f"%{number_substring}%"))
+                .order_by(Audience.number)
+            )
+        else:
+            stmt = (
+                select(Audience.number)
+                .distinct()
+                .order_by(Audience.number)
+                .filter(Audience.number.ilike(f"%{number_substring}%"))
             )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
