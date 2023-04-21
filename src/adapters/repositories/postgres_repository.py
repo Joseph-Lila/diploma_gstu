@@ -57,13 +57,11 @@ class PostgresRepository(AbstractRepository):
 
     async def get_unique_groups_titles_depending_on_faculty(self, title_substring: str, faculty_title: Optional[str]):
         if faculty_title is not None:
-            stmt = select(Faculty).filter_by(title=faculty_title)
-            async with self.async_session() as session:
-                faculty = await session.scalar(stmt)
             stmt = (
                 select(Group.title)
+                .join(Faculty)
+                .where(Faculty.title == faculty_title)
                 .distinct()
-                .filter_by(faculty_id=faculty.id)
                 .filter(Group.title.ilike(f"%{title_substring}%"))
                 .order_by(Group.title)
             )
