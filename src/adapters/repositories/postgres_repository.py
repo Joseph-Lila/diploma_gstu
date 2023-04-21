@@ -9,7 +9,7 @@ from src.adapters.orm import (
     async_session_factory,
     Mentor,
     Group,
-    Faculty,
+    Faculty, Department,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -89,6 +89,16 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
+    async def get_unique_departments_titles(self, title_substring: str):
+        stmt = (
+            select(Department.title)
+            .order_by(Department.title)
+            .filter(Department.title.ilike(f"%{title_substring}%"))
+        )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
     async def get_unique_years_depending_on_workload(self, term: Optional[str]):
         stmt = select(Workload.year)
         if term:
@@ -148,3 +158,26 @@ class PostgresRepository(AbstractRepository):
         stmt = delete(Schedule).where(Schedule.id == id_)
         async with self.async_session() as session, session.begin():
             await session.execute(stmt)
+
+    async def get_unique_mentors_fios_depending_on_department(
+        self, fio_substring: str, department_title: Optional[str]
+    ):
+        if department_title is not None:
+            stmt = (
+                select(Mentor.fio)
+                .join(Department)
+                .where(Department.title == department_title)
+                .distinct()
+                .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
+                .order_by(Mentor.fio)
+            )
+        else:
+            stmt = (
+                select(Mentor.fio)
+                .distinct()
+                .order_by(Mentor.fio)
+                .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
+            )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()

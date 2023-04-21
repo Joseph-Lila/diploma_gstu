@@ -14,7 +14,7 @@ from src.domain.commands import (
     GetUniqueGroups,
     DeleteSchedule,
     GetUniqueFaculties,
-    GetUniqueGroupsDependingOnFaculty,
+    GetUniqueGroupsDependingOnFaculty, GetUniqueDepartments, GetUniqueMentorsDependingOnDepartment,
 )
 from src.domain.events import (
     GotSchedules,
@@ -26,6 +26,7 @@ from src.domain.events import (
     ScheduleIsDeleted,
     GotUniqueFaculties,
 )
+from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -143,3 +144,22 @@ class Controller:
             )
         )
         await groups_selector.update_variants(event.groups)
+
+    @use_loop
+    async def fill_departments_selector(self, departments_selector, title_substring):
+        event: GotUniqueDepartments = await self.bus.handle_command(
+            GetUniqueDepartments(title_substring)
+        )
+        await departments_selector.update_variants(event.departments)
+
+    @use_loop
+    async def fill_mentors_selector_depending_on_department(
+        self, mentors_selector, title_substring, department: Optional[str]
+    ):
+        event: GotUniqueMentors = await self.bus.handle_command(
+            GetUniqueMentorsDependingOnDepartment(
+                title_substring,
+                department,
+            )
+        )
+        await mentors_selector.update_variants(event.mentors)

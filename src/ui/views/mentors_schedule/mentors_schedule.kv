@@ -4,21 +4,9 @@
     spacing: 7
 
     BoxLayout:
-        size_hint_y: .17
+        size_hint_y: .194
 
         MentorsScheduleLegend:
+            schedule_view: root
 
-    MDScrollView:
-        bar_inactive_color: 33/255, 33/255, 33/255, 1
-        bar_color: 92/255, 0/255, 115/255, 1
-        do_scroll_x: True
-        do_scroll_y: True
-
-        MDGridLayout:
-            id: grid_for_records
-
-            rows: 1
-            cols: None
-            size_hint: None, None
-            adaptive_size: True
-            padding: 10
+    Widget:
