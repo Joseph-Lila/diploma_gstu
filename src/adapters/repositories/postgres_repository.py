@@ -12,6 +12,8 @@ from src.adapters.orm import (
     Faculty,
     Department,
     Audience,
+    Subject,
+    SubjectType,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -53,6 +55,28 @@ class PostgresRepository(AbstractRepository):
             .distinct()
             .order_by(Group.title)
             .filter(Group.title.ilike(f"%{title_substring}%"))
+        )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_subjects_titles(self, title_substring: str):
+        stmt = (
+            select(Subject.title)
+            .distinct()
+            .order_by(Subject.title)
+            .filter(Subject.title.ilike(f"%{title_substring}%"))
+        )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_unique_subject_types_titles(self, title_substring: str):
+        stmt = (
+            select(SubjectType.title)
+            .distinct()
+            .order_by(SubjectType.title)
+            .filter(SubjectType.title.ilike(f"%{title_substring}%"))
         )
         async with self.async_session() as session:
             items = await session.scalars(stmt)

@@ -32,6 +32,14 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    async def get_unique_subjects_titles(self, title_substring: str):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_unique_subject_types_titles(self, title_substring: str):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     async def get_unique_groups_titles_depending_on_faculty(
         self, title_substring: str, faculty_title: Optional[str]
     ):

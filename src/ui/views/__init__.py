@@ -1,5 +1,4 @@
 from .file_tab_options import FileTabOptions
-from .workload_area import WorkloadArea
 from .auditories_schedule import AuditoriesSchedule
 from .auditories_schedule_legend import AuditoriesScheduleLegend
 from .clickable_text_field_round import ClickableTextFieldRound
@@ -13,3 +12,5 @@ from .mentors_schedule_legend import MentorsScheduleLegend
 from .schedule_screen import ScheduleScreenView
 from .auto_complete_label import AutoCompleteLabel
 from .auto_complete_text_field import AutoCompleteTextField
+from .workload_area import WorkloadArea
+from .workload_area_legend import WorkloadAreaLegend

@@ -18,6 +18,8 @@ from src.domain.commands import (
     GetUniqueDepartments,
     GetUniqueMentorsDependingOnDepartment,
     GetUniqueAudiencesDependingOnDepartment,
+    GetUniqueSubjectTypes,
+    GetUniqueSubjects,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -30,6 +32,8 @@ from src.domain.events import (
     ScheduleIsDeleted,
     GotUniqueFaculties,
     GotUniqueAudiences,
+    GotUniqueSubjectTypes,
+    GotUniqueSubjects,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -173,6 +177,26 @@ async def get_unique_departments(
     return GotUniqueDepartments(departments_titles)
 
 
+async def got_unique_subjects(
+    cmd: GetUniqueSubjects,
+    repository: AbstractRepository,
+) -> GotUniqueSubjects:
+    subjects_titles: List[str] = await repository.get_unique_subjects_titles(
+        cmd.title_substring
+    )
+    return GotUniqueSubjects(subjects_titles)
+
+
+async def got_unique_subject_types(
+    cmd: GetUniqueSubjectTypes,
+    repository: AbstractRepository,
+) -> GotUniqueSubjectTypes:
+    subject_types_titles: List[str] = await repository.get_unique_subject_types_titles(
+        cmd.title_substring
+    )
+    return GotUniqueSubjectTypes(subject_types_titles)
+
+
 async def get_unique_mentors_depending_on_department(
     cmd: GetUniqueMentorsDependingOnDepartment,
     repository: AbstractRepository,
@@ -215,4 +239,6 @@ COMMAND_HANDLERS = {
     GetUniqueDepartments: get_unique_departments,
     GetUniqueMentorsDependingOnDepartment: get_unique_mentors_depending_on_department,
     GetUniqueAudiencesDependingOnDepartment: get_unique_audiences_depending_on_department,
+    GetUniqueSubjects: got_unique_subjects,
+    GetUniqueSubjectTypes: got_unique_subject_types,
 }  # type: Dict[Type[Command], Callable]

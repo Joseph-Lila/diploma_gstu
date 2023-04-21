@@ -7,3 +7,5 @@ from .got_unique_groups import GotUniqueGroups
 from .schedule_is_deleted import ScheduleIsDeleted
 from .got_unique_faculties import GotUniqueFaculties
 from .got_unique_audiences import GotUniqueAudiences
+from .got_unique_subjects import GotUniqueSubjects
+from .got_unique_subject_types import GotUniqueSubjectTypes
