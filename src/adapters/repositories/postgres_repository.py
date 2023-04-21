@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.adapters.orm import (
@@ -142,7 +142,10 @@ class PostgresRepository(AbstractRepository):
         return new_elem
 
     async def delete_schedule(self, id_):
-        stmt = select(Schedule).filter_by(id=id_)
+        print('delete')
+        stmt = (
+            delete(Schedule)
+            .where(Schedule.id == id_)
+        )
         async with self.async_session() as session, session.begin():
-            schedule = await session.scalar(stmt)
-            await session.delete(schedule)
+            await session.execute(stmt)
