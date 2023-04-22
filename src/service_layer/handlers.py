@@ -20,6 +20,7 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjectTypes,
     GetUniqueSubjects,
+    GetWorkloads,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -34,6 +35,7 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
+    GotWorkloads,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -177,7 +179,7 @@ async def get_unique_departments(
     return GotUniqueDepartments(departments_titles)
 
 
-async def got_unique_subjects(
+async def get_unique_subjects(
     cmd: GetUniqueSubjects,
     repository: AbstractRepository,
 ) -> GotUniqueSubjects:
@@ -187,7 +189,7 @@ async def got_unique_subjects(
     return GotUniqueSubjects(subjects_titles)
 
 
-async def got_unique_subject_types(
+async def get_unique_subject_types(
     cmd: GetUniqueSubjectTypes,
     repository: AbstractRepository,
 ) -> GotUniqueSubjectTypes:
@@ -223,6 +225,21 @@ async def get_unique_audiences_depending_on_department(
     return GotUniqueAudiences(audiences_numbers)
 
 
+async def get_workloads(
+    cmd: GetWorkloads,
+    repository: AbstractRepository,
+) -> GotWorkloads:
+    data: List[tuple] = await repository.get_workloads(
+        cmd.group_substring,
+        cmd.subject_substring,
+        cmd.subject_type_substring,
+        cmd.mentor_substring,
+        cmd.year,
+        cmd.term,
+    )
+    return GotWorkloads(data)
+
+
 COMMAND_HANDLERS = {
     GetSchedules: get_schedules,
     GetUniqueYearsDependingOnWorkload: get_unique_years_depending_on_workload,
@@ -239,6 +256,7 @@ COMMAND_HANDLERS = {
     GetUniqueDepartments: get_unique_departments,
     GetUniqueMentorsDependingOnDepartment: get_unique_mentors_depending_on_department,
     GetUniqueAudiencesDependingOnDepartment: get_unique_audiences_depending_on_department,
-    GetUniqueSubjects: got_unique_subjects,
-    GetUniqueSubjectTypes: got_unique_subject_types,
+    GetUniqueSubjects: get_unique_subjects,
+    GetUniqueSubjectTypes: get_unique_subject_types,
+    GetWorkloads: get_workloads,
 }  # type: Dict[Type[Command], Callable]

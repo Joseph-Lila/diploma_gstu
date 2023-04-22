@@ -13,6 +13,9 @@ class ScreenMasterView(ScreenManager):
         super().__init__(**kwargs)
         self.transition = NoTransition()
 
+    def get_current_screen_view(self, *args):
+        return self.current_screen
+
     def go_to_home_screen(self):
         self.current = Screens.HOME_SCREEN.name
 

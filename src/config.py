@@ -1,7 +1,6 @@
 """ Module srс """
 import os
 import pathlib
-from typing import List
 
 from dotenv import load_dotenv
 

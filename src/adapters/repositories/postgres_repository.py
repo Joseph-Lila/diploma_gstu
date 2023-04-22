@@ -82,6 +82,38 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
+    async def get_workloads(
+        self,
+        group_substring,
+        subject_substring,
+        subject_type_substring,
+        mentor_substring,
+        year,
+        term,
+    ):
+        stmt = (
+            select(
+                Mentor.fio,
+                Group.title,
+                Subject.title,
+                SubjectType.title,
+                Workload.hours,
+            )
+            .join(Mentor)
+            .join(Group)
+            .join(Subject)
+            .join(SubjectType)
+            .where(Workload.year == year and Workload.term == term)
+            .filter(Group.title.ilike(f"%{group_substring}%"))
+            .filter(Subject.title.ilike(f"%{subject_substring}%"))
+            .filter(SubjectType.title.ilike(f"%{subject_type_substring}%"))
+            .filter(Mentor.fio.ilike(f"%{mentor_substring}%"))
+            .order_by(Mentor.fio)
+        )
+        async with self.async_session() as session:
+            items = await session.execute(stmt)
+        return items.fetchall()
+
     async def get_unique_groups_titles_depending_on_faculty(
         self, title_substring: str, faculty_title: Optional[str]
     ):

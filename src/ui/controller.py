@@ -20,6 +20,7 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjects,
     GetUniqueSubjectTypes,
+    GetWorkloads,
 )
 from src.domain.events import (
     GotSchedules,
@@ -33,6 +34,7 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
+    GotWorkloads,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -199,3 +201,26 @@ class Controller:
             )
         )
         await audiences_selector.update_variants(event.audiences)
+
+    @use_loop
+    async def get_workloads(
+        self,
+        recycle_view_master,
+        group_substring,
+        subject_substring,
+        subject_type_substring,
+        mentor_substring,
+        year,
+        term,
+    ):
+        event: GotWorkloads = await self.bus.handle_command(
+            GetWorkloads(
+                group_substring,
+                subject_substring,
+                subject_type_substring,
+                mentor_substring,
+                year,
+                term,
+            )
+        )
+        await recycle_view_master.update_data(event.data)

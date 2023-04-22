@@ -3,6 +3,8 @@ from kivymd.uix.card import MDCard
 from kivy.app import App
 import asynckivy as ak
 
+from src.adapters.orm import Schedule
+
 
 class WorkloadAreaLegend(MDCard):
     schedule_view = ObjectProperty()
@@ -47,5 +49,26 @@ class WorkloadAreaLegend(MDCard):
             App.get_running_app().controller.fill_subject_types_selector(
                 self.ids.subject_type,
                 self.ids.subject_type.text,
+            )
+        )
+
+    def send_command_to_get_workload_data(self, *args):
+        schedule: Schedule = (
+            App.get_running_app().root.get_current_screen_view().schedule
+        )
+        if not schedule:
+            raise
+
+        year = schedule.year
+        term = schedule.term
+        ak.start(
+            App.get_running_app().controller.get_workloads(
+                self.schedule_view,
+                self.ids.group.text,
+                self.ids.subject.text,
+                self.ids.subject_type.text,
+                self.ids.mentor.text,
+                year,
+                term,
             )
         )

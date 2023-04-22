@@ -48,6 +48,7 @@ class ScheduleScreenView(MDScreen):
 
     def update_metadata(self, schedule: Schedule):
         self.schedule = schedule
+        # TODO update schedule views data
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
 
     def close_screen(self, *args):

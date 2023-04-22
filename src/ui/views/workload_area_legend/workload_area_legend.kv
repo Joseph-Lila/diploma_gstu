@@ -3,26 +3,30 @@
 
     spacing: 10
 
-    BoxLayout:
+    MDFloatLayout:
 
-        Widget:
+        MDBoxLayout:
+            pos: 10, 620
 
-        BoxLayout:
-            orientation: 'vertical'
-            size_hint_x: .1
+            Widget:
 
-            MDIconButton:
-                icon: 'assets/images/icons8-google-поиск 1.png'
-                icon_size: "30sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                theme_text_color: "Hint"
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .1
 
-            MDIconButton:
-                icon: 'assets/images/icons8-очистить-фильтры-96.png'
-                icon_size: "30sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                theme_text_color: "Hint"
-                on_press: root.clear_filters()
+                MDIconButton:
+                    icon: 'assets/images/icons8-google-поиск 1.png'
+                    icon_size: "30sp"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    theme_text_color: "Hint"
+                    on_press: root.send_command_to_get_workload_data()
+
+                MDIconButton:
+                    icon: 'assets/images/icons8-очистить-фильтры-96.png'
+                    icon_size: "30sp"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    theme_text_color: "Hint"
+                    on_press: root.clear_filters()
 
     MDBoxLayout:
         size_hint_y: None

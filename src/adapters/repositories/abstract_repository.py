@@ -80,3 +80,15 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     async def delete_schedule(self, id_):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_workloads(
+        self,
+        group_substring,
+        subject_substring,
+        subject_type_substring,
+        mentor_substring,
+        year,
+        term,
+    ):
+        raise NotImplementedError
