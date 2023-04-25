@@ -3,8 +3,10 @@ from typing import List
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivymd.uix.boxlayout import MDBoxLayout
 
+from src.ui.views.interfaces import AbstractAutoCompleteElement
 
-class AutoCompleteTextField(MDBoxLayout):
+
+class AutoCompleteTextField(MDBoxLayout, AbstractAutoCompleteElement):
     request_method = ObjectProperty()
     change_text_request = ObjectProperty()
     text = StringProperty()
