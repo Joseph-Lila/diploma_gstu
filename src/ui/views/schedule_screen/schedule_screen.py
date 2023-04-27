@@ -1,9 +1,11 @@
+from dataclasses import astuple
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
+from src.domain.entities import ScheduleMaster
 from src.ui.views import FileTabOptions
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
@@ -12,7 +14,7 @@ from src.ui.views.open_dialog import OpenDialog
 class ScheduleScreenView(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.schedule = None
+        self.schedule: ScheduleMaster = ScheduleMaster()
         self._init_file_tab_options_dialog()
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
@@ -47,7 +49,7 @@ class ScheduleScreenView(MDScreen):
             manager.current = "workloads"
 
     def update_metadata(self, schedule: Schedule):
-        self.schedule = schedule
+        self.schedule.update_metadata(*astuple(schedule))
         # TODO update schedule views data
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
 
