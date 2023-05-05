@@ -34,9 +34,10 @@ class ScheduleScreenView(MDScreen):
         self.file_tab_options_dialog.ids.close_btn.bind(on_press=self.close_screen)
 
     def change_schedule_view(self, segmented_control_instance, item_instance):
+        is_current_control_first = segmented_control_instance == self.ids.first_segm_control
         manager = (
             self.ids.first_scr_mng
-            if segmented_control_instance == self.ids.first_segm_control
+            if is_current_control_first
             else self.ids.second_scr_mng
         )
         if item_instance.text == "Группы":
