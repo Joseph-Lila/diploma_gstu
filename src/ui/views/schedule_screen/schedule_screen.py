@@ -5,7 +5,7 @@ import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
-from src.domain.entities import ScheduleMaster
+from src.ui.schedule_master import ScheduleMaster
 from src.ui.views import FileTabOptions
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
