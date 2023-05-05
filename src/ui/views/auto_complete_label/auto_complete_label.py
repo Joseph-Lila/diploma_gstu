@@ -49,6 +49,8 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
             {
                 "viewclass": "OneLineListItem",
                 "text": variant,
+                "bg_color": (185 / 255, 162 / 255, 255 / 255, 100 / 100),
+                "divider_color": "white",
                 "on_press": lambda x=variant: self.change_text_value_and_hide_options(
                     x
                 ),
