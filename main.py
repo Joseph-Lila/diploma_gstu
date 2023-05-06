@@ -1,3 +1,6 @@
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,disable_multitouch')
+
 import asyncio
 
 from kivy import Logger

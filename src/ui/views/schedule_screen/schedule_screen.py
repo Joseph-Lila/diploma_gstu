@@ -1,12 +1,15 @@
 from dataclasses import astuple
+from typing import Optional
+
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
+from src.domain.enums import ViewType
 from src.ui.schedule_master import ScheduleMaster
-from src.ui.views import FileTabOptions
+from src.ui.views import FileTabOptions, GroupsSchedule, AuditoriesSchedule, MentorsSchedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
 
@@ -15,6 +18,9 @@ class ScheduleScreenView(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.schedule: ScheduleMaster = ScheduleMaster()
+        self.groups_schedule: Optional[GroupsSchedule] = None
+        self.audiences_schedule: Optional[AuditoriesSchedule] = None
+        self.mentors_schedule: Optional[MentorsSchedule] = None
         self._init_file_tab_options_dialog()
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
@@ -51,8 +57,18 @@ class ScheduleScreenView(MDScreen):
 
     def update_metadata(self, schedule: Schedule):
         self.schedule.update_metadata(*astuple(schedule))
-        # TODO update schedule views data
+        ak.start(
+            self.update_specific_views()
+        )
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
+
+    async def update_specific_views(self, *args):
+        print('UPDATED SPECIFIC VIEWS')
+
+    def move_specific_view_to_schedule_view(self, schedule_view_instance, view_type: ViewType):
+        if view_type == ViewType.GROUP:
+            # remove needed widget from its parent
+            pass
 
     def close_screen(self, *args):
         self.file_tab_options_dialog.dismiss()

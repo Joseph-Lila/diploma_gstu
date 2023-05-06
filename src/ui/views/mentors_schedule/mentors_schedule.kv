@@ -3,10 +3,17 @@
     padding: 7
     spacing: 7
 
-    BoxLayout:
+    Widget:
         size_hint_y: .194
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Widget:
+
+    MDBoxLayout:
+        size_hint_y: None
+        height: 0
 
         MentorsScheduleLegend:
             schedule_view: root
-
-    Widget:
