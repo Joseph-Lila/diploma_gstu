@@ -1,4 +1,7 @@
 from kivy.config import Config
+
+from src.ui.model import Model
+
 Config.set('input', 'mouse', 'mouse,disable_multitouch')
 
 import asyncio
@@ -38,8 +41,8 @@ async def main():
         Logger.info("Application: Can't create bus...")
         return
     app = KivyApp()
-    app.bus = bus
-    app.controller = Controller(bus)
+    model: Model = Model(bus, None)
+    app.controller = Controller(model)
     await app.async_run(async_lib='asyncio')
 
 

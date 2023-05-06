@@ -21,5 +21,5 @@ class ScreenMasterView(ScreenManager):
 
     def go_to_schedule_screen(self, schedule: Schedule, *args):
         screen: ScheduleScreenView = self.get_screen(Screens.SCHEDULE_SCREEN.name)
-        screen.update_metadata(schedule)
+        screen.update_schedule_data(schedule)
         self.current = Screens.SCHEDULE_SCREEN.name

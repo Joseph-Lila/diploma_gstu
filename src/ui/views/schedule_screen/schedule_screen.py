@@ -17,7 +17,6 @@ from src.ui.views.open_dialog import OpenDialog
 class ScheduleScreenView(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.schedule: ScheduleMaster = ScheduleMaster()
         self.groups_schedule: Optional[GroupsSchedule] = None
         self.audiences_schedule: Optional[AuditoriesSchedule] = None
         self.mentors_schedule: Optional[MentorsSchedule] = None
@@ -55,15 +54,11 @@ class ScheduleScreenView(MDScreen):
         elif item_instance.text == "Нагрузка":
             manager.current = "workloads"
 
-    def update_metadata(self, schedule: Schedule):
-        self.schedule.update_metadata(*astuple(schedule))
+    def update_schedule_data(self, schedule: Schedule):
         ak.start(
-            self.update_specific_views()
+            App.get_running_app().controller.update_schedule_metadata(schedule)
         )
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
-
-    async def update_specific_views(self, *args):
-        print('UPDATED SPECIFIC VIEWS')
 
     def move_specific_view_to_schedule_view(self, schedule_view_instance, view_type: ViewType):
         if view_type == ViewType.GROUP:
@@ -85,9 +80,7 @@ class ScheduleScreenView(MDScreen):
     def delete_schedule(self, *args):
         self.file_tab_options_dialog.dismiss()
         ak.start(
-            App.get_running_app().controller.delete_schedule(
-                self.schedule.id,
-            )
+            App.get_running_app().controller.delete_schedule()
         )
         App.get_running_app().root.go_to_home_screen()
 
