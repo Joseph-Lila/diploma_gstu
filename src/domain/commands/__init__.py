@@ -1,3 +1,4 @@
+from .get_extended_schedule_records import GetExtendedScheduleRecords
 from .create_schedule import CreateSchedule
 from .get_10_schedules import Get10Schedules
 from .get_schedules import GetSchedules

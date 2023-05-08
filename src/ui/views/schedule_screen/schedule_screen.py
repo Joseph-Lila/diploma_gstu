@@ -60,11 +60,6 @@ class ScheduleScreenView(MDScreen):
         )
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
 
-    def move_specific_view_to_schedule_view(self, schedule_view_instance, view_type: ViewType):
-        if view_type == ViewType.GROUP:
-            # remove needed widget from its parent
-            pass
-
     def close_screen(self, *args):
         self.file_tab_options_dialog.dismiss()
         App.get_running_app().root.go_to_home_screen()

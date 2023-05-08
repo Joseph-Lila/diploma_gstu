@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 
@@ -8,4 +8,3 @@ class SubjectPart:
     subject_type_id: int
     subject: str
     subject_type: str
-    allowed_audiences: List[str]  # contains audiences numbers

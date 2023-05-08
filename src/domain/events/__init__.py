@@ -1,3 +1,4 @@
+from .got_dataframe import GotDataFrame
 from .got_schedules import GotSchedules
 from .got_unique_terms import GotUniqueTerms
 from .got_unique_years import GotUniqueYears

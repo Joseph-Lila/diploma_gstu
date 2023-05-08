@@ -1,5 +1,5 @@
 from typing import Optional
-
+import pandas as pd
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -13,7 +13,7 @@ from src.adapters.orm import (
     Department,
     Audience,
     Subject,
-    SubjectType,
+    SubjectType, ScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -81,6 +81,40 @@ class PostgresRepository(AbstractRepository):
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
+
+    async def get_extended_schedule_records(self, schedule_id: int):
+        stmt = (
+            select(
+                ScheduleRecord.day_of_week,
+                ScheduleRecord.pair_number,
+                ScheduleRecord.week_type,
+                ScheduleRecord.subgroup,
+                Audience.id,
+                Audience.number,
+                Audience.number_of_seats,
+                Group.id,
+                Group.title,
+                Group.number_of_students,
+                Mentor.id,
+                Mentor.fio,
+                Mentor.scientific_degree,
+                Subject.id,
+                SubjectType.id,
+                Subject.title,
+                SubjectType.title,
+                ScheduleRecord.mentor_free,
+                ScheduleRecord.id,
+            )
+            .join(Mentor)
+            .join(Group)
+            .join(Subject)
+            .join(Audience)
+            .join(SubjectType)
+            .where(ScheduleRecord.schedule_id == schedule_id)
+        )
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        return pd.DataFrame(query.fetchall())
 
     async def get_workloads(
         self,

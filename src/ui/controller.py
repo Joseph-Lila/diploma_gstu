@@ -3,7 +3,7 @@ import functools
 from dataclasses import astuple
 from typing import Optional
 
-from kivy import Logger
+from kivy.app import App
 
 from src.adapters.orm import Schedule
 from src.domain.commands import (
@@ -41,7 +41,6 @@ from src.domain.events import (
     GotWorkloads,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
-from src.ui.schedule_master import ScheduleMaster
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -233,5 +232,5 @@ class Controller:
         await recycle_view_master.update_data(event.data)
 
     async def update_schedule_metadata(self, schedule: Schedule):
-        self.model.schedule_master = ScheduleMaster()
-        self.model.schedule_master.update_metadata(*astuple(schedule))
+        self.model.create_schedule_master()
+        await self.model.schedule_master.update_metadata(*astuple(schedule))

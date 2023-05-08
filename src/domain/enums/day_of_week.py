@@ -8,4 +8,3 @@ class DayOfWeek(enum.Enum):
     THURSDAY = "THURSDAY"
     FRIDAY = "FRIDAY"
     SATURDAY = "SATURDAY"
-    SUNDAY = "SUNDAY"

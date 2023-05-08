@@ -1,2 +1,3 @@
 from .abstract_auto_complete_element import AbstractAutoCompleteElement
-from .abstract_schedule_view_cell_element import AbstractScheduleViewCellElement
+from .abstract_size_slave import AbstractSizeSlave
+from .abstract_size_master import AbstractSizeMaster

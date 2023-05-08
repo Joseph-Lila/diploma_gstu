@@ -92,3 +92,10 @@ class AbstractRepository(abc.ABC):
         term,
     ):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_extended_schedule_records(
+            self,
+            schedule_id: int,
+    ):
+        raise NotImplementedError

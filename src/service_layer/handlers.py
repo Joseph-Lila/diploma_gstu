@@ -1,5 +1,7 @@
 from typing import Callable, Dict, List, Type
 
+from pandas import DataFrame
+
 from src.adapters.orm import Schedule
 from src.adapters.repositories.abstract_repository import AbstractRepository
 from src.domain.commands import (
@@ -20,7 +22,7 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjectTypes,
     GetUniqueSubjects,
-    GetWorkloads,
+    GetWorkloads, GetExtendedScheduleRecords,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -35,7 +37,7 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
-    GotWorkloads,
+    GotWorkloads, GotDataFrame,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -240,8 +242,19 @@ async def get_workloads(
     return GotWorkloads(data)
 
 
+async def get_extended_schedule_records(
+    cmd: GetExtendedScheduleRecords,
+    repository: AbstractRepository,
+) -> GotDataFrame:
+    df: DataFrame = await repository.get_extended_schedule_records(
+        cmd.schedule_id,
+    )
+    return GotDataFrame(df)
+
+
 COMMAND_HANDLERS = {
     GetSchedules: get_schedules,
+    GetExtendedScheduleRecords: get_extended_schedule_records,
     GetUniqueYearsDependingOnWorkload: get_unique_years_depending_on_workload,
     GetUniqueYearsDependingOnSchedule: get_unique_years_depending_on_schedule,
     GetUniqueTermsDependingOnWorkload: get_unique_terms_depending_on_workload,

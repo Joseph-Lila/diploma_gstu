@@ -1,6 +1,5 @@
 from .additional_part import AdditionalPart
 from .audience_part import AudiencePart
-from .audience_record import AudienceRecord
 from .cell_part import CellPart
 from .cell_pos import CellPos
 from .group_part import GroupPart
