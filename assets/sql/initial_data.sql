@@ -1637,3 +1637,5 @@ INSERT INTO workloads (group_id, subject_id, subject_type_id, mentor_id, hours, 
 INSERT INTO workloads (group_id, subject_id, subject_type_id, mentor_id, hours, year, term) VALUES (13, 61, 2, 46, 2, 2022, 'Весенний')
 INSERT INTO workloads (group_id, subject_id, subject_type_id, mentor_id, hours, year, term) VALUES (13, 61, 1, 46, 1, 2022, 'Весенний')
 INSERT INTO workloads (group_id, subject_id, subject_type_id, mentor_id, hours, year, term) VALUES (13, 61, 1, 46, 1, 2022, 'Весенний')
+INSERT INTO schedule_records (schedule_id, day_of_week, pair_number, subject_id, subject_type_id, mentor_id, audience_id, group_id, week_type, subgroup, mentor_free) VALUES (1, 'MONDAY', 1, 32, 2, 37, 1, 7, 'BOTH', 'BOTH', TRUE)
+INSERT INTO schedule_records (schedule_id, day_of_week, pair_number, subject_id, subject_type_id, mentor_id, audience_id, group_id, week_type, subgroup, mentor_free) VALUES (1, 'MONDAY', 1, 32, 2, 37, 1, 8, 'BOTH', 'BOTH', TRUE)

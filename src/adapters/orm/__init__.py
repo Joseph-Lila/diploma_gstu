@@ -11,6 +11,7 @@ from .group import Group
 from .mentor import Mentor
 from .schedule import Schedule
 from .schedule_record import ScheduleRecord
+from .local_schedule_record import LocalScheduleRecord
 from .subject import Subject
 from .subject_audience import SubjectAudience
 from .subject_type import SubjectType
