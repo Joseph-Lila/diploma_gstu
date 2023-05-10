@@ -1,22 +1,31 @@
+from typing import List
+
 from kivymd.uix.card import MDCard
 
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.enums import ViewState
 from src.domain.interfaces import AbstractSizeMaster, AbstractSizeSlave
+from src.ui.views.schedule_item_btn import ScheduleItemBtn
 
 
 class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.slaves = []
+    SLAVES_CNT = 4
 
-    def add_slaves(self, slaves):
-        if len(slaves) != 4:
+    def __init__(self, *args, cur_group='', **kwargs):
+        super().__init__(*args, **kwargs)
+        self.slaves = [ScheduleItemBtn(cur_group=cur_group) for _ in range(ScheduleCell.SLAVES_CNT)]
+        for slave in self.slaves:
+            slave.update_info(ViewState.EMPTY.value)
+        if ScheduleCell.SLAVES_CNT < 4:
             raise
-        self.slaves.extend(slaves)
-        self.ids.top_cont.add_widget(slaves[0])
-        self.ids.top_cont.add_widget(slaves[1])
-        self.ids.bottom_cont.add_widget(slaves[2])
-        self.ids.bottom_cont.add_widget(slaves[3])
+        self.ids.top_cont.add_widget(self.slaves[0])
+        self.ids.top_cont.add_widget(self.slaves[1])
+        self.ids.bottom_cont.add_widget(self.slaves[2])
+        self.ids.bottom_cont.add_widget(self.slaves[3])
 
     def get_minimum_width(self):
         self.texture_update()
         return self.width
+
+    async def tune_slaves_using_info_records(self, info_records: List[ScheduleItemInfo]):
+        print(f"{info_records = }")
