@@ -1,1 +1,2 @@
-from .abstract_observer import AbstractObserver
+from .abstract_size_master import AbstractSizeMaster
+from .abstract_size_slave import AbstractSizeSlave

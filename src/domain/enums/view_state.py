@@ -6,3 +6,4 @@ class ViewState(enum.Enum):
     EDITABLE = 'EDITABLE'
     FILLED = 'FILLED'
     INVINCIBLE = 'INVINCIBLE'
+    EMPTY = 'EMPTY'

@@ -1,3 +1,1 @@
 from .abstract_auto_complete_element import AbstractAutoCompleteElement
-from .abstract_size_slave import AbstractSizeSlave
-from .abstract_size_master import AbstractSizeMaster

@@ -1,4 +1,3 @@
-from dataclasses import astuple
 from typing import Optional
 
 from kivymd.uix.screen import MDScreen
@@ -7,8 +6,6 @@ import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
-from src.domain.enums import ViewType
-from src.ui.schedule_master import ScheduleMaster
 from src.ui.views import FileTabOptions, GroupsSchedule, AuditoriesSchedule, MentorsSchedule
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog

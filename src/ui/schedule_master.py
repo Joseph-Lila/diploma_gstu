@@ -1,15 +1,23 @@
+from typing import Optional, List
+
+from pandas import DataFrame
+
 from src.domain.commands import GetExtendedScheduleRecords
+from src.domain.entities import GroupPart
+from src.domain.entities.schedule_item_info import ScheduleItemInfo, build_from_raw_data
+from src.domain.enums import ViewType, ViewState
+from src.domain.events import GotDataFrame
 from src.ui.controller import use_loop
 
 
 class ScheduleMaster:
+    BOARDS_CNT = 2
+
     def __init__(self, model):
         self._model = model
         self._schedule_id = None
         self._year = None
         self._term = None
-        self._observers = []
-        self._half_elements = []  # to control half elements
 
     @property
     def id(self):
@@ -30,25 +38,7 @@ class ScheduleMaster:
             year,
             term,
     ):
+        # data about the schedule
         self._schedule_id = id_
         self._year = year
         self._term = term
-        df = await self._model.bus.handle_command(GetExtendedScheduleRecords(id_))
-        print(df)
-
-    def register_observer(self, observer):
-        if observer not in self._observers:
-            self._observers.append(observer)
-
-    def remove_observer(self, observer):
-        if observer in self._observers:
-            self._observers.remove(observer)
-
-    def notify_observers(self, *args):
-        pass
-
-    def consider_the_proposal(self, *args, check_presented_observers=False):
-        pass
-
-    def give_data_variants_for_observer(self, *args):
-        pass

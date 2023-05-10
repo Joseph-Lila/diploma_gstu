@@ -1,13 +1,9 @@
-from kivy.properties import ObjectProperty
 from kivy.uix.button import Button
 
-from src.domain.interfaces import AbstractObserver
-from src.ui.views.interfaces import AbstractSizeSlave
+from src.domain.interfaces import AbstractSizeSlave
 
 
-class ScheduleItemBtn(Button, AbstractSizeSlave, AbstractObserver):
-    info = ObjectProperty()
-
+class ScheduleItemBtn(Button, AbstractSizeSlave):
     def on_press(self):
         pass
 
