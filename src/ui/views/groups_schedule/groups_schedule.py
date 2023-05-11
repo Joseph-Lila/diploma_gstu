@@ -1,9 +1,7 @@
 from dataclasses import astuple
 from typing import List
 
-from kivy.app import App
 from kivymd.uix.card import MDCard
-import asynckivy as ak
 
 from src import config
 from src.domain.entities import GroupDescription
@@ -32,6 +30,8 @@ class GroupsSchedule(MDCard):
         self.group_descriptions = group_descriptions
         for ind, r in enumerate(group_descriptions):
             key = astuple(r)
+
+            # create views
             self.groups[key] = ScheduleWeek(
                 r.title, ViewType.GROUP.value, config.get_pairs_quantity()
             )

@@ -1,17 +1,13 @@
-from typing import Optional
+from typing import Optional, List
 
+from kivymd.uix.card import MDCard
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
-from src.ui.views import (
-    FileTabOptions,
-    GroupsSchedule,
-    AuditoriesSchedule,
-    MentorsSchedule,
-)
+from src.ui.views import FileTabOptions
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
 
@@ -19,9 +15,14 @@ from src.ui.views.open_dialog import OpenDialog
 class ScheduleScreenView(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.groups_schedule: Optional[GroupsSchedule] = None
-        self.audiences_schedule: Optional[AuditoriesSchedule] = None
-        self.mentors_schedule: Optional[MentorsSchedule] = None
+        self.schedule_views: List[MDCard] = [
+            self.ids.group_1,
+            self.ids.mentor_1,
+            self.ids.audience_1,
+            self.ids.group_2,
+            self.ids.mentor_2,
+            self.ids.audience_2,
+        ]
         self._init_file_tab_options_dialog()
         self.open_dialog = OpenDialog()
         self.create_dialog = CreateDialog()
