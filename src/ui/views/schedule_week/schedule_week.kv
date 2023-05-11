@@ -1,0 +1,23 @@
+<ScheduleWeek>:
+    orientation: 'vertical'
+    size_hint_x: None
+    size_hint_y: None
+    height: 2500
+    radius: 0, 0, 0, 0
+    style: 'outlined'
+    line_color: 'black'
+
+    MDLabel:
+        id: entity_title
+
+        halign: "center"
+        valign: "center"
+        size_hint: None, None
+        height: 45
+        bg_color: 1, 1, 1, 0
+
+    BoxLayout:
+        id: cont
+
+        orientation: 'vertical'
+        adaptive_width: True

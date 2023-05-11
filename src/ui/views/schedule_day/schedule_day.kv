@@ -1,0 +1,33 @@
+<ScheduleDay>:
+    adaptive_width: True
+    radius: 0, 0, 0, 0
+    style: 'outlined'
+    line_color: 'black'
+
+    BoxLayout:
+        padding: 5
+
+        MDLabel:
+            id: day_of_week_lbl
+
+            halign: 'center'
+            valign: 'center'
+            size_hint_x: None
+            width: 40
+
+    MDCard:
+        id: pairs_cells_cont
+
+        radius: 0, 0, 0, 0
+        style: 'outlined'
+        line_color: 'black'
+
+        orientation: 'vertical'
+        size_hint_x: None
+        width: 30
+
+    MDBoxLayout:
+        id: content
+
+        orientation: 'vertical'
+        adaptive_width: True

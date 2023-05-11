@@ -14,7 +14,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
     cur_group = StringProperty()
 
     def on_press(self):
-        if self.schedule_item_info.view_state != ViewState.FILLED.value:
+        if self.schedule_item_info is not None and self.schedule_item_info.view_state != ViewState.FILLED.value:
             ak.start(
                 App.get_running_app().controller.get_filling_variants(
                     self,

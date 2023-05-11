@@ -2,9 +2,9 @@ import enum
 
 
 class DayOfWeek(enum.Enum):
-    MONDAY = "MONDAY"
-    TUESDAY = "TUESDAY"
-    WEDNESDAY = "WEDNESDAY"
-    THURSDAY = "THURSDAY"
-    FRIDAY = "FRIDAY"
-    SATURDAY = "SATURDAY"
+    MONDAY = "Пн"
+    TUESDAY = "Вт"
+    WEDNESDAY = "Ср"
+    THURSDAY = "Чт"
+    FRIDAY = "Пт"
+    SATURDAY = "Сб"

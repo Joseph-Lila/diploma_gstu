@@ -22,10 +22,10 @@ class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
         self.ids.top_cont.add_widget(self.slaves[1])
         self.ids.bottom_cont.add_widget(self.slaves[2])
         self.ids.bottom_cont.add_widget(self.slaves[3])
+        self.fit_slaves()
 
     def get_minimum_width(self):
-        self.texture_update()
-        return self.width
+        return self.slaves[-1].width * 2 + 2 * self.padding[-1] + self.spacing
 
     async def tune_slaves_using_info_records(self, info_records: List[ScheduleItemInfo]):
         print(f"{info_records = }")
