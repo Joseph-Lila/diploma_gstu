@@ -38,8 +38,5 @@ class HomeScreenView(MDScreen):
 
     def send_command_to_update_latest_10_schedules(self):
         ak.start(
-            do_with_loading_modal_view(
-                App.get_running_app().controller.update_latest_10_schedules,
-                self,
-            )
+            App.get_running_app().controller.update_latest_10_schedules(self)
         )

@@ -3,7 +3,6 @@ import functools
 from dataclasses import astuple
 from typing import Optional
 
-from kivy.app import App
 
 from src.adapters.orm import Schedule
 from src.domain.commands import (
@@ -213,7 +212,7 @@ class Controller:
     @use_loop
     async def get_workloads(
         self,
-        recycle_view_master,
+        sender,
         group_substring,
         subject_substring,
         subject_type_substring,
@@ -231,15 +230,20 @@ class Controller:
                 term,
             )
         )
-        await recycle_view_master.update_data(event.data)
+        await sender.update_data(event.data)
 
     @use_loop
     async def get_group_descriptions(
         self,
         sender,
+        faculty_substring,
+        group_substring,
     ):
         event: GotGroupDescriptions = await self.model.bus.handle_command(
-            GetGroupDescriptions()
+            GetGroupDescriptions(
+                faculty_substring,
+                group_substring,
+            )
         )
         await sender.add_groups(event.group_descriptions)
 

@@ -6,4 +6,5 @@ from src.domain.commands.command import Command
 
 @dataclass
 class GetGroupDescriptions(Command):
-    pass
+    faculty_substring: str
+    group_substring: str

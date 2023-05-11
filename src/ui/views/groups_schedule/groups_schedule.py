@@ -20,9 +20,6 @@ class GroupsSchedule(MDCard):
         self.group_descriptions = []
         self.min_id, self.max_id = None, None
 
-    def on_kv_post(self, base_widget):
-        ak.start(App.get_running_app().controller.get_group_descriptions(self))
-
     async def add_groups(self, group_descriptions: List[GroupDescription]):
         self.groups.clear()
         self.group_descriptions.clear()
@@ -46,6 +43,9 @@ class GroupsSchedule(MDCard):
         return self.groups[key]
 
     async def shift_group(self, direction: str):
+        if self.min_id is None or self.max_id is None:
+            return
+
         if direction == "r":
             if self.max_id + 1 < len(self.group_descriptions):
                 widget_to_remove = await self.get_group_widget_by_id(self.min_id)

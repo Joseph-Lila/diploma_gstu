@@ -263,7 +263,10 @@ async def get_group_descriptions(
 ) -> GotGroupDescriptions:
     group_descriptions: List[
         GroupDescription
-    ] = await repository.get_group_descriptions()
+    ] = await repository.get_group_descriptions(
+        cmd.group_substring,
+        cmd.faculty_substring,
+    )
     return GotGroupDescriptions(group_descriptions)
 
 

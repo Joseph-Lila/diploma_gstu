@@ -29,7 +29,11 @@ class PostgresRepository(AbstractRepository):
     ):
         self.async_session: async_sessionmaker[AsyncSession] = async_session_factory_
 
-    async def get_schedules(self, year: Optional[int], term: Optional[str]):
+    async def get_schedules(
+        self,
+        year: Optional[int],
+        term: Optional[str],
+    ):
         stmt = select(Schedule)
         if year:
             stmt = stmt.filter_by(year=year)
@@ -40,7 +44,11 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_group_descriptions(self):
+    async def get_group_descriptions(
+        self,
+        group_substring,
+        faculty_substring,
+    ):
         stmt = (
             select(
                 Group.id,
@@ -49,13 +57,18 @@ class PostgresRepository(AbstractRepository):
             )
             .join(Faculty)
             .order_by(Group.title)
+            .filter(Group.title.ilike(f"%{group_substring}%"))
+            .filter(Faculty.title.ilike(f"%{faculty_substring}%"))
         )
         async with self.async_session() as session:
             items = await session.execute(stmt)
         results = [parse_row_data_to_group_description(item) for item in items]
         return results
 
-    async def get_unique_mentors_fios(self, fio_substring: str):
+    async def get_unique_mentors_fios(
+        self,
+        fio_substring: str,
+    ):
         stmt = (
             select(Mentor.fio)
             .distinct()
@@ -66,7 +79,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_groups_titles(self, title_substring: str):
+    async def get_unique_groups_titles(
+        self,
+        title_substring: str,
+    ):
         stmt = (
             select(Group.title)
             .distinct()
@@ -77,7 +93,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_subjects_titles(self, title_substring: str):
+    async def get_unique_subjects_titles(
+        self,
+        title_substring: str,
+    ):
         stmt = (
             select(Subject.title)
             .distinct()
@@ -88,7 +107,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_subject_types_titles(self, title_substring: str):
+    async def get_unique_subject_types_titles(
+        self,
+        title_substring: str,
+    ):
         stmt = (
             select(SubjectType.title)
             .distinct()
@@ -99,7 +121,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_extended_schedule_records(self, schedule_id: int):
+    async def get_extended_schedule_records(
+        self,
+        schedule_id: int,
+    ):
         stmt = (
             select(
                 ScheduleRecord.day_of_week,
@@ -166,7 +191,9 @@ class PostgresRepository(AbstractRepository):
         return items.fetchall()
 
     async def get_unique_groups_titles_depending_on_faculty(
-        self, title_substring: str, faculty_title: Optional[str]
+        self,
+        title_substring: str,
+        faculty_title: Optional[str],
     ):
         if faculty_title is not None:
             stmt = (
@@ -188,7 +215,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_faculties_titles(self, title_substring: str):
+    async def get_unique_faculties_titles(
+        self,
+        title_substring: str,
+    ):
         stmt = (
             select(Faculty.title)
             .order_by(Faculty.title)
@@ -198,7 +228,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_departments_titles(self, title_substring: str):
+    async def get_unique_departments_titles(
+        self,
+        title_substring: str,
+    ):
         stmt = (
             select(Department.title)
             .order_by(Department.title)
@@ -208,7 +241,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_years_depending_on_workload(self, term: Optional[str]):
+    async def get_unique_years_depending_on_workload(
+        self,
+        term: Optional[str],
+    ):
         stmt = select(Workload.year)
         if term:
             stmt = stmt.filter_by(term=term)
@@ -217,7 +253,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_years_depending_on_schedule(self, term: Optional[str]):
+    async def get_unique_years_depending_on_schedule(
+        self,
+        term: Optional[str],
+    ):
         stmt = select(Schedule.year)
         if term:
             stmt = stmt.filter_by(term=term)
@@ -226,7 +265,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_terms_depending_on_workload(self, year: Optional[str]):
+    async def get_unique_terms_depending_on_workload(
+        self,
+        year: Optional[str],
+    ):
         stmt = select(Workload.term)
         if year:
             stmt = stmt.filter_by(year=year)
@@ -235,7 +277,10 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_unique_terms_depending_on_schedule(self, year: Optional[str]):
+    async def get_unique_terms_depending_on_schedule(
+        self,
+        year: Optional[str],
+    ):
         stmt = select(Schedule.term)
         if year:
             stmt = stmt.filter_by(year=year)
@@ -244,32 +289,47 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_10_schedules(self):
+    async def get_10_schedules(
+        self,
+    ):
         stmt = select(Schedule).order_by(Schedule.year.desc()).limit(10)
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_schedule_by_year_and_term(self, year, term):
+    async def get_schedule_by_year_and_term(
+        self,
+        year,
+        term,
+    ):
         stmt = select(Schedule).filter_by(year=year).filter_by(term=term)
         async with self.async_session() as session:
             result = await session.scalar(stmt)
         return result
 
-    async def create_schedule(self, year, term):
+    async def create_schedule(
+        self,
+        year,
+        term,
+    ):
         async with self.async_session() as session, session.begin():
             new_elem = Schedule(year=year, term=term)
             session.add(new_elem)
             await session.flush()
         return new_elem
 
-    async def delete_schedule(self, id_):
+    async def delete_schedule(
+        self,
+        id_,
+    ):
         stmt = delete(Schedule).where(Schedule.id == id_)
         async with self.async_session() as session, session.begin():
             await session.execute(stmt)
 
     async def get_unique_mentors_fios_depending_on_department(
-        self, fio_substring: str, department_title: Optional[str]
+        self,
+        fio_substring: str,
+        department_title: Optional[str],
     ):
         if department_title is not None:
             stmt = (
@@ -292,7 +352,9 @@ class PostgresRepository(AbstractRepository):
         return items.all()
 
     async def get_unique_audiences_numbers_depending_on_department(
-        self, number_substring: str, department_title: Optional[str]
+        self,
+        number_substring: str,
+        department_title: Optional[str],
     ):
         if department_title is not None:
             stmt = (
