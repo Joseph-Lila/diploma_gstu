@@ -33,10 +33,10 @@ class ScheduleMaster:
 
     @use_loop
     async def update_metadata(
-            self,
-            id_,
-            year,
-            term,
+        self,
+        id_,
+        year,
+        term,
     ):
         # data about the schedule
         self._schedule_id = id_

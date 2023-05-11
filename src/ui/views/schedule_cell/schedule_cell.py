@@ -11,9 +11,11 @@ from src.ui.views.schedule_item_btn import ScheduleItemBtn
 class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
     SLAVES_CNT = 4
 
-    def __init__(self, *args, cur_group='', **kwargs):
+    def __init__(self, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
-        self.slaves = [ScheduleItemBtn(cur_group=cur_group) for _ in range(ScheduleCell.SLAVES_CNT)]
+        self.slaves = [
+            ScheduleItemBtn(cur_group=cur_group) for _ in range(ScheduleCell.SLAVES_CNT)
+        ]
         for slave in self.slaves:
             slave.update_info(ViewState.EMPTY.value)
         if ScheduleCell.SLAVES_CNT < 4:
@@ -27,5 +29,7 @@ class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
     def get_minimum_width(self):
         return self.slaves[-1].width * 2 + 2 * self.padding[-1] + self.spacing
 
-    async def tune_slaves_using_info_records(self, info_records: List[ScheduleItemInfo]):
+    async def tune_slaves_using_info_records(
+        self, info_records: List[ScheduleItemInfo]
+    ):
         print(f"{info_records = }")

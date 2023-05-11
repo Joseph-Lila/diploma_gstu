@@ -14,7 +14,10 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
     cur_group = StringProperty()
 
     def on_press(self):
-        if self.schedule_item_info is not None and self.schedule_item_info.view_state != ViewState.FILLED.value:
+        if (
+            self.schedule_item_info is not None
+            and self.schedule_item_info.view_state != ViewState.FILLED.value
+        ):
             ak.start(
                 App.get_running_app().controller.get_filling_variants(
                     self,
@@ -32,7 +35,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         if view_state == ViewState.FILLED.value:
             self.schedule_item_info = info
             self.text = f"{info.subject_part.subject} a. {info.audience_part.number} {info.mentor_part.scientific_degree} {info.mentor_part.fio}"
-            self.background_color = 'green'  # add using config
+            self.background_color = "green"  # add using config
         elif view_state == ViewState.UNAVAILABLE.value:
             """
             Make disabled=True, and add respective label
@@ -42,7 +45,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
             Make disabled=False, and add respective label
             """
         elif view_state == ViewState.EMPTY.value:
-            self.text = 'ПУСТО'
+            self.text = "ПУСТО"
         elif view_state == ViewState.INVINCIBLE.value:
             """
             Make invincible

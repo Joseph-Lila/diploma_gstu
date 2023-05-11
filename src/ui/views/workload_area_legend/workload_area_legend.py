@@ -53,9 +53,7 @@ class WorkloadAreaLegend(MDCard):
         )
 
     def send_command_to_get_workload_data(self, *args):
-        schedule: Schedule = (
-            App.get_running_app().controller.model.schedule_master
-        )
+        schedule: Schedule = App.get_running_app().controller.model.schedule_master
         if schedule is None:
             raise
 

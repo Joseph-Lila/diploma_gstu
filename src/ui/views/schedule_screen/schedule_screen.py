@@ -6,7 +6,12 @@ import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
-from src.ui.views import FileTabOptions, GroupsSchedule, AuditoriesSchedule, MentorsSchedule
+from src.ui.views import (
+    FileTabOptions,
+    GroupsSchedule,
+    AuditoriesSchedule,
+    MentorsSchedule,
+)
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
 
@@ -36,7 +41,9 @@ class ScheduleScreenView(MDScreen):
         self.file_tab_options_dialog.ids.close_btn.bind(on_press=self.close_screen)
 
     def change_schedule_view(self, segmented_control_instance, item_instance):
-        is_current_control_first = segmented_control_instance == self.ids.first_segm_control
+        is_current_control_first = (
+            segmented_control_instance == self.ids.first_segm_control
+        )
         manager = (
             self.ids.first_scr_mng
             if is_current_control_first
@@ -52,9 +59,7 @@ class ScheduleScreenView(MDScreen):
             manager.current = "workloads"
 
     def update_schedule_data(self, schedule: Schedule):
-        ak.start(
-            App.get_running_app().controller.update_schedule_metadata(schedule)
-        )
+        ak.start(App.get_running_app().controller.update_schedule_metadata(schedule))
         self.ids.head_label.text = f"Расписание занятий {schedule.term.lower()} семестр {schedule.year}-{schedule.year+1} учебный год"
 
     def close_screen(self, *args):
@@ -71,9 +76,7 @@ class ScheduleScreenView(MDScreen):
 
     def delete_schedule(self, *args):
         self.file_tab_options_dialog.dismiss()
-        ak.start(
-            App.get_running_app().controller.delete_schedule()
-        )
+        ak.start(App.get_running_app().controller.delete_schedule())
         App.get_running_app().root.go_to_home_screen()
 
     def save_schedule(self, *args):

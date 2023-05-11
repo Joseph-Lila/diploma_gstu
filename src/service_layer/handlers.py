@@ -22,9 +22,12 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjectTypes,
     GetUniqueSubjects,
-    GetWorkloads, GetExtendedScheduleRecords,
+    GetWorkloads,
+    GetExtendedScheduleRecords,
+    GetGroupDescriptions,
 )
 from src.domain.commands.command import Command
+from src.domain.entities import GroupDescription
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -37,7 +40,9 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
-    GotWorkloads, GotDataFrame,
+    GotWorkloads,
+    GotDataFrame,
+    GotGroupDescriptions,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -252,6 +257,16 @@ async def get_extended_schedule_records(
     return GotDataFrame(df)
 
 
+async def get_group_descriptions(
+    cmd: GetGroupDescriptions,
+    repository: AbstractRepository,
+) -> GotGroupDescriptions:
+    group_descriptions: List[
+        GroupDescription
+    ] = await repository.get_group_descriptions()
+    return GotGroupDescriptions(group_descriptions)
+
+
 COMMAND_HANDLERS = {
     GetSchedules: get_schedules,
     GetExtendedScheduleRecords: get_extended_schedule_records,
@@ -272,4 +287,5 @@ COMMAND_HANDLERS = {
     GetUniqueSubjects: get_unique_subjects,
     GetUniqueSubjectTypes: get_unique_subject_types,
     GetWorkloads: get_workloads,
+    GetGroupDescriptions: get_group_descriptions,
 }  # type: Dict[Type[Command], Callable]

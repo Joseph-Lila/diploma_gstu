@@ -10,22 +10,22 @@ class ScheduleWeek(MDCard, AbstractSizeMaster):
     view_type = StringProperty()
 
     def __init__(
-            self,
-            entity_title: str,
-            view_type: str,
-            pairs_quantity: int,
-            *args,
-            **kwargs,
+        self,
+        entity_title: str,
+        view_type: str,
+        pairs_quantity: int,
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.slaves = []
         self.update_metadata(entity_title, view_type, pairs_quantity)
 
     def update_metadata(
-            self,
-            entity_title: str,
-            view_type: str,
-            pairs_quantity: int,
+        self,
+        entity_title: str,
+        view_type: str,
+        pairs_quantity: int,
     ):
         self.ids.entity_title.text = entity_title
         self.view_type = view_type
@@ -34,7 +34,7 @@ class ScheduleWeek(MDCard, AbstractSizeMaster):
             ScheduleDay(
                 pairs_quantity,
                 day_of_week.value,
-                cur_group=entity_title if view_type == ViewType.GROUP.value else '',
+                cur_group=entity_title if view_type == ViewType.GROUP.value else "",
             )
             for day_of_week in DayOfWeek
         ]

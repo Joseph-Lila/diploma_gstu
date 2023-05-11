@@ -1,3 +1,5 @@
+#: import ak asynckivy
+
 <GroupsSchedule>:
     orientation: 'vertical'
     padding: 7
@@ -7,12 +9,33 @@
         size_hint_y: .194
 
     BoxLayout:
+        size_hint_y: .1
+
+        Widget:
+
+        BoxLayout:
+            size_hint_x: .2
+
+            MDIconButton:
+                icon: 'assets/images/icons8-двойная-стрелка-влево-96.png'
+                on_press:
+                    ak.start(root.shift_group('l'))
+
+            MDIconButton:
+                icon: 'assets/images/icons8-двойная-стрелка-вправо-96.png'
+                on_press:
+                    ak.start(root.shift_group('r'))
+
+    BoxLayout:
         orientation: 'vertical'
 
         MDScrollView:
+            id: scroll
+
+            always_overscroll: False
 
             MDBoxLayout:
-                id: groups_cont
+                id: body_cont
 
                 adaptive_size: True
                 orientation: 'horizontal'

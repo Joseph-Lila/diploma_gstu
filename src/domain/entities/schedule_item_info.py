@@ -1,7 +1,15 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from src.domain.entities import AdditionalPart, AudiencePart, CellPart, CellPos, GroupPart, MentorPart, SubjectPart
+from src.domain.entities import (
+    AdditionalPart,
+    AudiencePart,
+    CellPart,
+    CellPos,
+    GroupPart,
+    MentorPart,
+    SubjectPart,
+)
 from src.domain.enums import ViewState, ViewType
 
 
@@ -19,9 +27,27 @@ class ScheduleItemInfo:
 
 
 def build_from_raw_data(
-        day_of_week, pair_number, week_type, subgroup,audience_id, audience_number, number_of_seats, group_id,
-        group_title, number_of_students, mentor_id, mentor_fio, scientific_degree, subject_id, subject_type_id,
-        subject_title, subject_type_title, mentor_free, schedule_record_id, view_state, view_type,
+    day_of_week,
+    pair_number,
+    week_type,
+    subgroup,
+    audience_id,
+    audience_number,
+    number_of_seats,
+    group_id,
+    group_title,
+    number_of_students,
+    mentor_id,
+    mentor_fio,
+    scientific_degree,
+    subject_id,
+    subject_type_id,
+    subject_title,
+    subject_type_title,
+    mentor_free,
+    schedule_record_id,
+    view_state,
+    view_type,
 ):
     return ScheduleItemInfo(
         cell_pos=CellPos(
@@ -41,7 +67,7 @@ def build_from_raw_data(
             GroupPart(
                 group_id=group_id,
                 title=group_title,
-                number_of_students=number_of_students
+                number_of_students=number_of_students,
             )
         ],
         mentor_part=MentorPart(

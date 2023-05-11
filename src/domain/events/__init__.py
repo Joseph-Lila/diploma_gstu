@@ -11,3 +11,4 @@ from .got_unique_audiences import GotUniqueAudiences
 from .got_unique_subjects import GotUniqueSubjects
 from .got_unique_subject_types import GotUniqueSubjectTypes
 from .got_workloads import GotWorkloads
+from .got_group_descriptions import GotGroupDescriptions

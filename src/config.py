@@ -26,7 +26,7 @@ def get_big_window_size():
 
 
 def get_pairs_quantity() -> int:
-    return os.environ.get("PAIRS_QUANTITY", 6)
+    return int(os.environ.get("PAIRS_QUANTITY", 6))
 
 
 def get_initial_data_file_path() -> str:
