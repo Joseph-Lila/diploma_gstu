@@ -36,7 +36,7 @@ class GroupsScheduleLegend(MDCard):
 
     def send_command_to_get_group_descriptions(self, *args):
         ak.start(
-            App.get_running_app().controller.get_group_descriptions(
+            App.get_running_app().controller.get_group_titles_depending_on_faculty(
                 self.schedule_view,
                 self.ids.faculty.text,
                 self.ids.group.text,

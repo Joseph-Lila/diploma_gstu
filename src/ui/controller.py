@@ -24,7 +24,7 @@ from src.domain.commands import (
     GetUniqueSubjects,
     GetUniqueSubjectTypes,
     GetWorkloads,
-    GetGroupDescriptions,
+    GetGroupTitlesDependingOnFaculty,
 )
 from src.domain.events import (
     GotSchedules,
@@ -39,7 +39,6 @@ from src.domain.events import (
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
     GotWorkloads,
-    GotGroupDescriptions,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -233,19 +232,19 @@ class Controller:
         await sender.update_data(event.data)
 
     @use_loop
-    async def get_group_descriptions(
+    async def get_group_titles_depending_on_faculty(
         self,
         sender,
         faculty_substring,
         group_substring,
     ):
-        event: GotGroupDescriptions = await self.model.bus.handle_command(
-            GetGroupDescriptions(
+        event: GotUniqueGroups = await self.model.bus.handle_command(
+            GetGroupTitlesDependingOnFaculty(
                 faculty_substring,
                 group_substring,
             )
         )
-        await sender.add_groups(event.group_descriptions)
+        await sender.add_groups(event.groups)
 
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()

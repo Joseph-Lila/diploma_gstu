@@ -154,7 +154,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def get_group_descriptions(
+    async def get_group_titles_depending_on_faculty(
         self,
         group_substring,
         faculty_substring,

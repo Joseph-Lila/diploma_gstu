@@ -17,7 +17,6 @@ from src.adapters.orm import (
     ScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from src.domain.entities import parse_row_data_to_group_description
 
 
 class PostgresRepository(AbstractRepository):
@@ -44,16 +43,14 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_group_descriptions(
+    async def get_group_titles_depending_on_faculty(
         self,
         group_substring,
         faculty_substring,
     ):
         stmt = (
             select(
-                Group.id,
                 Group.title,
-                Faculty.title,
             )
             .join(Faculty)
             .order_by(Group.title)
@@ -61,9 +58,8 @@ class PostgresRepository(AbstractRepository):
             .filter(Faculty.title.ilike(f"%{faculty_substring}%"))
         )
         async with self.async_session() as session:
-            items = await session.execute(stmt)
-        results = [parse_row_data_to_group_description(item) for item in items]
-        return results
+            items = await session.scalars(stmt)
+        return items.fetchall()
 
     async def get_unique_mentors_fios(
         self,
