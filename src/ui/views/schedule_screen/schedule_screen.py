@@ -55,7 +55,7 @@ class ScheduleScreenView(MDScreen):
         elif item_instance.text == "Преподаватели":
             manager.current = "mentors"
         elif item_instance.text == "Аудитории":
-            manager.current = "auditories"
+            manager.current = "audiences"
         elif item_instance.text == "Нагрузка":
             manager.current = "workloads"
 

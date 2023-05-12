@@ -1,0 +1,57 @@
+#: import ak asynckivy
+
+<AudiencesSchedule>:
+    orientation: 'vertical'
+    padding: 7
+    spacing: 7
+
+    Widget:
+        size_hint_y: .194
+
+    BoxLayout:
+        size_hint_y: .1
+        padding: 5
+
+        Widget:
+
+        MDCard:
+            size_hint_x: .172
+            style: 'outlined'
+            line_color: 185 / 255, 162 / 255, 255 / 255, 100 / 100
+
+            MDIconButton:
+                icon: 'assets/images/icons8-двойная-стрелка-влево-96.png'
+                icon_size: "30sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Hint"
+                on_press:
+                    ak.start(root.shift_audience('l'))
+
+            MDIconButton:
+                icon: 'assets/images/icons8-двойная-стрелка-вправо-96.png'
+                icon_size: "30sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Hint"
+                on_press:
+                    ak.start(root.shift_audience('r'))
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDScrollView:
+            id: scroll
+
+            always_overscroll: False
+
+            MDBoxLayout:
+                id: body_cont
+
+                adaptive_size: True
+                orientation: 'horizontal'
+
+    MDBoxLayout:
+        size_hint_y: None
+        height: 0
+
+        AudiencesScheduleLegend:
+            schedule_view: root

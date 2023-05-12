@@ -1,1 +1,1 @@
-from .auditories_schedule_legend import AuditoriesScheduleLegend
+from .audiences_schedule_legend import AudiencesScheduleLegend

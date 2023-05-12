@@ -336,24 +336,16 @@ class PostgresRepository(AbstractRepository):
     async def get_unique_audiences_numbers_depending_on_department(
         self,
         number_substring: str,
-        department_title: Optional[str],
+        department_title: str,
     ):
-        if department_title is not None:
-            stmt = (
-                select(Audience.number)
-                .join(Department)
-                .where(Department.title == department_title)
-                .distinct()
-                .filter(Audience.number.ilike(f"%{number_substring}%"))
-                .order_by(Audience.number)
-            )
-        else:
-            stmt = (
-                select(Audience.number)
-                .distinct()
-                .order_by(Audience.number)
-                .filter(Audience.number.ilike(f"%{number_substring}%"))
-            )
+        stmt = (
+            select(Audience.number)
+            .join(Department)
+            .distinct()
+            .filter(Audience.number.ilike(f"%{number_substring}%"))
+            .filter(Department.title.ilike(f"%{department_title}%"))
+            .order_by(Audience.number)
+        )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()

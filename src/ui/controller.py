@@ -260,6 +260,21 @@ class Controller:
         )
         await sender.add_mentors(event.mentors)
 
+    @use_loop
+    async def update_schedule_view_audiences(
+        self,
+        sender,
+        audience_number_substring,
+        department_substring,
+    ):
+        event: GotUniqueAudiences = await self.model.bus.handle_command(
+            GetUniqueAudiencesDependingOnDepartment(
+                audience_number_substring,
+                department_substring,
+            )
+        )
+        await sender.add_audiences(event.audiences)
+
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()
         await self.model.schedule_master.update_metadata(*astuple(schedule))

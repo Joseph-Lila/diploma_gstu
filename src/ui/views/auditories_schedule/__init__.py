@@ -1,1 +1,1 @@
-from .auditories_schedule import AuditoriesSchedule
+from .audiences_schedule import AudiencesSchedule

@@ -79,7 +79,7 @@ class AbstractRepository(abc.ABC):
     async def get_unique_audiences_numbers_depending_on_department(
         self,
         number_substring: str,
-        department_title: Optional[str],
+        department_title: str,
     ):
         raise NotImplementedError
 
