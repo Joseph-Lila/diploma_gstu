@@ -24,7 +24,6 @@ from src.domain.commands import (
     GetUniqueSubjects,
     GetUniqueSubjectTypes,
     GetWorkloads,
-    GetGroupTitlesDependingOnFaculty,
 )
 from src.domain.events import (
     GotSchedules,
@@ -151,7 +150,7 @@ class Controller:
 
     @use_loop
     async def fill_groups_selector_depending_on_faculty(
-        self, groups_selector, title_substring, faculty: Optional[str]
+        self, groups_selector, title_substring, faculty: str
     ):
         event: GotUniqueGroups = await self.model.bus.handle_command(
             GetUniqueGroupsDependingOnFaculty(
@@ -232,19 +231,34 @@ class Controller:
         await sender.update_data(event.data)
 
     @use_loop
-    async def get_group_titles_depending_on_faculty(
+    async def update_schedule_view_groups(
         self,
         sender,
         faculty_substring,
         group_substring,
     ):
         event: GotUniqueGroups = await self.model.bus.handle_command(
-            GetGroupTitlesDependingOnFaculty(
-                faculty_substring,
+            GetUniqueGroupsDependingOnFaculty(
                 group_substring,
+                faculty_substring,
             )
         )
         await sender.add_groups(event.groups)
+
+    @use_loop
+    async def update_schedule_view_mentors(
+        self,
+        sender,
+        mentor_fio_substring,
+        department_substring,
+    ):
+        event: GotUniqueMentors = await self.model.bus.handle_command(
+            GetUniqueMentorsDependingOnDepartment(
+                mentor_fio_substring,
+                department_substring,
+            )
+        )
+        await sender.add_mentors(event.mentors)
 
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()

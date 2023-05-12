@@ -37,6 +37,4 @@ class HomeScreenView(MDScreen):
             self.ids.recent_items_list_instance.add_widget(new_item)
 
     def send_command_to_update_latest_10_schedules(self):
-        ak.start(
-            App.get_running_app().controller.update_latest_10_schedules(self)
-        )
+        ak.start(App.get_running_app().controller.update_latest_10_schedules(self))

@@ -14,7 +14,7 @@ class AbstractRepository(abc.ABC):
     @abc.abstractmethod
     async def get_unique_years_depending_on_workload(
         self,
-        term: Optional[str],
+        term: str,
     ):
         raise NotImplementedError
 
@@ -71,7 +71,7 @@ class AbstractRepository(abc.ABC):
     async def get_unique_groups_titles_depending_on_faculty(
         self,
         title_substring: str,
-        faculty_title: Optional[str],
+        faculty_title: str,
     ):
         raise NotImplementedError
 
@@ -87,7 +87,7 @@ class AbstractRepository(abc.ABC):
     async def get_unique_mentors_fios_depending_on_department(
         self,
         fio_substring: str,
-        department_title: Optional[str],
+        department_title: str,
     ):
         raise NotImplementedError
 

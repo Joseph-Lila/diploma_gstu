@@ -15,11 +15,10 @@ class CreateDialog(MDCard, ModalView):
         self.ids.term.change_text_value("")
 
     def send_command_to_get_years_values(self, *args):
-        term = None if self.ids.term.text == "" else self.ids.term.text
         ak.start(
             App.get_running_app().controller.fill_years_selector_depending_on_workload(
                 self.ids.year,
-                term,
+                self.ids.term.text,
             )
         )
 

@@ -24,7 +24,6 @@ from src.domain.commands import (
     GetUniqueSubjects,
     GetWorkloads,
     GetExtendedScheduleRecords,
-    GetGroupTitlesDependingOnFaculty,
 )
 from src.domain.commands.command import Command
 from src.domain.events import (
@@ -255,19 +254,6 @@ async def get_extended_schedule_records(
     return GotDataFrame(df)
 
 
-async def get_group_descriptions(
-    cmd: GetGroupTitlesDependingOnFaculty,
-    repository: AbstractRepository,
-) -> GotUniqueGroups:
-    groups: List[
-        str
-    ] = await repository.get_group_titles_depending_on_faculty(
-        cmd.group_substring,
-        cmd.faculty_substring,
-    )
-    return GotUniqueGroups(groups)
-
-
 COMMAND_HANDLERS = {
     GetSchedules: get_schedules,
     GetExtendedScheduleRecords: get_extended_schedule_records,
@@ -288,5 +274,4 @@ COMMAND_HANDLERS = {
     GetUniqueSubjects: get_unique_subjects,
     GetUniqueSubjectTypes: get_unique_subject_types,
     GetWorkloads: get_workloads,
-    GetGroupTitlesDependingOnFaculty: get_group_descriptions,
 }  # type: Dict[Type[Command], Callable]

@@ -35,3 +35,12 @@ class MentorsScheduleLegend(MDCard):
                 department,
             )
         )
+
+    def send_command_to_get_mentor_fios_depending_on_department(self, *args):
+        ak.start(
+            App.get_running_app().controller.update_schedule_view_mentors(
+                self.schedule_view,
+                self.ids.mentor.text,
+                self.ids.department.text,
+            )
+        )

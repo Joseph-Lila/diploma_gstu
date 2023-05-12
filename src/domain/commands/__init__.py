@@ -21,4 +21,3 @@ from .get_unique_audiences_depending_on_department import (
 from .get_unique_subjects import GetUniqueSubjects
 from .get_unique_subject_types import GetUniqueSubjectTypes
 from .get_workloads import GetWorkloads
-from .get_group_titles_depending_on_faculty import GetGroupTitlesDependingOnFaculty

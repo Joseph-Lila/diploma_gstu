@@ -189,24 +189,16 @@ class PostgresRepository(AbstractRepository):
     async def get_unique_groups_titles_depending_on_faculty(
         self,
         title_substring: str,
-        faculty_title: Optional[str],
+        faculty_title: str,
     ):
-        if faculty_title is not None:
-            stmt = (
-                select(Group.title)
-                .join(Faculty)
-                .where(Faculty.title == faculty_title)
-                .distinct()
-                .filter(Group.title.ilike(f"%{title_substring}%"))
-                .order_by(Group.title)
-            )
-        else:
-            stmt = (
-                select(Group.title)
-                .distinct()
-                .order_by(Group.title)
-                .filter(Group.title.ilike(f"%{title_substring}%"))
-            )
+        stmt = (
+            select(Group.title)
+            .join(Faculty)
+            .distinct()
+            .filter(Group.title.ilike(f"%{title_substring}%"))
+            .filter(Faculty.title.ilike(f"%{faculty_title}%"))
+            .order_by(Group.title)
+        )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
@@ -239,12 +231,14 @@ class PostgresRepository(AbstractRepository):
 
     async def get_unique_years_depending_on_workload(
         self,
-        term: Optional[str],
+        term: str,
     ):
-        stmt = select(Workload.year)
-        if term:
-            stmt = stmt.filter_by(term=term)
-        stmt = stmt.distinct().order_by(Workload.year)
+        stmt = (
+            select(Workload.year)
+            .filter(Workload.term.ilike(f"%{term}%"))
+            .distinct()
+            .order_by(Workload.year)
+        )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
@@ -325,24 +319,16 @@ class PostgresRepository(AbstractRepository):
     async def get_unique_mentors_fios_depending_on_department(
         self,
         fio_substring: str,
-        department_title: Optional[str],
+        department_title: str,
     ):
-        if department_title is not None:
-            stmt = (
-                select(Mentor.fio)
-                .join(Department)
-                .where(Department.title == department_title)
-                .distinct()
-                .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
-                .order_by(Mentor.fio)
-            )
-        else:
-            stmt = (
-                select(Mentor.fio)
-                .distinct()
-                .order_by(Mentor.fio)
-                .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
-            )
+        stmt = (
+            select(Mentor.fio)
+            .join(Department)
+            .distinct()
+            .filter(Mentor.fio.ilike(f"%{fio_substring}%"))
+            .filter(Department.title.ilike(f"%{department_title}%"))
+            .order_by(Mentor.fio)
+        )
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
