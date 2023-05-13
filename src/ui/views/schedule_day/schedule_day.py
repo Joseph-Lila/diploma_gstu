@@ -1,17 +1,26 @@
+from typing import List
+
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 
-from src.domain.interfaces import AbstractSizeMaster, AbstractSizeSlave
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.interfaces import (
+    AbstractSizeMaster,
+    AbstractSizeSlave,
+    AbstractTunedByInfoRecords,
+)
 from src.ui.views.schedule_cell import ScheduleCell
 
 
-class ScheduleDay(MDCard, AbstractSizeMaster, AbstractSizeSlave):
+class ScheduleDay(
+    MDCard, AbstractSizeMaster, AbstractSizeSlave, AbstractTunedByInfoRecords
+):
     def __init__(
         self, pairs_quantity: int, day_of_week: str, *args, cur_group="", **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.cur_group = cur_group
-        self.slaves = []
+        self.slaves: List[ScheduleCell] = []
         self.update_metadata(pairs_quantity, day_of_week)
 
     def get_minimum_width(self):
@@ -47,3 +56,14 @@ class ScheduleDay(MDCard, AbstractSizeMaster, AbstractSizeSlave):
             )
             self.ids.content.add_widget(self.slaves[i - 1])
         self.fit_slaves()
+
+    async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
+        for i, slave in enumerate(self.slaves, start=1):
+            await slave.tune_using_info_records(
+                [
+                    record
+                    for record in info_records
+                    if self.ids.day_of_week_lbl.text == record.cell_pos.day_of_week
+                    and i == record.cell_pos.pair_number
+                ]
+            )

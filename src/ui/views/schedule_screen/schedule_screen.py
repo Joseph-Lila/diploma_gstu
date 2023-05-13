@@ -1,12 +1,13 @@
 from typing import Optional, List
 
-from kivymd.uix.card import MDCard
 from kivymd.uix.screen import MDScreen
 
 import asynckivy as ak
 from kivy.app import App
 
 from src.adapters.orm import Schedule
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.interfaces import AbstractScheduleWeeksStore
 from src.ui.views import FileTabOptions
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
@@ -15,7 +16,7 @@ from src.ui.views.open_dialog import OpenDialog
 class ScheduleScreenView(MDScreen):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.schedule_views: List[MDCard] = [
+        self.schedule_weeks_stores: List[AbstractScheduleWeeksStore] = [
             self.ids.group_1,
             self.ids.mentor_1,
             self.ids.audience_1,
@@ -24,8 +25,6 @@ class ScheduleScreenView(MDScreen):
             self.ids.audience_2,
         ]
         self._init_file_tab_options_dialog()
-        self.open_dialog = OpenDialog()
-        self.create_dialog = CreateDialog()
 
     def _init_file_tab_options_dialog(self):
         self.file_tab_options_dialog = FileTabOptions()
@@ -69,11 +68,11 @@ class ScheduleScreenView(MDScreen):
 
     def show_open_dialog(self, *args):
         self.file_tab_options_dialog.dismiss()
-        self.open_dialog.open(self)
+        OpenDialog().open(self)
 
     def show_create_dialog(self, *args):
         self.file_tab_options_dialog.dismiss()
-        self.create_dialog.open()
+        CreateDialog().open()
 
     def delete_schedule(self, *args):
         self.file_tab_options_dialog.dismiss()
@@ -82,6 +81,7 @@ class ScheduleScreenView(MDScreen):
 
     def save_schedule(self, *args):
         self.file_tab_options_dialog.dismiss()
+        # TODO save local changes (ask before it)
 
     def auto_filling(self, *args):
         self.file_tab_options_dialog.dismiss()
@@ -89,3 +89,14 @@ class ScheduleScreenView(MDScreen):
 
     def generate_pdf(self, *args):
         self.file_tab_options_dialog.dismiss()
+
+    def send_command_to_refresh_cells(self, *args):
+        ak.start(
+            App.get_running_app().controller.get_actual_schedule_info_records(
+                self,
+            )
+        )
+
+    async def refresh_cells(self, info_records: List[ScheduleItemInfo]):
+        for store in self.schedule_weeks_stores:
+            await store.tune_using_info_records(info_records)

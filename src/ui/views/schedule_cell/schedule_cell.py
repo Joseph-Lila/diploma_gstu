@@ -4,16 +4,22 @@ from kivymd.uix.card import MDCard
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.enums import ViewState
-from src.domain.interfaces import AbstractSizeMaster, AbstractSizeSlave
+from src.domain.interfaces import (
+    AbstractSizeMaster,
+    AbstractSizeSlave,
+    AbstractTunedByInfoRecords,
+)
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
 
 
-class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
+class ScheduleCell(
+    MDCard, AbstractSizeMaster, AbstractSizeSlave, AbstractTunedByInfoRecords
+):
     SLAVES_CNT = 4
 
     def __init__(self, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
-        self.slaves = [
+        self.slaves: List[ScheduleItemBtn] = [
             ScheduleItemBtn(cur_group=cur_group) for _ in range(ScheduleCell.SLAVES_CNT)
         ]
         for slave in self.slaves:
@@ -29,7 +35,5 @@ class ScheduleCell(MDCard, AbstractSizeMaster, AbstractSizeSlave):
     def get_minimum_width(self):
         return self.slaves[-1].width * 2 + 2 * self.padding[-1] + self.spacing
 
-    async def tune_slaves_using_info_records(
-        self, info_records: List[ScheduleItemInfo]
-    ):
-        print(f"{info_records = }")
+    async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
+        print(f"This is cell!\n {info_records = }")

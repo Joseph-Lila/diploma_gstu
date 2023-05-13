@@ -1,5 +1,5 @@
 from .file_tab_options import FileTabOptions
-from .auditories_schedule import AudiencesSchedule
+from .audiences_schedule import AudiencesSchedule
 from .auditories_schedule_legend import AudiencesScheduleLegend
 from .clickable_text_field_round import ClickableTextFieldRound
 from .groups_schedule import GroupsSchedule

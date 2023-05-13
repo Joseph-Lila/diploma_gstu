@@ -1,12 +1,15 @@
+from typing import List
+
 from kivy.properties import StringProperty
 from kivymd.uix.card import MDCard
 
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.enums import DayOfWeek, ViewType
-from src.domain.interfaces import AbstractSizeMaster
+from src.domain.interfaces import AbstractSizeMaster, AbstractTunedByInfoRecords
 from src.ui.views.schedule_day import ScheduleDay
 
 
-class ScheduleWeek(MDCard, AbstractSizeMaster):
+class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
     view_type = StringProperty()
 
     def __init__(
@@ -18,7 +21,7 @@ class ScheduleWeek(MDCard, AbstractSizeMaster):
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-        self.slaves = []
+        self.slaves: List[ScheduleDay] = []
         self.update_metadata(entity_title, view_type, pairs_quantity)
 
     def update_metadata(
@@ -43,3 +46,18 @@ class ScheduleWeek(MDCard, AbstractSizeMaster):
         self.fit_slaves()
         self.ids.entity_title.width = self.slaves[-1].width
         self.width = self.slaves[-1].width
+
+    async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
+        for slave in self.slaves:
+            await slave.tune_using_info_records(
+                [
+                    record
+                    for record in info_records
+                    if self.ids.entity_title.text
+                    in [
+                        record.mentor_part.fio,
+                        record.audience_part.number,
+                    ]
+                    + [r.title for r in record.groups_part]
+                ]
+            )

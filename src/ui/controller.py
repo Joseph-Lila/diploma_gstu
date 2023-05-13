@@ -278,3 +278,37 @@ class Controller:
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()
         await self.model.schedule_master.update_metadata(*astuple(schedule))
+        # TODO describe `make_global_schedule_records_like_local` and `load_fitted_workloads_to_model`
+
+    async def make_global_schedule_records_like_local(
+        self,
+        sender,
+    ):
+        # it's enough to load only records for pointed schedule
+        # schedule_id I can get from the Model
+        raise NotImplementedError
+
+    async def make_local_schedule_records_like_global(
+        self,
+        sender,
+    ):
+        # delete all existing and add local
+        # schedule_id I can get from the Model
+        raise NotImplementedError
+
+    async def load_fitted_workloads_to_model(
+        self,
+        sender,
+    ):
+        # it runs after `make_global_schedule_records_like_local`
+        # schedule_id I can get from the Model
+        raise NotImplementedError
+
+    async def get_actual_schedule_info_records(
+        self,
+        sender,
+    ):
+        # use local workloads (after `load_fitted_workloads_to_model`)
+        # schedule_id I can get from the Model
+        raise NotImplementedError
+        # await sender.refresh_cells(info_records)
