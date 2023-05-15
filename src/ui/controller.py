@@ -24,6 +24,8 @@ from src.domain.commands import (
     GetUniqueSubjects,
     GetUniqueSubjectTypes,
     GetWorkloads,
+    MakeGlobalScheduleRecordsLikeLocal,
+    GetExtendedScheduleRecords,
 )
 from src.domain.events import (
     GotSchedules,
@@ -38,6 +40,7 @@ from src.domain.events import (
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
     GotWorkloads,
+    GotExtendedScheduleRecords,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -275,40 +278,31 @@ class Controller:
         )
         await sender.add_audiences(event.audiences)
 
+    @use_loop
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()
         await self.model.schedule_master.update_metadata(*astuple(schedule))
-        # TODO describe `make_global_schedule_records_like_local` and `load_fitted_workloads_to_model`
+        await self.model.bus.handle_command(
+            MakeGlobalScheduleRecordsLikeLocal(self.model.schedule_master.id)
+        )
+        event: GotWorkloads = await self.model.bus.handle_command(
+            GetWorkloads(
+                "",
+                "",
+                "",
+                "",
+                self.model.schedule_master.year,
+                self.model.schedule_master.term,
+            )
+        )
+        await self.model.schedule_master.set_workloads(event.data)
 
-    async def make_global_schedule_records_like_local(
-        self,
-        sender,
-    ):
-        # it's enough to load only records for pointed schedule
-        # schedule_id I can get from the Model
-        raise NotImplementedError
-
-    async def make_local_schedule_records_like_global(
-        self,
-        sender,
-    ):
-        # delete all existing and add local
-        # schedule_id I can get from the Model
-        raise NotImplementedError
-
-    async def load_fitted_workloads_to_model(
-        self,
-        sender,
-    ):
-        # it runs after `make_global_schedule_records_like_local`
-        # schedule_id I can get from the Model
-        raise NotImplementedError
-
+    @use_loop
     async def get_actual_schedule_info_records(
         self,
         sender,
     ):
-        # use local workloads (after `load_fitted_workloads_to_model`)
-        # schedule_id I can get from the Model
-        raise NotImplementedError
-        # await sender.refresh_cells(info_records)
+        event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
+            GetExtendedScheduleRecords(self.model.schedule_master.id)
+        )
+        await sender.refresh_cells(event.records)

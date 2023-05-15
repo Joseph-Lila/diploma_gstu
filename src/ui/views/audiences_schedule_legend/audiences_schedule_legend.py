@@ -9,9 +9,10 @@ class AudiencesScheduleLegend(MDCard):
     department_hint_text = "Введите название кафедры"
     audience_hint_text = "Введите номер аудитории"
 
-    def clear_filters(self, *args):
+    def clear_results(self, *args):
         self.ids.audience.change_text_value("")
         self.ids.department.change_text_value("")
+        self.schedule_view.clear_audiences()
 
     def clear_audience_selector_value(self, *args):
         self.ids.audience.change_text_value("")

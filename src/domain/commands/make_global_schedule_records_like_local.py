@@ -4,6 +4,5 @@ from src.domain.commands.command import Command
 
 
 @dataclass
-class GetUniqueGroupsDependingOnFaculty(Command):
-    title_substring: str
-    faculty: str
+class MakeGlobalScheduleRecordsLikeLocal(Command):
+    schedule_id: int

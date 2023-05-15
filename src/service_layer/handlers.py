@@ -1,6 +1,5 @@
-from typing import Callable, Dict, List, Type
+from typing import Callable, Dict, List, Type, Tuple
 
-from pandas import DataFrame
 
 from src.adapters.orm import Schedule
 from src.adapters.repositories.abstract_repository import AbstractRepository
@@ -24,8 +23,13 @@ from src.domain.commands import (
     GetUniqueSubjects,
     GetWorkloads,
     GetExtendedScheduleRecords,
+    MakeGlobalScheduleRecordsLikeLocal,
+    MakeLocalScheduleRecordsLikeGlobal,
 )
 from src.domain.commands.command import Command
+from src.domain.entities.schedule_item_info import (
+    build_schedule_item_info_from_raw_data,
+)
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -39,7 +43,7 @@ from src.domain.events import (
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
     GotWorkloads,
-    GotDataFrame,
+    GotExtendedScheduleRecords,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -247,14 +251,31 @@ async def get_workloads(
 async def get_extended_schedule_records(
     cmd: GetExtendedScheduleRecords,
     repository: AbstractRepository,
-) -> GotDataFrame:
-    df: DataFrame = await repository.get_extended_schedule_records(
+) -> GotExtendedScheduleRecords:
+    data: Tuple[tuple] = await repository.get_extended_local_schedule_records(
         cmd.schedule_id,
     )
-    return GotDataFrame(df)
+    records = [build_schedule_item_info_from_raw_data(*item) for item in data]
+    return GotExtendedScheduleRecords(records)
+
+
+async def make_local_schedule_records_like_global(
+    cmd: MakeLocalScheduleRecordsLikeGlobal,
+    repository: AbstractRepository,
+):
+    await repository.make_local_schedule_records_like_global(cmd.schedule_id)
+
+
+async def make_global_schedule_records_like_local(
+    cmd: MakeGlobalScheduleRecordsLikeLocal,
+    repository: AbstractRepository,
+):
+    await repository.make_global_schedule_records_like_local(cmd.schedule_id)
 
 
 COMMAND_HANDLERS = {
+    MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
+    MakeGlobalScheduleRecordsLikeLocal: make_global_schedule_records_like_local,
     GetSchedules: get_schedules,
     GetExtendedScheduleRecords: get_extended_schedule_records,
     GetUniqueYearsDependingOnWorkload: get_unique_years_depending_on_workload,

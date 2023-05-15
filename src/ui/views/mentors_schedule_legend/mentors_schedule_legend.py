@@ -9,9 +9,10 @@ class MentorsScheduleLegend(MDCard):
     mentor_hint_text = "Введите ФИО преподавателя"
     department_hint_text = "Введите название кафедры"
 
-    def clear_filters(self, *args):
+    def clear_results(self, *args):
         self.ids.mentor.change_text_value("")
         self.ids.department.change_text_value("")
+        self.schedule_view.clear_mentors()
 
     def clear_mentor_selector_value(self, *args):
         self.ids.mentor.change_text_value("")

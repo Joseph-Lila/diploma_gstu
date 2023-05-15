@@ -7,6 +7,8 @@ from src.domain.enums import ViewState
 from src.domain.interfaces import (
     AbstractSizeMaster,
     AbstractSizeSlave,
+)
+from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
@@ -36,4 +38,5 @@ class ScheduleCell(
         return self.slaves[-1].width * 2 + 2 * self.padding[-1] + self.spacing
 
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
-        print(f"This is cell!\n {info_records = }")
+        if len(info_records) > 0:
+            print(f"This is cell!\n {[r.view_type for r in info_records] = }")

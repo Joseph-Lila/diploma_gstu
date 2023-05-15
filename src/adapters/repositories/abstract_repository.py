@@ -147,7 +147,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def get_extended_schedule_records(
+    async def get_extended_local_schedule_records(
         self,
         schedule_id: int,
     ):
@@ -158,5 +158,80 @@ class AbstractRepository(abc.ABC):
         self,
         group_substring,
         faculty_substring,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_global_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_local_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def clear_local_schedule_records(
+        self,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def clear_global_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def create_local_schedule_record(
+        self,
+        schedule_id: int,
+        day_of_week: str,
+        pair_number: int,
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+        audience_id: int,
+        group_id: int,
+        week_type: str,
+        subgroup: str,
+        mentor_free: bool,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def create_global_schedule_record(
+        self,
+        schedule_id: int,
+        day_of_week: str,
+        pair_number: int,
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+        audience_id: int,
+        group_id: int,
+        week_type: str,
+        subgroup: str,
+        mentor_free: bool,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def make_global_schedule_records_like_local(
+        self,
+        schedule_id: int,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def make_local_schedule_records_like_global(
+        self,
+        schedule_id: int,
     ):
         raise NotImplementedError

@@ -1,4 +1,3 @@
-from .got_dataframe import GotDataFrame
 from .got_schedules import GotSchedules
 from .got_unique_terms import GotUniqueTerms
 from .got_unique_years import GotUniqueYears
@@ -11,3 +10,4 @@ from .got_unique_audiences import GotUniqueAudiences
 from .got_unique_subjects import GotUniqueSubjects
 from .got_unique_subject_types import GotUniqueSubjectTypes
 from .got_workloads import GotWorkloads
+from .got_extended_schedule_records import GotExtendedScheduleRecords

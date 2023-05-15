@@ -9,9 +9,10 @@ class GroupsScheduleLegend(MDCard):
     faculty_hint_text = "Введите название факультета"
     group_hint_text = "Введите название группы"
 
-    def clear_filters(self, *args):
+    def clear_results(self, *args):
         self.ids.group.change_text_value("")
         self.ids.faculty.change_text_value("")
+        self.schedule_view.clear_groups()
 
     def clear_group_selector_value(self, *args):
         self.ids.group.change_text_value("")

@@ -1,4 +1,3 @@
 from .abstract_size_master import AbstractSizeMaster
 from .abstract_size_slave import AbstractSizeSlave
 from .abstract_schedule_weeks_store import AbstractScheduleWeeksStore
-from .abstract_tuned_by_info_records import AbstractTunedByInfoRecords

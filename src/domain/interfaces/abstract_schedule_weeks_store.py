@@ -1,10 +1,14 @@
+from kivy.properties import ObjectProperty
+
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from typing import List
 
-from src.ui.views.schedule_week import ScheduleWeek
+from src.ui.views.schedule_week.schedule_week import ScheduleWeek
 
 
 class AbstractScheduleWeeksStore:
+    master = ObjectProperty()
+
     def __init__(self):
         self.schedule_weeks: List[ScheduleWeek] = []
         self.min_id, self.max_id = None, None

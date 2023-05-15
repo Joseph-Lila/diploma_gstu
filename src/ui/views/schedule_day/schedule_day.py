@@ -7,6 +7,8 @@ from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.interfaces import (
     AbstractSizeMaster,
     AbstractSizeSlave,
+)
+from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
 from src.ui.views.schedule_cell import ScheduleCell

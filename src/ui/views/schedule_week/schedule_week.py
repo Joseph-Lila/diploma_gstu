@@ -5,7 +5,10 @@ from kivymd.uix.card import MDCard
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.enums import DayOfWeek, ViewType
-from src.domain.interfaces import AbstractSizeMaster, AbstractTunedByInfoRecords
+from src.domain.interfaces import AbstractSizeMaster
+from src.domain.interfaces.abstract_tuned_by_info_records import (
+    AbstractTunedByInfoRecords,
+)
 from src.ui.views.schedule_day import ScheduleDay
 
 
@@ -49,15 +52,20 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
 
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
         for slave in self.slaves:
-            await slave.tune_using_info_records(
-                [
-                    record
-                    for record in info_records
-                    if self.ids.entity_title.text
-                    in [
-                        record.mentor_part.fio,
-                        record.audience_part.number,
-                    ]
-                    + [r.title for r in record.groups_part]
+            # find suitable records
+            fit_info_records = [
+                record
+                for record in info_records
+                if self.ids.entity_title.text
+                in [
+                    record.mentor_part.fio,
+                    record.audience_part.number,
                 ]
-            )
+                + [r.title for r in record.groups_part]
+            ]
+            # make copy to create new instances
+            copy_of_fit_info_records = fit_info_records[:]
+            # change view_state on actual
+            for r in copy_of_fit_info_records:
+                r.view_type = self.view_type
+            await slave.tune_using_info_records(copy_of_fit_info_records)

@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
-    AsyncResult,
 )
 from sqlalchemy.orm import registry
 

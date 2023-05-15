@@ -5,15 +5,14 @@ from kivymd.uix.card import MDCard
 from src import config
 from src.domain.enums import ViewType
 from src.domain.interfaces import AbstractScheduleWeeksStore
-from src.ui.views.schedule_week import ScheduleWeek
+from src.ui.views.schedule_week.schedule_week import ScheduleWeek
 
 
 class AudiencesSchedule(MDCard, AbstractScheduleWeeksStore):
     AUDIENCES_AT_ONE_MOMENT = 4
 
     async def add_audiences(self, audiences: List[str]):
-        self.schedule_weeks.clear()
-        self.ids.body_cont.clear_widgets()
+        self.clear_audiences()
 
         self.min_id, self.max_id = (
             0,
@@ -30,6 +29,12 @@ class AudiencesSchedule(MDCard, AbstractScheduleWeeksStore):
             )
             if ind <= self.max_id:
                 self.ids.body_cont.add_widget(self.schedule_weeks[ind])
+        self.master.send_command_to_refresh_cells()
+
+    def clear_audiences(self):
+        self.schedule_weeks.clear()
+        self.ids.body_cont.clear_widgets()
+        self.min_id, self.max_id = None, None
 
     async def shift_audience(self, direction: str):
         if self.min_id is None or self.max_id is None:

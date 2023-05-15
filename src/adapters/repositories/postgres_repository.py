@@ -1,5 +1,4 @@
 from typing import Optional
-import pandas as pd
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -15,6 +14,7 @@ from src.adapters.orm import (
     Subject,
     SubjectType,
     ScheduleRecord,
+    LocalScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
 
@@ -117,16 +117,16 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def get_extended_schedule_records(
+    async def get_extended_local_schedule_records(
         self,
         schedule_id: int,
     ):
         stmt = (
             select(
-                ScheduleRecord.day_of_week,
-                ScheduleRecord.pair_number,
-                ScheduleRecord.week_type,
-                ScheduleRecord.subgroup,
+                LocalScheduleRecord.day_of_week,
+                LocalScheduleRecord.pair_number,
+                LocalScheduleRecord.week_type,
+                LocalScheduleRecord.subgroup,
                 Audience.id.label("audience_id"),
                 Audience.number.label("audience_number"),
                 Audience.number_of_seats,
@@ -140,19 +140,160 @@ class PostgresRepository(AbstractRepository):
                 SubjectType.id.label("subject_type_id"),
                 Subject.title.label("subject_title"),
                 SubjectType.title.label("subject_type_title"),
-                ScheduleRecord.mentor_free,
-                ScheduleRecord.id.label("schedule_record_id"),
+                LocalScheduleRecord.mentor_free,
+                LocalScheduleRecord.id.label("schedule_record_id"),
             )
             .join(Mentor)
             .join(Group)
             .join(Subject)
             .join(Audience)
             .join(SubjectType)
-            .where(ScheduleRecord.schedule_id == schedule_id)
+            .where(LocalScheduleRecord.schedule_id == schedule_id)
         )
         async with self.async_session() as session:
             query = await session.execute(stmt)
-        return pd.DataFrame(query.fetchall())
+        return query.fetchall()
+
+    async def get_global_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        stmt = select(ScheduleRecord).where(ScheduleRecord.schedule_id == schedule_id)
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def get_local_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        stmt = select(LocalScheduleRecord).where(
+            LocalScheduleRecord.schedule_id == schedule_id
+        )
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.all()
+
+    async def clear_local_schedule_records(
+        self,
+    ):
+        stmt = delete(LocalScheduleRecord)
+        async with self.async_session() as session, session.begin():
+            await session.execute(stmt)
+
+    async def clear_global_schedule_records(
+        self,
+        schedule_id: int,
+    ):
+        stmt = delete(ScheduleRecord).where(ScheduleRecord.schedule_id == schedule_id)
+        async with self.async_session() as session, session.begin():
+            await session.execute(stmt)
+
+    async def create_local_schedule_record(
+        self,
+        schedule_id: int,
+        day_of_week: str,
+        pair_number: int,
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+        audience_id: int,
+        group_id: int,
+        week_type: str,
+        subgroup: str,
+        mentor_free: bool,
+    ):
+        async with self.async_session() as session, session.begin():
+            new_elem = LocalScheduleRecord(
+                schedule_id=schedule_id,
+                day_of_week=day_of_week,
+                pair_number=pair_number,
+                subject_id=subject_id,
+                subject_type_id=subject_type_id,
+                mentor_id=mentor_id,
+                audience_id=audience_id,
+                group_id=group_id,
+                week_type=week_type,
+                subgroup=subgroup,
+                mentor_free=mentor_free,
+            )
+            session.add(new_elem)
+            await session.flush()
+        return new_elem
+
+    async def create_global_schedule_record(
+        self,
+        schedule_id: int,
+        day_of_week: str,
+        pair_number: int,
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+        audience_id: int,
+        group_id: int,
+        week_type: str,
+        subgroup: str,
+        mentor_free: bool,
+    ):
+        async with self.async_session() as session, session.begin():
+            new_elem = ScheduleRecord(
+                schedule_id=schedule_id,
+                day_of_week=day_of_week,
+                pair_number=pair_number,
+                subject_id=subject_id,
+                subject_type_id=subject_type_id,
+                mentor_id=mentor_id,
+                audience_id=audience_id,
+                group_id=group_id,
+                week_type=week_type,
+                subgroup=subgroup,
+                mentor_free=mentor_free,
+            )
+            session.add(new_elem)
+            await session.flush()
+        return new_elem
+
+    async def make_global_schedule_records_like_local(
+        self,
+        schedule_id: int,
+    ):
+        global_records = await self.get_global_schedule_records(schedule_id)
+        await self.clear_local_schedule_records()
+        for record in global_records:
+            await self.create_local_schedule_record(
+                record.schedule_id,
+                record.day_of_week,
+                record.pair_number,
+                record.subject_id,
+                record.subject_type_id,
+                record.mentor_id,
+                record.audience_id,
+                record.group_id,
+                record.week_type,
+                record.subgroup,
+                record.mentor_free,
+            )
+
+    async def make_local_schedule_records_like_global(
+        self,
+        schedule_id: int,
+    ):
+        local_records = await self.get_local_schedule_records(schedule_id)
+        await self.clear_global_schedule_records(schedule_id)
+        for record in local_records:
+            await self.create_global_schedule_record(
+                record.schedule_id,
+                record.day_of_week,
+                record.pair_number,
+                record.subject_id,
+                record.subject_type_id,
+                record.mentor_id,
+                record.audience_id,
+                record.group_id,
+                record.week_type,
+                record.subgroup,
+                record.mentor_free,
+            )
 
     async def get_workloads(
         self,
