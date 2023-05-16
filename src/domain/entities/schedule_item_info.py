@@ -10,7 +10,6 @@ from src.domain.entities import (
     MentorPart,
     SubjectPart,
 )
-from src.domain.enums import ViewState, ViewType
 
 
 @dataclass
@@ -22,8 +21,6 @@ class ScheduleItemInfo:
     mentor_part: Optional[MentorPart] = None
     subject_part: Optional[SubjectPart] = None
     additional_part: Optional[AdditionalPart] = None
-    view_state: str = ViewState.UNAVAILABLE.value
-    view_type: str = ViewType.GROUP.value
 
 
 def build_schedule_item_info_from_raw_data(
@@ -46,8 +43,6 @@ def build_schedule_item_info_from_raw_data(
     subject_type_title,
     mentor_free,
     schedule_record_id,
-    view_state=ViewState.UNAVAILABLE.value,
-    view_type=ViewType.GROUP.value,
 ):
     return ScheduleItemInfo(
         cell_pos=CellPos(
@@ -85,6 +80,4 @@ def build_schedule_item_info_from_raw_data(
             mentor_free=mentor_free,
             schedule_record_id=schedule_record_id,
         ),
-        view_state=view_state,
-        view_type=view_type,
     )

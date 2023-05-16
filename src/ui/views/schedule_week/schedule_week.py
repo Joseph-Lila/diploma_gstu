@@ -4,7 +4,7 @@ from kivy.properties import StringProperty
 from kivymd.uix.card import MDCard
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
-from src.domain.enums import DayOfWeek, ViewType
+from src.domain.enums import DayOfWeek, ViewType, ViewState
 from src.domain.interfaces import AbstractSizeMaster
 from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
@@ -47,8 +47,6 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
         for slave in self.slaves:
             self.ids.cont.add_widget(slave)
         self.fit_slaves()
-        self.ids.entity_title.width = self.slaves[-1].width
-        self.width = self.slaves[-1].width
 
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
         for slave in self.slaves:
@@ -69,3 +67,12 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
             for r in copy_of_fit_info_records:
                 r.view_type = self.view_type
             await slave.tune_using_info_records(copy_of_fit_info_records)
+        self.fit_slaves()
+
+    def fit_slaves(self):
+        if len(self.slaves) > 0:
+            max_width = max(slave.get_minimum_width() for slave in self.slaves)
+            for slave in self.slaves:
+                slave.set_width(max_width)
+        self.ids.entity_title.width = self.slaves[-1].width
+        self.width = self.slaves[-1].width

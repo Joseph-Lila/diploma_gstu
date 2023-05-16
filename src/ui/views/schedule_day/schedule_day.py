@@ -4,6 +4,7 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.enums import ViewState
 from src.domain.interfaces import (
     AbstractSizeMaster,
     AbstractSizeSlave,
@@ -24,6 +25,20 @@ class ScheduleDay(
         self.cur_group = cur_group
         self.slaves: List[ScheduleCell] = []
         self.update_metadata(pairs_quantity, day_of_week)
+
+    def fit_slaves(self):
+        if len(self.slaves) > 0:
+            max_width = max(slave.get_minimum_width() for slave in self.slaves)
+            for slave in self.slaves:
+                slave.set_width(max_width)
+
+    def set_width(self, width):
+        self.size_hint_x = None
+        self.size_hint_y = 1
+        self.width = width
+        for slave in self.slaves:
+            slave.width = width - self.ids.lbl_container.width - self.ids.pairs_cells_cont.width
+            slave.expand_slaves_on_all_width()
 
     def get_minimum_width(self):
         return (
@@ -69,3 +84,4 @@ class ScheduleDay(
                     and i == record.cell_pos.pair_number
                 ]
             )
+        self.fit_slaves()
