@@ -11,13 +11,13 @@ class ScheduleCellContextMenu:
                 "text": "Настроить компоновку",
                 "viewclass": "OneLineListItem",
                 "height": dp(56),
-                "on_release": lambda: owner.open_dialog()
+                "on_release": owner.open_dialog
             },
             {
                 "text": "Очистить ячейку",
                 "viewclass": "OneLineListItem",
                 "height": dp(56),
-                "on_release": lambda: owner.clear()
+                "on_release": owner.clear
             }
         ]
 

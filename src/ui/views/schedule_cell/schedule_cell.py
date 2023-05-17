@@ -73,6 +73,7 @@ class ScheduleCell(
         super(ScheduleCell, self).on_touch_down(touch)
 
         if self.collide_point(*touch.pos) and touch.button == 'right':
+            print('открыл dropdown!!!!')
             self.menu.open()
 
     def fit_slaves(self):

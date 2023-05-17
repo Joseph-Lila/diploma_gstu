@@ -1,7 +1,6 @@
 from .file_tab_options import FileTabOptions
 from .audiences_schedule import AudiencesSchedule
 from .audiences_schedule_legend import AudiencesScheduleLegend
-from .clickable_text_field_round import ClickableTextFieldRound
 from .groups_schedule import GroupsSchedule
 from .groups_schedule_legend import GroupsScheduleLegend
 from .home_screen import HomeScreenView
