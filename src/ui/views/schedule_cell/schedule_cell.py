@@ -1,5 +1,5 @@
 from typing import List
-
+import asynckivy as ak
 from kivymd.uix.card import MDCard
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -11,6 +11,7 @@ from src.domain.interfaces import (
 from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
+from src.ui.views.schedule_cell_context_menu import ScheduleCellContextMenu
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
 
 
@@ -42,6 +43,7 @@ class ScheduleCell(
 
     def __init__(self, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
+        self.menu = ScheduleCellContextMenu.get_menu(self)
         self.slaves: List[ScheduleItemBtn] = [
             ScheduleItemBtn(
                 cur_group=cur_group,
@@ -57,6 +59,21 @@ class ScheduleCell(
         self.ids.bottom_cont.add_widget(self.slaves[2])
         self.ids.bottom_cont.add_widget(self.slaves[3])
         self.fit_slaves()
+
+    def open_dialog(self):
+        print('open dialog')
+
+    def clear(self):
+        print('clear')
+        ak.start(
+            self.tune_using_info_records([])
+        )
+
+    def on_touch_down(self, touch):
+        super(ScheduleCell, self).on_touch_down(touch)
+
+        if self.collide_point(*touch.pos) and touch.button == 'right':
+            self.menu.open()
 
     def fit_slaves(self):
         if len(self.slaves) > 0:

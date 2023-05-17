@@ -13,20 +13,11 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
     view_state = StringProperty()
     view_type = StringProperty()
 
-    def on_press(self):
-        # if (
-        #     self.schedule_item_info is not None
-        #     and self.view_state != ViewState.FILLED.value
-        # ):
-        #     # ak.start(
-        #     #     App.get_running_app().controller.get_filling_variants(
-        #     #         self,
-        #     #         self.schedule_item_info.cell_pos,
-        #     #         self.schedule_item_info.cell_part,
-        #     #         self.schedule_item_info.view_type,
-        #     #     )
-        #     # )
-        pass
+    def on_touch_down(self, touch):
+        super(ScheduleItemBtn, self).on_touch_down(touch)
+
+        if self.collide_point(*touch.pos) and touch.button == 'left':
+            print(f'hi {self}')
 
     def get_minimum_width(self):
         if self.view_state != ViewState.INVISIBLE.value:
@@ -36,9 +27,12 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
             return 0
 
     def set_width(self, width):
+        self.size_hint_x = 1
+        tmp_width = self.width
+
         self.size_hint_x = None
         self.size_hint_y = 1
-        self.width = width
+        self.width = max(tmp_width, width)
 
     def update_info(self, view_state: str):
         self.view_state = view_state
