@@ -25,6 +25,7 @@ class GroupsSchedule(MDCard, AbstractScheduleWeeksStore):
                     group,
                     ViewType.GROUP.value,
                     config.get_pairs_quantity(),
+                    context_menu=self.master.cell_context_dialog,
                 )
             )
             if ind <= self.max_id:

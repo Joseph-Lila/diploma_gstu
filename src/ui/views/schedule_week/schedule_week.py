@@ -20,10 +20,12 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
         entity_title: str,
         view_type: str,
         pairs_quantity: int,
+        context_menu,
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
+        self.context_menu = context_menu
         self.slaves: List[ScheduleDay] = []
         self.update_metadata(entity_title, view_type, pairs_quantity)
 
@@ -40,6 +42,7 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
             ScheduleDay(
                 pairs_quantity,
                 day_of_week.value,
+                context_menu=self.context_menu,
                 cur_group=entity_title if view_type == ViewType.GROUP.value else "",
             )
             for day_of_week in DayOfWeek

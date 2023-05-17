@@ -1,5 +1,6 @@
 from typing import List
 import asynckivy as ak
+from kivy.core.window import Window
 from kivymd.uix.card import MDCard
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -11,7 +12,7 @@ from src.domain.interfaces import (
 from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
-from src.ui.views.schedule_cell_context_menu import ScheduleCellContextMenu
+from src.service_layer.handlers import convert_pos_into_pos_hint
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
 
 
@@ -41,14 +42,15 @@ class ScheduleCell(
         },
     )
 
-    def __init__(self, *args, cur_group="", **kwargs):
+    def __init__(self, context_menu, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
-        self.menu = ScheduleCellContextMenu.get_menu(self)
+        self.context_menu = context_menu
         self.slaves: List[ScheduleItemBtn] = [
             ScheduleItemBtn(
                 cur_group=cur_group,
                 view_state=ViewState.EMPTY.value,
-            ) for _ in range(ScheduleCell.SLAVES_CNT)
+            )
+            for _ in range(ScheduleCell.SLAVES_CNT)
         ]
         for slave in self.slaves:
             slave.update_info(ViewState.EMPTY.value)
@@ -60,21 +62,32 @@ class ScheduleCell(
         self.ids.bottom_cont.add_widget(self.slaves[3])
         self.fit_slaves()
 
-    def open_dialog(self):
-        print('open dialog')
+    def open_dialog(self, *args):
+        self.context_menu.dismiss()
 
-    def clear(self):
-        print('clear')
-        ak.start(
-            self.tune_using_info_records([])
-        )
+    def clear(self, *args):
+        self.context_menu.dismiss()
+        ak.start(self.tune_using_info_records([]))
 
-    def on_touch_down(self, touch):
-        super(ScheduleCell, self).on_touch_down(touch)
-
-        if self.collide_point(*touch.pos) and touch.button == 'right':
-            print('открыл dropdown!!!!')
-            self.menu.open()
+    def on_touch_up(self, touch):
+        if self.collide_point(*touch.pos) and touch.button == "right":
+            pos = self.to_window(*touch.pos)
+            pos_hint = convert_pos_into_pos_hint(
+                Window.size,
+                pos,
+            )
+            self.context_menu.set_data(pos, pos_hint, self.open_dialog, self.clear)
+            self.context_menu.open()
+        elif (
+            self.collide_point(*touch.pos)
+            and touch.button == "left"
+            and not self.context_menu._is_open
+        ):
+            self.context_menu.dismiss()
+            [touched_slave] = [
+                slave for slave in self.slaves if slave.collide_point(*touch.pos)
+            ]
+            print(f"OPEN DIALOG for {touched_slave}!")
 
     def fit_slaves(self):
         if len(self.slaves) > 0:
@@ -86,12 +99,20 @@ class ScheduleCell(
                     slave.set_width(max_width)
 
             # tune containers
-            if self.slaves[0].view_state == self.slaves[1].view_state == ViewState.INVISIBLE.value:
+            if (
+                self.slaves[0].view_state
+                == self.slaves[1].view_state
+                == ViewState.INVISIBLE.value
+            ):
                 self.ids.top_cont.size_hint_y = None
                 self.ids.top_cont.height = 0
             else:
                 self.ids.top_cont.size_hint_y = 1
-            if self.slaves[2].view_state == self.slaves[3].view_state == ViewState.INVISIBLE.value:
+            if (
+                self.slaves[2].view_state
+                == self.slaves[3].view_state
+                == ViewState.INVISIBLE.value
+            ):
                 self.ids.bottom_cont.size_hint_y = None
                 self.ids.bottom_cont.height = 0
             else:
@@ -110,12 +131,16 @@ class ScheduleCell(
                 slave.size_hint_x = 1
 
     def get_minimum_width(self):
-        return max(
-            [
-                self.slaves[0].width + self.slaves[1].width,
-                self.slaves[2].width + self.slaves[3].width,
-            ]
-        ) + 2 * self.padding[-1] + self.spacing
+        return (
+            max(
+                [
+                    self.slaves[0].width + self.slaves[1].width,
+                    self.slaves[2].width + self.slaves[3].width,
+                ]
+            )
+            + 2 * self.padding[-1]
+            + self.spacing
+        )
 
     @staticmethod
     def parse_info(info_record: ScheduleItemInfo):
@@ -132,7 +157,9 @@ class ScheduleCell(
                 ViewState.INVISIBLE.value,
             ]
         else:
-            parsed_info_records = [ScheduleCell.parse_info(record) for record in info_records]
+            parsed_info_records = [
+                ScheduleCell.parse_info(record) for record in info_records
+            ]
 
             for i, parsed_info_record in enumerate(parsed_info_records):
                 for j, condition in enumerate(self.CONDITIONS):

@@ -25,6 +25,7 @@ class MentorsSchedule(MDCard, AbstractScheduleWeeksStore):
                     mentor,
                     ViewType.MENTOR.value,
                     config.get_pairs_quantity(),
+                    context_menu=self.master.cell_context_dialog,
                 )
             )
             if ind <= self.max_id:

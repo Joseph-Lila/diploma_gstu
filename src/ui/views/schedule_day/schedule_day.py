@@ -4,7 +4,6 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
-from src.domain.enums import ViewState
 from src.domain.interfaces import (
     AbstractSizeMaster,
     AbstractSizeSlave,
@@ -19,9 +18,16 @@ class ScheduleDay(
     MDCard, AbstractSizeMaster, AbstractSizeSlave, AbstractTunedByInfoRecords
 ):
     def __init__(
-        self, pairs_quantity: int, day_of_week: str, *args, cur_group="", **kwargs
+        self,
+        pairs_quantity: int,
+        day_of_week: str,
+        context_menu,
+        *args,
+        cur_group="",
+        **kwargs
     ):
         super().__init__(*args, **kwargs)
+        self.context_menu = context_menu
         self.cur_group = cur_group
         self.slaves: List[ScheduleCell] = []
         self.update_metadata(pairs_quantity, day_of_week)
@@ -37,7 +43,9 @@ class ScheduleDay(
         self.size_hint_y = 1
         self.width = width
         for slave in self.slaves:
-            slave.width = width - self.ids.lbl_container.width - self.ids.pairs_cells_cont.width
+            slave.width = (
+                width - self.ids.lbl_container.width - self.ids.pairs_cells_cont.width
+            )
             slave.expand_slaves_on_all_width()
 
     def get_minimum_width(self):
@@ -58,7 +66,11 @@ class ScheduleDay(
         self.ids.content.clear_widgets()
         self.ids.pairs_cells_cont.clear_widgets()
         self.slaves = [
-            ScheduleCell(cur_group=self.cur_group) for _ in range(1, pairs_quantity + 1)
+            ScheduleCell(
+                context_menu=self.context_menu,
+                cur_group=self.cur_group,
+            )
+            for _ in range(1, pairs_quantity + 1)
         ]
 
         for i in range(1, pairs_quantity + 1):

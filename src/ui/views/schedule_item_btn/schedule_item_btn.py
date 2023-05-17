@@ -13,12 +13,6 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
     view_state = StringProperty()
     view_type = StringProperty()
 
-    def on_touch_down(self, touch):
-        super(ScheduleItemBtn, self).on_touch_down(touch)
-
-        if self.collide_point(*touch.pos) and touch.button == 'left':
-            print(f'hi {self}')
-
     def get_minimum_width(self):
         if self.view_state != ViewState.INVISIBLE.value:
             self.texture_update()
@@ -50,7 +44,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         elif view_state == ViewState.EMPTY.value:
             self.text = "ПУСТО"
         elif view_state == ViewState.INVISIBLE.value:
-            self.text = ''
+            self.text = ""
         else:
             raise
 

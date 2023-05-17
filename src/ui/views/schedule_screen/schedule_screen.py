@@ -11,6 +11,7 @@ from src.domain.interfaces import AbstractScheduleWeeksStore
 from src.ui.views import FileTabOptions
 from src.ui.views.create_dialog import CreateDialog
 from src.ui.views.open_dialog import OpenDialog
+from src.ui.views.schedule_cell_context_menu import ScheduleCellContextMenu
 
 
 class ScheduleScreenView(MDScreen):
@@ -25,6 +26,7 @@ class ScheduleScreenView(MDScreen):
             self.ids.audience_2,
         ]
         self._init_file_tab_options_dialog()
+        self._init_cell_context_dialog()
 
     def _init_file_tab_options_dialog(self):
         self.file_tab_options_dialog = FileTabOptions()
@@ -39,6 +41,9 @@ class ScheduleScreenView(MDScreen):
         )
         self.file_tab_options_dialog.ids.get_pdf_btn.bind(on_press=self.generate_pdf)
         self.file_tab_options_dialog.ids.close_btn.bind(on_press=self.close_screen)
+
+    def _init_cell_context_dialog(self):
+        self.cell_context_dialog = ScheduleCellContextMenu()
 
     def change_schedule_view(self, segmented_control_instance, item_instance):
         is_current_control_first = (

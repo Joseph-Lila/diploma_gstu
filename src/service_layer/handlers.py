@@ -58,6 +58,15 @@ async def get_schedules(
     return GotSchedules(schedules)
 
 
+def convert_pos_into_pos_hint(window_pos: tuple, pos: tuple) -> dict:
+    window_x, window_y = window_pos
+    x, y = pos
+    return {
+        "x": x / window_x,
+        "y": y / window_y,
+    }
+
+
 async def get_10_schedules(
     cmd: Get10Schedules,
     repository: AbstractRepository,
