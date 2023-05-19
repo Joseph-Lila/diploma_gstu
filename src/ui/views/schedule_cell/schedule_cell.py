@@ -69,6 +69,22 @@ class ScheduleCell(
         self.context_menu.dismiss()
         ak.start(self.tune_using_info_records([]))
 
+    def check_if_clearable(self):
+        for slave in self.slaves:
+            if slave.view_state in [
+                ViewState.FILLED.value,
+            ]:
+                return True
+        return False
+
+    def check_if_configuration_can_be_tuned(self):
+        for slave in self.slaves:
+            if slave.view_state in [
+                ViewState.EDITABLE.value,
+            ]:
+                return True
+        return False
+
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos) and touch.button == "right":
             pos = self.to_window(*touch.pos)
@@ -76,7 +92,14 @@ class ScheduleCell(
                 Window.size,
                 pos,
             )
-            self.context_menu.set_data(pos, pos_hint, self.open_dialog, self.clear)
+            self.context_menu.set_data(
+                pos,
+                pos_hint,
+                self.open_dialog,
+                self.clear,
+                self.check_if_clearable(),
+                self.check_if_configuration_can_be_tuned()
+            )
             self.context_menu.open()
         elif (
             self.collide_point(*touch.pos)

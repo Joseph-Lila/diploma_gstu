@@ -2,6 +2,6 @@ import enum
 
 
 class SubjectType(enum.Enum):
-    LECTURE = "LECTURE"
-    LAB = "LAB"
-    PRACTISE = "PRACTISE"
+    LECTURE = "Лекция"
+    LAB = "Лабораторная"
+    PRACTISE = "Практика"

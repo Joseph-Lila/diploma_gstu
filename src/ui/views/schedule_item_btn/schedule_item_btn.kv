@@ -1,4 +1,9 @@
+#: import SubjectColor src.domain.enums.SubjectColor
+
+
 <ScheduleItemBtn>:
     size_hint: None, 1
     text: 'Empty'
     font_size: 11
+    disabled_color: SubjectColor.UNAVAILABLE.value
+    background_normal: ''
