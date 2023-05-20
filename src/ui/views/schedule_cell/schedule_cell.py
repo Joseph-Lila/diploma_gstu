@@ -46,6 +46,7 @@ class ScheduleCell(
     def __init__(self, view_type, context_menu, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
         self.context_menu = context_menu
+        self.cur_group = cur_group
         self.slaves: List[ScheduleItemBtn] = [
             ScheduleItemBtn(
                 cur_group=cur_group,
@@ -68,15 +69,21 @@ class ScheduleCell(
 
     def clear(self, *args):
         self.context_menu.dismiss()
+
+        ids_to_delete = []
+        for slave in self.slaves:
+            if slave.schedule_item_info is not None:
+                if self.cur_group != "":
+                    for i, group in enumerate(slave.schedule_item_info.groups_part):
+                        if group.title == self.cur_group:
+                            ids_to_delete.append(slave.schedule_item_info.additional_part.schedule_record_ids[i])
+                else:
+                    for schedule_record_id in slave.schedule_item_info.additional_part.schedule_record_ids:
+                        ids_to_delete.append(schedule_record_id)
+
         ak.start(
             App.get_running_app().controller.delete_local_schedule_records(
-                [
-                    id_
-                    for slave in self.slaves
-                    if slave.schedule_item_info is not None
-                    and slave.schedule_item_info.additional_part is not None
-                    for id_ in slave.schedule_item_info.additional_part.schedule_record_ids
-                ],
+                ids_to_delete,
                 App.get_running_app().root.get_current_screen_view(),
             )
         )
