@@ -3,10 +3,21 @@
 
 <LoadingModalDialog>:
     size_hint: None, None
-    size: config.get_common_window_size()
+    size: 220, 260
     md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
     auto_dismiss: False
     orientation: 'vertical'
+    radius: 25, 25, 25, 25
+    padding: 0, 10, 0, 10
 
-    Button:
-        text: 'Hi'
+    MDLabel:
+        size_hint_y: .1
+        text: 'Пожалуйста, подождите...'
+        font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+        font_size: 15
+        halign: 'center'
+        valign: 'center'
+
+    Image:
+        source: 'assets/images/6c3294141813161.Y3JvcCw2NjIsNTE4LDcyLDU3.png'
+        allow_stretch: True

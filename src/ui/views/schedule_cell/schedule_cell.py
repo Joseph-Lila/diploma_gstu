@@ -129,7 +129,11 @@ class ScheduleCell(
             [touched_slave] = [
                 slave for slave in self.slaves if slave.collide_point(*touch.pos)
             ]
-            print(f"OPEN DIALOG for {touched_slave}!")
+            if touched_slave.view_state in [
+                ViewState.FILLED.value,
+                ViewState.EDITABLE.value,
+            ]:
+                print(f"OPEN DIALOG for {touched_slave}!")
 
     def fit_slaves(self):
         if len(self.slaves) > 0:

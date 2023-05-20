@@ -46,32 +46,44 @@ from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
-async def do_with_loading_modal_view(func, *args, **kwargs):
-    loading_modal_view = LoadingModalDialog()
-    loading_modal_view.open()
-    await func(*args, **kwargs)
-    loading_modal_view.dismiss()
-
-
-def use_loop(func):
+def do_with_loading_modal_view(func):
     @functools.wraps(func)
-    async def wrapped(self, *args, **kwargs):
-        try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = None
-
-        if loop and loop.is_running():
-            loop.create_task(func(self, *args, **kwargs))
+    async def wrapped(*args, **kwargs):
+        loading_modal_view = LoadingModalDialog()
+        loading_modal_view.open()
+        await func(*args, **kwargs)
+        loading_modal_view.dismiss()
 
     return wrapped
+
+
+def use_loop(use_loading_modal_view=False):
+    def _use_loop(func):
+        @functools.wraps(func)
+        async def wrapped(*args, **kwargs):
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                if use_loading_modal_view:
+                    loop.create_task(
+                        do_with_loading_modal_view(func)(*args, **kwargs)
+                    )
+                else:
+                    loop.create_task(
+                        func(*args, **kwargs)
+                    )
+        return wrapped
+    return _use_loop
 
 
 class Controller:
     def __init__(self, model):
         self.model = model
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_open_dialog_schedules(self, open_dialog, year, term):
         event: GotSchedules = await self.model.bus.handle_command(
             GetSchedules(
@@ -81,47 +93,47 @@ class Controller:
         )
         await open_dialog.update_items(event.schedules)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_years_selector_depending_on_workload(self, years_selector, term):
         event: GotUniqueYears = await self.model.bus.handle_command(
             GetUniqueYearsDependingOnWorkload(term=term)
         )
         await years_selector.update_variants([str(year) for year in event.years])
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_years_selector_depending_on_schedule(self, years_selector, term):
         event: GotUniqueYears = await self.model.bus.handle_command(
             GetUniqueYearsDependingOnSchedule(term=term)
         )
         await years_selector.update_variants([str(year) for year in event.years])
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_terms_selector_depending_on_workload(self, terms_selector, year):
         event: GotUniqueTerms = await self.model.bus.handle_command(
             GetUniqueTermsDependingOnWorkload(year=year)
         )
         await terms_selector.update_variants(event.terms)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_terms_selector_depending_on_schedule(self, terms_selector, year):
         event: GotUniqueTerms = await self.model.bus.handle_command(
             GetUniqueTermsDependingOnSchedule(year=year)
         )
         await terms_selector.update_variants(event.terms)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_latest_10_schedules(self, home_screen):
         event: GotSchedules = await self.model.bus.handle_command(Get10Schedules())
         await home_screen.update_latest_10_schedules(event.schedules)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def try_to_create_schedule(self, create_dialog, year: int, term: str):
         event: ScheduleIsCreated = await self.model.bus.handle_command(
             CreateSchedule(year=year, term=term)
         )
         await create_dialog.check_if_new_schedule_is_created(event.schedule)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def delete_schedule(self):
         if self.model.schedule_master is None:
             return
@@ -130,28 +142,28 @@ class Controller:
         )
         return event.success
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_faculties_selector(self, faculties_selector, title_substring):
         event: GotUniqueFaculties = await self.model.bus.handle_command(
             GetUniqueFaculties(title_substring)
         )
         await faculties_selector.update_variants(event.faculties)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_mentors_selector(self, mentors_selector, fio_substring):
         event: GotUniqueMentors = await self.model.bus.handle_command(
             GetUniqueMentors(fio_substring)
         )
         await mentors_selector.update_variants(event.mentors)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_groups_selector(self, groups_selector, title_substring):
         event: GotUniqueGroups = await self.model.bus.handle_command(
             GetUniqueGroups(title_substring)
         )
         await groups_selector.update_variants(event.groups)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_groups_selector_depending_on_faculty(
         self, groups_selector, title_substring, faculty: str
     ):
@@ -163,21 +175,21 @@ class Controller:
         )
         await groups_selector.update_variants(event.groups)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_departments_selector(self, departments_selector, title_substring):
         event: GotUniqueDepartments = await self.model.bus.handle_command(
             GetUniqueDepartments(title_substring)
         )
         await departments_selector.update_variants(event.departments)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_subjects_selector(self, subjects_selector, title_substring):
         event: GotUniqueSubjects = await self.model.bus.handle_command(
             GetUniqueSubjects(title_substring)
         )
         await subjects_selector.update_variants(event.subjects)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_subject_types_selector(
         self, subject_types_selector, title_substring
     ):
@@ -186,7 +198,7 @@ class Controller:
         )
         await subject_types_selector.update_variants(event.subject_types)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_mentors_selector_depending_on_department(
         self, mentors_selector, title_substring, department: Optional[str]
     ):
@@ -198,7 +210,7 @@ class Controller:
         )
         await mentors_selector.update_variants(event.mentors)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=False)
     async def fill_audiences_selector_depending_on_department(
         self, audiences_selector, number_substring, department: Optional[str]
     ):
@@ -210,7 +222,7 @@ class Controller:
         )
         await audiences_selector.update_variants(event.audiences)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def get_workloads(
         self,
         sender,
@@ -233,7 +245,7 @@ class Controller:
         )
         await sender.update_data(event.data)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_schedule_view_groups(
         self,
         sender,
@@ -248,7 +260,7 @@ class Controller:
         )
         await sender.add_groups(event.groups)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_schedule_view_mentors(
         self,
         sender,
@@ -263,7 +275,7 @@ class Controller:
         )
         await sender.add_mentors(event.mentors)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_schedule_view_audiences(
         self,
         sender,
@@ -278,7 +290,7 @@ class Controller:
         )
         await sender.add_audiences(event.audiences)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def update_schedule_metadata(self, schedule: Schedule):
         self.model.create_schedule_master()
         await self.model.schedule_master.update_metadata(*astuple(schedule))
@@ -297,7 +309,7 @@ class Controller:
         )
         await self.model.schedule_master.set_workloads(event.data)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def get_actual_schedule_info_records(
         self,
         sender,
@@ -307,7 +319,7 @@ class Controller:
         )
         await sender.refresh_cells(event.records)
 
-    @use_loop
+    @use_loop(use_loading_modal_view=True)
     async def delete_local_schedule_records(
         self,
         ids: List[int],
