@@ -45,14 +45,18 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
                 self.text = "{subject} a. {audience_number} гр. {groups}".format(
                     subject=self.schedule_item_info.subject_part.subject,
                     audience_number=self.schedule_item_info.audience_part.number,
-                    groups=', '.join([group.title for group in self.schedule_item_info.groups_part]),
+                    groups=", ".join(
+                        [group.title for group in self.schedule_item_info.groups_part]
+                    ),
                 )
             elif self.view_type == ViewType.AUDIENCE.value:
                 self.text = "{subject} {scientific_degree} {mentor} гр. {groups}".format(
                     subject=self.schedule_item_info.subject_part.subject,
                     scientific_degree=self.schedule_item_info.mentor_part.scientific_degree,
                     mentor=self.schedule_item_info.mentor_part.fio,
-                    groups=', '.join([group.title for group in self.schedule_item_info.groups_part]),
+                    groups=", ".join(
+                        [group.title for group in self.schedule_item_info.groups_part]
+                    ),
                 )
             elif self.view_type == ViewType.GROUP.value:
                 self.text = "{subject} a. {audience_number} {scientific_degree} {mentor}".format(
@@ -64,11 +68,20 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
             else:
                 raise ValueError
 
-            if self.schedule_item_info.subject_part.subject_type == SubjectType.LECTURE.value:
+            if (
+                self.schedule_item_info.subject_part.subject_type
+                == SubjectType.LECTURE.value
+            ):
                 self.background_color = SubjectColor.LECTURE.value
-            elif self.schedule_item_info.subject_part.subject_type == SubjectType.LAB.value:
+            elif (
+                self.schedule_item_info.subject_part.subject_type
+                == SubjectType.LAB.value
+            ):
                 self.background_color = SubjectColor.LAB.value
-            elif self.schedule_item_info.subject_part.subject_type == SubjectType.PRACTISE.value:
+            elif (
+                self.schedule_item_info.subject_part.subject_type
+                == SubjectType.PRACTISE.value
+            ):
                 self.background_color = SubjectColor.PRACTISE.value
             else:
                 raise ValueError
@@ -84,7 +97,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         elif view_state == ViewState.EMPTY.value:
             self.disabled = True
             self.text = "ПУСТО"
-            self.background_color = 'grey'
+            self.background_color = "grey"
         elif view_state == ViewState.INVISIBLE.value:
             self.disabled = True
             self.text = ""

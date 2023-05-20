@@ -24,7 +24,8 @@ from src.domain.commands import (
     GetWorkloads,
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
-    MakeLocalScheduleRecordsLikeGlobal, DeleteLocalScheduleRecords,
+    MakeLocalScheduleRecordsLikeGlobal,
+    DeleteLocalScheduleRecords,
 )
 from src.domain.commands.command import Command
 from src.domain.entities.schedule_item_info import (
@@ -267,16 +268,38 @@ async def get_extended_schedule_records(
     records = {}
     for item in data:
         record = build_schedule_item_info_from_raw_data(*item)
-        if (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part) in records:
+        if (
+            record.cell_pos,
+            record.cell_part,
+            record.audience_part,
+            record.mentor_part,
+        ) in records:
             records[
-                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
+                (
+                    record.cell_pos,
+                    record.cell_part,
+                    record.audience_part,
+                    record.mentor_part,
+                )
             ].groups_part.extend(record.groups_part)
             records[
-                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
-            ].additional_part.schedule_record_ids.extend(record.additional_part.schedule_record_ids)
+                (
+                    record.cell_pos,
+                    record.cell_part,
+                    record.audience_part,
+                    record.mentor_part,
+                )
+            ].additional_part.schedule_record_ids.extend(
+                record.additional_part.schedule_record_ids
+            )
         else:
             records[
-                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
+                (
+                    record.cell_pos,
+                    record.cell_part,
+                    record.audience_part,
+                    record.mentor_part,
+                )
             ] = record
     return GotExtendedScheduleRecords(list(records.values()))
 

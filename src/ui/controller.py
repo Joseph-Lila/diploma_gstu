@@ -24,7 +24,8 @@ from src.domain.commands import (
     GetUniqueSubjectTypes,
     GetWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
-    GetExtendedScheduleRecords, DeleteLocalScheduleRecords,
+    GetExtendedScheduleRecords,
+    DeleteLocalScheduleRecords,
 )
 from src.domain.events import (
     GotSchedules,
@@ -312,9 +313,7 @@ class Controller:
         ids: List[int],
         schedule_screen_view,
     ):
-        await self.model.bus.handle_command(
-            DeleteLocalScheduleRecords(ids=ids)
-        )
+        await self.model.bus.handle_command(DeleteLocalScheduleRecords(ids=ids))
         event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
             GetExtendedScheduleRecords(self.model.schedule_master.id)
         )

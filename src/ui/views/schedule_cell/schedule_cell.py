@@ -110,7 +110,7 @@ class ScheduleCell(
                 self.open_dialog,
                 self.clear,
                 self.check_if_clearable(),
-                self.check_if_configuration_can_be_tuned()
+                self.check_if_configuration_can_be_tuned(),
             )
             self.context_menu.open()
         elif (

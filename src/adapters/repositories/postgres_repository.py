@@ -191,7 +191,9 @@ class PostgresRepository(AbstractRepository):
         id_=None,
     ):
         if id_ is None:
-            stmt = delete(ScheduleRecord).where(ScheduleRecord.schedule_id == schedule_id)
+            stmt = delete(ScheduleRecord).where(
+                ScheduleRecord.schedule_id == schedule_id
+            )
         else:
             stmt = delete(ScheduleRecord).where(ScheduleRecord.id == id_)
         async with self.async_session() as session, session.begin():
