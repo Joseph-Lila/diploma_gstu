@@ -21,12 +21,14 @@ class ScheduleDay(
         self,
         pairs_quantity: int,
         day_of_week: str,
+        view_type,
         context_menu,
         *args,
         cur_group="",
         **kwargs
     ):
         super().__init__(*args, **kwargs)
+        self.view_type = view_type
         self.context_menu = context_menu
         self.cur_group = cur_group
         self.slaves: List[ScheduleCell] = []
@@ -67,6 +69,7 @@ class ScheduleDay(
         self.ids.pairs_cells_cont.clear_widgets()
         self.slaves = [
             ScheduleCell(
+                self.view_type,
                 context_menu=self.context_menu,
                 cur_group=self.cur_group,
             )

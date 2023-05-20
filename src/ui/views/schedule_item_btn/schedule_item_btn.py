@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.button import Button
 
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
-from src.domain.enums import ViewState, SubjectColor, SubjectType
+from src.domain.enums import ViewState, SubjectColor, SubjectType, ViewType
 from src.domain.interfaces import AbstractSizeSlave
 
 
@@ -33,12 +33,36 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         self.size = (0, 0)
         self.opacity = 0
 
-    def update_info(self, view_state: str):
+    def update_info(self, view_state: str, view_type: Optional[str] = None):
         self.view_state = view_state
+        if view_type is not None:
+            self.view_type = view_type
 
         if view_state == ViewState.FILLED.value:
             self.disabled = False
-            self.text = f"{self.schedule_item_info.subject_part.subject} a. {self.schedule_item_info.audience_part.number} {self.schedule_item_info.mentor_part.scientific_degree} {self.schedule_item_info.mentor_part.fio}"
+
+            if self.view_type == ViewType.MENTOR.value:
+                self.text = "{subject} a. {audience_number} гр. {groups}".format(
+                    subject=self.schedule_item_info.subject_part.subject,
+                    audience_number=self.schedule_item_info.audience_part.number,
+                    groups=', '.join([group.title for group in self.schedule_item_info.groups_part]),
+                )
+            elif self.view_type == ViewType.AUDIENCE.value:
+                self.text = "{subject} {scientific_degree} {mentor} гр. {groups}".format(
+                    subject=self.schedule_item_info.subject_part.subject,
+                    scientific_degree=self.schedule_item_info.mentor_part.scientific_degree,
+                    mentor=self.schedule_item_info.mentor_part.fio,
+                    groups=', '.join([group.title for group in self.schedule_item_info.groups_part]),
+                )
+            elif self.view_type == ViewType.GROUP.value:
+                self.text = "{subject} a. {audience_number} {scientific_degree} {mentor}".format(
+                    subject=self.schedule_item_info.subject_part.subject,
+                    audience_number=self.schedule_item_info.audience_part.number,
+                    scientific_degree=self.schedule_item_info.mentor_part.scientific_degree,
+                    mentor=self.schedule_item_info.mentor_part.fio,
+                )
+            else:
+                raise ValueError
 
             if self.schedule_item_info.subject_part.subject_type == SubjectType.LECTURE.value:
                 self.background_color = SubjectColor.LECTURE.value

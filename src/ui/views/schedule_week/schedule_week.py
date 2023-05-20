@@ -42,6 +42,7 @@ class ScheduleWeek(MDCard, AbstractSizeMaster, AbstractTunedByInfoRecords):
             ScheduleDay(
                 pairs_quantity,
                 day_of_week.value,
+                view_type,
                 context_menu=self.context_menu,
                 cur_group=entity_title if view_type == ViewType.GROUP.value else "",
             )

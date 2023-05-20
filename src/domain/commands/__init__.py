@@ -23,3 +23,4 @@ from .get_unique_subject_types import GetUniqueSubjectTypes
 from .get_workloads import GetWorkloads
 from .make_global_schedule_records_like_local import MakeGlobalScheduleRecordsLikeLocal
 from .make_local_schedule_records_like_global import MakeLocalScheduleRecordsLikeGlobal
+from .delete_local_schedule_records import DeleteLocalScheduleRecords

@@ -78,6 +78,6 @@ def build_schedule_item_info_from_raw_data(
         ),
         additional_part=AdditionalPart(
             mentor_free=mentor_free,
-            schedule_record_id=schedule_record_id,
+            schedule_record_ids=[schedule_record_id],
         ),
     )

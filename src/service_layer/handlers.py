@@ -24,7 +24,7 @@ from src.domain.commands import (
     GetWorkloads,
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
-    MakeLocalScheduleRecordsLikeGlobal,
+    MakeLocalScheduleRecordsLikeGlobal, DeleteLocalScheduleRecords,
 )
 from src.domain.commands.command import Command
 from src.domain.entities.schedule_item_info import (
@@ -264,8 +264,21 @@ async def get_extended_schedule_records(
     data: Tuple[tuple] = await repository.get_extended_local_schedule_records(
         cmd.schedule_id,
     )
-    records = [build_schedule_item_info_from_raw_data(*item) for item in data]
-    return GotExtendedScheduleRecords(records)
+    records = {}
+    for item in data:
+        record = build_schedule_item_info_from_raw_data(*item)
+        if (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part) in records:
+            records[
+                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
+            ].groups_part.extend(record.groups_part)
+            records[
+                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
+            ].additional_part.schedule_record_ids.extend(record.additional_part.schedule_record_ids)
+        else:
+            records[
+                (record.cell_pos, record.cell_part, record.audience_part, record.mentor_part)
+            ] = record
+    return GotExtendedScheduleRecords(list(records.values()))
 
 
 async def make_local_schedule_records_like_global(
@@ -282,7 +295,16 @@ async def make_global_schedule_records_like_local(
     await repository.make_global_schedule_records_like_local(cmd.schedule_id)
 
 
+async def delete_local_schedule_records(
+    cmd: DeleteLocalScheduleRecords,
+    repository: AbstractRepository,
+):
+    for id_ in cmd.ids:
+        await repository.clear_local_schedule_record(id_=id_)
+
+
 COMMAND_HANDLERS = {
+    DeleteLocalScheduleRecords: delete_local_schedule_records,
     MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
     MakeGlobalScheduleRecordsLikeLocal: make_global_schedule_records_like_local,
     GetSchedules: get_schedules,

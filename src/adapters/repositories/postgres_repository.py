@@ -174,18 +174,26 @@ class PostgresRepository(AbstractRepository):
             items = await session.scalars(stmt)
         return items.all()
 
-    async def clear_local_schedule_records(
+    async def clear_local_schedule_record(
         self,
+        id_=None,
     ):
-        stmt = delete(LocalScheduleRecord)
+        if id_ is None:
+            stmt = delete(LocalScheduleRecord)
+        else:
+            stmt = delete(LocalScheduleRecord).where(LocalScheduleRecord.id == id_)
         async with self.async_session() as session, session.begin():
             await session.execute(stmt)
 
-    async def clear_global_schedule_records(
+    async def clear_global_schedule_record(
         self,
         schedule_id: int,
+        id_=None,
     ):
-        stmt = delete(ScheduleRecord).where(ScheduleRecord.schedule_id == schedule_id)
+        if id_ is None:
+            stmt = delete(ScheduleRecord).where(ScheduleRecord.schedule_id == schedule_id)
+        else:
+            stmt = delete(ScheduleRecord).where(ScheduleRecord.id == id_)
         async with self.async_session() as session, session.begin():
             await session.execute(stmt)
 
@@ -258,7 +266,7 @@ class PostgresRepository(AbstractRepository):
         schedule_id: int,
     ):
         global_records = await self.get_global_schedule_records(schedule_id)
-        await self.clear_local_schedule_records()
+        await self.clear_local_schedule_record()
         for record in global_records:
             await self.create_local_schedule_record(
                 record.schedule_id,
@@ -279,7 +287,7 @@ class PostgresRepository(AbstractRepository):
         schedule_id: int,
     ):
         local_records = await self.get_local_schedule_records(schedule_id)
-        await self.clear_global_schedule_records(schedule_id)
+        await self.clear_global_schedule_record(schedule_id)
         for record in local_records:
             await self.create_global_schedule_record(
                 record.schedule_id,

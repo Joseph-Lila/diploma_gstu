@@ -1,5 +1,6 @@
 from typing import List
 import asynckivy as ak
+from kivy.app import App
 from kivy.core.window import Window
 from kivymd.uix.card import MDCard
 
@@ -42,7 +43,7 @@ class ScheduleCell(
         },
     )
 
-    def __init__(self, context_menu, *args, cur_group="", **kwargs):
+    def __init__(self, view_type, context_menu, *args, cur_group="", **kwargs):
         super().__init__(*args, **kwargs)
         self.context_menu = context_menu
         self.slaves: List[ScheduleItemBtn] = [
@@ -53,7 +54,7 @@ class ScheduleCell(
             for _ in range(ScheduleCell.SLAVES_CNT)
         ]
         for slave in self.slaves:
-            slave.update_info(ViewState.EMPTY.value)
+            slave.update_info(ViewState.EMPTY.value, view_type)
         if ScheduleCell.SLAVES_CNT < 4:
             raise
         self.ids.top_cont.add_widget(self.slaves[0])
@@ -67,7 +68,18 @@ class ScheduleCell(
 
     def clear(self, *args):
         self.context_menu.dismiss()
-        ak.start(self.tune_using_info_records([]))
+        ak.start(
+            App.get_running_app().controller.delete_local_schedule_records(
+                [
+                    id_
+                    for slave in self.slaves
+                    if slave.schedule_item_info is not None
+                    and slave.schedule_item_info.additional_part is not None
+                    for id_ in slave.schedule_item_info.additional_part.schedule_record_ids
+                ],
+                App.get_running_app().root.get_current_screen_view(),
+            )
+        )
 
     def check_if_clearable(self):
         for slave in self.slaves:

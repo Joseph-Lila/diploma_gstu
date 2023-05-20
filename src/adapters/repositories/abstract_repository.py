@@ -176,15 +176,17 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def clear_local_schedule_records(
+    async def clear_local_schedule_record(
         self,
+        id_=None,
     ):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def clear_global_schedule_records(
+    async def clear_global_schedule_record(
         self,
         schedule_id: int,
+        id_=None,
     ):
         raise NotImplementedError
 

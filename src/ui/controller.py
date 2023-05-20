@@ -1,8 +1,7 @@
 import asyncio
 import functools
 from dataclasses import astuple
-from typing import Optional
-
+from typing import Optional, List
 
 from src.adapters.orm import Schedule
 from src.domain.commands import (
@@ -25,7 +24,7 @@ from src.domain.commands import (
     GetUniqueSubjectTypes,
     GetWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
-    GetExtendedScheduleRecords,
+    GetExtendedScheduleRecords, DeleteLocalScheduleRecords,
 )
 from src.domain.events import (
     GotSchedules,
@@ -306,3 +305,17 @@ class Controller:
             GetExtendedScheduleRecords(self.model.schedule_master.id)
         )
         await sender.refresh_cells(event.records)
+
+    @use_loop
+    async def delete_local_schedule_records(
+        self,
+        ids: List[int],
+        schedule_screen_view,
+    ):
+        await self.model.bus.handle_command(
+            DeleteLocalScheduleRecords(ids=ids)
+        )
+        event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
+            GetExtendedScheduleRecords(self.model.schedule_master.id)
+        )
+        await schedule_screen_view.refresh_cells(event.records)
