@@ -4,6 +4,7 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivymd.uix.card import MDCard
 
+from src.domain.entities import CellPart, CellPos
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.enums import ViewState, Subgroup, WeekType
 from src.domain.interfaces import (
@@ -14,7 +15,11 @@ from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
 from src.service_layer.handlers import convert_pos_into_pos_hint
+from src.ui.views.schedule_cell_configuration_type_dialog import (
+    ScheduleCellConfigurationTypeDialog,
+)
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
+from src.ui.views.schedule_item_dialog import ScheduleItemDialog
 
 
 class ScheduleCell(
@@ -43,7 +48,16 @@ class ScheduleCell(
         },
     )
 
-    def __init__(self, view_type, context_menu, *args, cur_group="", **kwargs):
+    def __init__(
+        self,
+        day_of_week,
+        pair_number,
+        view_type,
+        context_menu,
+        *args,
+        cur_group="",
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
         self.context_menu = context_menu
         self.cur_group = cur_group
@@ -51,11 +65,18 @@ class ScheduleCell(
             ScheduleItemBtn(
                 cur_group=cur_group,
                 view_state=ViewState.EMPTY.value,
+                schedule_item_info=ScheduleItemInfo(
+                    cell_part=CellPart(
+                        week_type=WeekType.UNDEFINED.value,
+                        subgroup=Subgroup.UNDEFINED.value,
+                    ),
+                    cell_pos=CellPos(day_of_week, pair_number),
+                ),
             )
             for _ in range(ScheduleCell.SLAVES_CNT)
         ]
         for slave in self.slaves:
-            slave.update_info(ViewState.EMPTY.value, view_type)
+            slave.update_view_metadata(ViewState.EMPTY.value, view_type)
         if ScheduleCell.SLAVES_CNT < 4:
             raise
         self.ids.top_cont.add_widget(self.slaves[0])
@@ -66,19 +87,29 @@ class ScheduleCell(
 
     def open_dialog(self, *args):
         self.context_menu.dismiss()
+        ScheduleCellConfigurationTypeDialog(self.slaves).open()
 
     def clear(self, *args):
         self.context_menu.dismiss()
 
         ids_to_delete = []
         for slave in self.slaves:
-            if slave.schedule_item_info is not None:
+            if (
+                slave.schedule_item_info is not None
+                and slave.schedule_item_info.additional_part is not None
+            ):
                 if self.cur_group != "":
                     for i, group in enumerate(slave.schedule_item_info.groups_part):
                         if group.title == self.cur_group:
-                            ids_to_delete.append(slave.schedule_item_info.additional_part.schedule_record_ids[i])
+                            ids_to_delete.append(
+                                slave.schedule_item_info.additional_part.schedule_record_ids[
+                                    i
+                                ]
+                            )
                 else:
-                    for schedule_record_id in slave.schedule_item_info.additional_part.schedule_record_ids:
+                    for (
+                        schedule_record_id
+                    ) in slave.schedule_item_info.additional_part.schedule_record_ids:
                         ids_to_delete.append(schedule_record_id)
 
         ak.start(
@@ -98,11 +129,13 @@ class ScheduleCell(
 
     def check_if_configuration_can_be_tuned(self):
         for slave in self.slaves:
-            if slave.view_state in [
+            if slave.view_state not in [
                 ViewState.EDITABLE.value,
+                ViewState.INVISIBLE.value,
+                ViewState.UNAVAILABLE.value,
             ]:
-                return True
-        return False
+                return False
+        return True
 
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos) and touch.button == "right":
@@ -133,7 +166,7 @@ class ScheduleCell(
                 ViewState.FILLED.value,
                 ViewState.EDITABLE.value,
             ]:
-                print(f"OPEN DIALOG for {touched_slave}!")
+                ScheduleItemDialog(touched_slave).open()
 
     def fit_slaves(self):
         if len(self.slaves) > 0:
@@ -217,10 +250,10 @@ class ScheduleCell(
 
         for i, state in enumerate(slave_states):
             if state != ViewState.EMPTY.value:
-                self.slaves[i].update_info(state)
+                self.slaves[i].update_view_metadata(state)
             else:
                 # define real state
                 # TODO: find actual state
-                self.slaves[i].update_info(state)
+                self.slaves[i].update_view_metadata(state)
 
         self.fit_slaves()

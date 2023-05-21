@@ -1,0 +1,108 @@
+#: import config src.config
+#: import ScheduleCellConfigurationTypeRadioBtn src.ui.views.schedule_cell_configuration_type_radio_btn.ScheduleCellConfigurationTypeRadioBtn
+
+
+<ScheduleCellConfigurationTypeDialog>:
+    size_hint: None, None
+    size: config.get_big_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    auto_dismiss: False
+    orientation: 'vertical'
+    radius: 0, 0, 0, 0
+
+    MDAnchorLayout:
+        size_hint: 1, None
+        height: 40
+
+        FitImage:
+            source: 'assets/images/background.png'
+
+        Label:
+            color: 'white'
+            text: 'Изменить компоновку'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 20
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8
+        spacing: 10
+
+        MDIconButton:
+            icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
+            icon_size: "60sp"
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Hint"
+            on_press: root.dismiss()
+
+        MDLabel:
+            valign: 'center'
+            halign: 'left'
+            color: 'black'
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            text: '*** Используйте данное окно, чтобы установить компоновку занятий!'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+            font_size: 18
+
+    MDGridLayout:
+        cols: 4
+        rows: 2
+        padding: 40, 40, 40, 10
+        spacing: 25
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_1
+
+            image_source: 'assets/images/Property 1=Default.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_2
+
+            image_source: 'assets/images/Property 1=Variant2.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_3
+
+            image_source: 'assets/images/Property 1=Variant3.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_4
+
+            image_source: 'assets/images/Property 1=Variant4.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_5
+
+            image_source: 'assets/images/Property 1=Variant5.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_6
+
+            image_source: 'assets/images/Property 1=Variant6.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_7
+
+            image_source: 'assets/images/Property 1=Variant7.png'
+
+        ScheduleCellConfigurationTypeRadioBtn:
+            id: btn_8
+
+            image_source: 'assets/images/Property 1=Variant8.png'
+
+    BoxLayout:
+        size_hint_y: .25
+        padding: 0, 0, 0, 10
+
+        Widget:
+
+        AnchorLayout:
+
+            MDFillRoundFlatButton:
+                md_bg_color: 3 / 255, 130 / 255, 0, 1
+                disabled: not any([btn_1.chosen, btn_2.chosen, btn_3.chosen, btn_4.chosen, btn_5.chosen, btn_6.chosen, btn_7.chosen, btn_8.chosen])
+                font_size: 20
+                text: 'Сохранить'
+                on_press: root.save_configuration_type()

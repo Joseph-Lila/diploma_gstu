@@ -30,7 +30,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         self.size = (0, 0)
         self.opacity = 0
 
-    def update_info(self, view_state: str, view_type: Optional[str] = None):
+    def update_view_metadata(self, view_state: str, view_type: Optional[str] = None):
         self.view_state = view_state
         if view_type is not None:
             self.view_type = view_type

@@ -69,11 +69,13 @@ class ScheduleDay(
         self.ids.pairs_cells_cont.clear_widgets()
         self.slaves = [
             ScheduleCell(
+                day_of_week,
+                pair_number,
                 self.view_type,
                 context_menu=self.context_menu,
                 cur_group=self.cur_group,
             )
-            for _ in range(1, pairs_quantity + 1)
+            for pair_number in range(1, pairs_quantity + 1)
         ]
 
         for i in range(1, pairs_quantity + 1):

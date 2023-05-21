@@ -68,14 +68,12 @@ def use_loop(use_loading_modal_view=False):
 
             if loop and loop.is_running():
                 if use_loading_modal_view:
-                    loop.create_task(
-                        do_with_loading_modal_view(func)(*args, **kwargs)
-                    )
+                    loop.create_task(do_with_loading_modal_view(func)(*args, **kwargs))
                 else:
-                    loop.create_task(
-                        func(*args, **kwargs)
-                    )
+                    loop.create_task(func(*args, **kwargs))
+
         return wrapped
+
     return _use_loop
 
 

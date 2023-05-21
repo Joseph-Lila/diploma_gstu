@@ -18,7 +18,7 @@
             color: 'white'
             text: 'Создать расписание'
             font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-            font_size: 24
+            font_size: 20
 
     BoxLayout:
         size_hint: 1, None
@@ -41,7 +41,7 @@
             pos_hint: {"center_y": .5}
             text: 'Заполните, пожалуйста, все поля...'
             font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-            font_size: 28
+            font_size: 22
 
     BoxLayout:
         size_hint_y: .5
@@ -63,7 +63,7 @@
                 color: 'black'
                 text: 'Окно вывода:'
                 font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
-                font_size: 24
+                font_size: 20
 
             TextInput:
                 id: outcome_text_input
@@ -82,7 +82,7 @@
         MDFillRoundFlatButton:
             md_bg_color: 3 / 255, 130 / 255, 0, 1
             disabled: False if year.text != '' and term.text != '' else True
-            font_size: 24
+            font_size: 20
             text: 'Создать'
             on_release: root.send_command_to_create_schedule()
 

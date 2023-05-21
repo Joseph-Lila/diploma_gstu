@@ -1,0 +1,17 @@
+<ScheduleCellConfigurationTypeRadioBtn>:
+    chosen: check.active
+    style: 'outlined'
+    line_color: 'silver'
+    orientation: 'vertical'
+    padding: 10
+    spacing: 5
+
+    MDCheckbox:
+        id: check
+        active: False
+        group: 'configuration type'
+        size_hint: None, None
+        size: dp(48), dp(48)
+
+    Image:
+        source: root.image_source

@@ -1,0 +1,49 @@
+#: import config src.config
+
+
+<ScheduleItemDialog>:
+    size_hint: None, None
+    size: config.get_big_window_size()
+    md_bg_color: 238 / 255, 238 / 255, 238 / 255, 1
+    auto_dismiss: False
+    orientation: 'vertical'
+    radius: 0, 0, 0, 0
+
+    MDAnchorLayout:
+        size_hint: 1, None
+        height: 40
+
+        FitImage:
+            source: 'assets/images/background.png'
+
+        Label:
+            color: 'white'
+            text: 'Редактировать записи'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
+            font_size: 20
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+        padding: 8
+        spacing: 10
+
+        MDIconButton:
+            icon: 'assets/images/icons8-стрелка-влево-в-круге-2-96 1.png'
+            icon_size: "60sp"
+            pos_hint: {"center_y": .5}
+            theme_text_color: "Hint"
+            on_press: root.dismiss()
+
+        MDLabel:
+            valign: 'center'
+            halign: 'left'
+            color: 'black'
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            text: '*** Используйте данное окно, чтобы очистить или заполнить записи расписания!'
+            font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
+            font_size: 18
+
+    MDLabel:
+        id: lbl
