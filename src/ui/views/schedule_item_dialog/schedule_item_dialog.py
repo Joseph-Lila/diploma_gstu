@@ -11,6 +11,8 @@ class ScheduleItemDialog(MDCard, ModalView):
     subgroup_hint = 'Выберите подгруппу'
     mentor_hint = 'Выберите преподавателя'
     audience_number_hint = 'Выберите аудиторию'
+    subject_hint = 'Выберите предмет'
+    subject_type_hint = 'Выберите тип предмета'
 
     def __init__(self, touched_slave, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -56,4 +58,10 @@ class ScheduleItemDialog(MDCard, ModalView):
         pass
 
     def send_command_to_get_audience_number_values(self, *args):
+        pass
+
+    def send_command_to_get_subject_values(self, *args):
+        pass
+
+    def send_command_to_get_subject_type_values(self, *args):
         pass

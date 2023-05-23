@@ -333,10 +333,22 @@
                     width: 280
 
                     AutoCompleteLabel:
-                        id: audience_number
-                        request_method: root.send_command_to_get_audience_number_values
+                        id: subject
+                        request_method: root.send_command_to_get_subject_values
                         recycle_view_height: 100
-                        hint_text: root.audience_number_hint
+                        hint_text: root.subject_hint
+                        total_width: 280
+
+                AnchorLayout:
+                    padding: 0, 0, 0, 100
+                    size_hint_x: None
+                    width: 280
+
+                    AutoCompleteLabel:
+                        id: subject_type
+                        request_method: root.send_command_to_get_subject_type_values
+                        recycle_view_height: 100
+                        hint_text: root.subject_type_hint
                         total_width: 280
 
                 MDSeparator:
@@ -362,3 +374,18 @@
             BoxLayout:
                 size_hint_y: None
                 height: 100
+
+                AnchorLayout:
+
+                    MDFillRoundFlatButton:
+                        md_bg_color: 255 / 255, 15 / 255, 15 / 255, 1
+                        font_size: 20
+                        text: 'Очистить'
+
+                AnchorLayout:
+
+                    MDFillRoundFlatButton:
+                        md_bg_color: 3 / 255, 130 / 255, 0, 1
+                        disabled: not all([week_type.text, day_of_week.text, pair_number.text, subgroup.text, mentor.text, audience_number.text, subject.text, subject_type.text])
+                        font_size: 20
+                        text: 'Сохранить'
