@@ -16,3 +16,7 @@ class AbstractScheduleWeeksStore:
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
         for schedule_week in self.schedule_weeks:
             await schedule_week.tune_using_info_records(info_records)
+
+    def fit_widgets(self):
+        for schedule_week in self.schedule_weeks:
+            schedule_week.fit_slaves()

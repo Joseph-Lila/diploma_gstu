@@ -105,3 +105,7 @@ class ScheduleScreenView(MDScreen):
     async def refresh_cells(self, info_records: List[ScheduleItemInfo]):
         for store in self.schedule_weeks_stores:
             await store.tune_using_info_records(info_records)
+
+    def fit_store_widgets(self):
+        for store in self.schedule_weeks_stores:
+            store.fit_widgets()

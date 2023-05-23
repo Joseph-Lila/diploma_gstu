@@ -7,3 +7,4 @@ class ViewState(enum.Enum):
     FILLED = "FILLED"
     INVISIBLE = "INVISIBLE"
     EMPTY = "EMPTY"
+    MENTOR_IS_BUSY = "MENTOR_IS_BUSY"

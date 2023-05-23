@@ -1,4 +1,5 @@
-from typing import List
+from dataclasses import astuple
+from typing import List, Any, Tuple
 import asynckivy as ak
 from kivy.app import App
 from kivy.core.window import Window
@@ -28,23 +29,23 @@ class ScheduleCell(
     SLAVES_CNT = 4
     CONDITIONS = (
         {
-            (Subgroup.FIRST.value, WeekType.ABOVE.value): [],
-            (Subgroup.BOTH.value, WeekType.ABOVE.value): [1],
-            (Subgroup.FIRST.value, WeekType.BOTH.value): [],
-            (Subgroup.BOTH.value, WeekType.BOTH.value): [1, 2, 3],
+            (WeekType.ABOVE.value, Subgroup.FIRST.value): [],
+            (WeekType.ABOVE.value, Subgroup.BOTH.value): [1],
+            (WeekType.BOTH.value, Subgroup.FIRST.value): [],
+            (WeekType.BOTH.value, Subgroup.BOTH.value): [1, 2, 3],
         },
         {
-            (Subgroup.SECOND.value, WeekType.ABOVE.value): [],
-            (Subgroup.SECOND.value, WeekType.BOTH.value): [],
+            (WeekType.ABOVE.value, Subgroup.SECOND.value): [],
+            (WeekType.BOTH.value, Subgroup.SECOND.value): [],
         },
         {
-            (Subgroup.FIRST.value, WeekType.UNDER.value): [],
-            (Subgroup.FIRST.value, WeekType.BOTH.value): [],
-            (Subgroup.BOTH.value, WeekType.UNDER.value): [3],
+            (WeekType.UNDER.value, Subgroup.FIRST.value): [],
+            (WeekType.BOTH.value, Subgroup.FIRST.value): [],
+            (WeekType.UNDER.value, Subgroup.BOTH.value): [3],
         },
         {
-            (Subgroup.SECOND.value, WeekType.UNDER.value): [],
-            (Subgroup.SECOND.value, WeekType.BOTH.value): [],
+            (WeekType.UNDER.value, Subgroup.SECOND.value): [],
+            (WeekType.BOTH.value, Subgroup.SECOND.value): [],
         },
     )
 
@@ -219,39 +220,33 @@ class ScheduleCell(
             + self.spacing
         )
 
-    @staticmethod
-    def parse_info(info_record: ScheduleItemInfo):
-        return info_record.cell_part.subgroup, info_record.cell_part.week_type
-
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
-        slave_states = [ViewState.EMPTY.value for _ in self.slaves]
+        slave_results: List[Any] = [None for _ in range(len(self.slaves))]
 
-        if len(info_records) == 0:
-            slave_states = [
-                ViewState.EDITABLE.value,
-                ViewState.INVISIBLE.value,
-                ViewState.INVISIBLE.value,
-                ViewState.INVISIBLE.value,
-            ]
-        else:
-            parsed_info_records = [
-                ScheduleCell.parse_info(record) for record in info_records
-            ]
+        parsed_info_records = [astuple(record.cell_part) for record in info_records]
 
-            for i, parsed_info_record in enumerate(parsed_info_records):
-                for j, condition in enumerate(self.CONDITIONS):
-                    if parsed_info_record in condition:
-                        self.slaves[j].schedule_item_info = info_records[i]
-                        slave_states[j] = ViewState.FILLED.value
-                        for ind in condition[parsed_info_record]:
-                            slave_states[ind] = ViewState.INVISIBLE.value
+        for i, parsed_info_record in enumerate(parsed_info_records):
+            for j, condition in enumerate(self.CONDITIONS):
+                if parsed_info_record in condition:
+                    res = ViewState.FILLED.value \
+                        if info_records[i].additional_part.mentor_free else ViewState.MENTOR_IS_BUSY.value
+                    slave_results[j] = (res, info_records[i])
+                    for ind in condition[parsed_info_record]:
+                        slave_results[ind] = (ViewState.INVISIBLE.value, None)
 
-        for i, state in enumerate(slave_states):
-            if state != ViewState.EMPTY.value:
+        for i, res in enumerate(slave_results):
+            if res is not None:
+                state, info = res
+                if info is not None:
+                    self.slaves[i].schedule_item_info = info
                 self.slaves[i].update_view_metadata(state)
             else:
-                # define real state
                 # TODO: find actual state
+                state = ViewState.EDITABLE.value
+                self.slaves[i].schedule_item_info.cell_part = CellPart(
+                    week_type=WeekType.ABOVE.value if i < 2 else WeekType.UNDER.value,
+                    subgroup=Subgroup.FIRST.value if i % 2 == 0 else Subgroup.SECOND.value,
+                )
                 self.slaves[i].update_view_metadata(state)
 
         self.fit_slaves()

@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.uix.modalview import ModalView
 from kivymd.uix.card import MDCard
 
@@ -86,9 +87,11 @@ class ScheduleCellConfigurationTypeDialog(MDCard, ModalView):
             )
         ].index(True)
         print(f"Выбрана конфигурация № {chosen_ind + 1}")
+        self.tune_configuration(chosen_ind)
+        App.get_running_app().root.get_current_screen_view().fit_store_widgets()
         self.dismiss()
 
-    async def tune_configuration(self, number):
+    def tune_configuration(self, number):
         for i, slave in enumerate(self.slaves):
             slave.schedule_item_info.cell_part = CellPart(
                 *self.CONFIGURATION_CELL_PARTS[number][i]
