@@ -25,3 +25,4 @@ from .make_global_schedule_records_like_local import MakeGlobalScheduleRecordsLi
 from .make_local_schedule_records_like_global import MakeLocalScheduleRecordsLikeGlobal
 from .delete_local_schedule_records import DeleteLocalScheduleRecords
 from .get_workloads import GetWorkloads
+from .create_local_schedule_record import CreateLocalScheduleRecord

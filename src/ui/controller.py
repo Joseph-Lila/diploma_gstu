@@ -1,10 +1,9 @@
 import asyncio
-import copy
 import functools
 from dataclasses import astuple
 from typing import Optional, List
 
-from src.adapters.orm import Schedule
+from src.adapters.orm import Schedule, LocalScheduleRecord
 from src.domain.commands import (
     CreateSchedule,
     Get10Schedules,
@@ -26,10 +25,10 @@ from src.domain.commands import (
     GetRowWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
     GetExtendedScheduleRecords,
-    DeleteLocalScheduleRecords,
+    DeleteLocalScheduleRecords, CreateLocalScheduleRecord,
 )
 from src.domain.commands import GetWorkloads
-from src.domain.entities import CellPos, CellPart
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -331,16 +330,28 @@ class Controller:
         await schedule_screen_view.refresh_cells(event.records)
 
     @use_loop(use_loading_modal_view=True)
-    async def find_state_for_empty_schedule_item(
+    async def add_local_schedule_records(
         self,
-        cell_pos: CellPos,
-        cell_part: CellPart,
-    ) -> str:
-        for workload in self.model.schedule_master.actual_workloads:
-            """
-            For now it's needed to ensure that:
-            a) mentor to produce this lesson is free
-            b) there is at least 1 fit audience
-            c) group not attend other lesson at the moment
-            """
-            # a condition
+        record: ScheduleItemInfo,
+    ):
+        local_records = []
+        for i, group in enumerate(record.groups_part):
+            local_records.append(
+                LocalScheduleRecord(
+                    schedule_id=self.model.schedule_master.id,
+                    day_of_week=record.cell_pos.day_of_week,
+                    pair_number=record.cell_pos.pair_number,
+                    subject_id=record.subject_part.subject_id,
+                    subject_type_id=record.subject_part.subject_type_id,
+                    mentor_id=record.mentor_part.mentor_id,
+                    audience_id=record.audience_part.audience_id,
+                    group_id=group.group_id,
+                    week_type=record.cell_part.week_type,
+                    subgroup=record.cell_part.subgroup,
+                    mentor_free=True,
+                )
+            )
+        for record in local_records:
+            await self.model.bus.handle_command(
+                CreateLocalScheduleRecord(record)
+            )

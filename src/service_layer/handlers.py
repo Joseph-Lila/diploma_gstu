@@ -25,7 +25,7 @@ from src.domain.commands import (
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
     MakeLocalScheduleRecordsLikeGlobal,
-    DeleteLocalScheduleRecords,
+    DeleteLocalScheduleRecords, CreateLocalScheduleRecord,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
@@ -156,6 +156,25 @@ async def create_schedule(
         return ScheduleIsCreated(schedule)
     else:
         return ScheduleIsCreated(None)
+
+
+async def create_local_schedule_record(
+    cmd: CreateLocalScheduleRecord,
+    repository: AbstractRepository,
+):
+    await repository.create_local_schedule_record(
+        schedule_id=cmd.record.schedule_id,
+        day_of_week=cmd.record.day_of_week,
+        pair_number=cmd.record.pair_number,
+        subject_id=cmd.record.subject_id,
+        subject_type_id=cmd.record.subject_type_id,
+        mentor_id=cmd.record.mentor_id,
+        audience_id=cmd.record.audience_id,
+        group_id=cmd.record.group_id,
+        week_type=cmd.record.week_type,
+        subgroup=cmd.record.subgroup,
+        mentor_free=cmd.record.mentor_free,
+    )
 
 
 async def delete_schedule(
@@ -373,6 +392,7 @@ COMMAND_HANDLERS = {
     GetUniqueTermsDependingOnSchedule: get_unique_terms_depending_on_schedule,
     Get10Schedules: get_10_schedules,
     CreateSchedule: create_schedule,
+    CreateLocalScheduleRecord: create_local_schedule_record,
     DeleteSchedule: delete_schedule,
     GetUniqueMentors: get_unique_mentors,
     GetUniqueGroups: get_unique_groups,

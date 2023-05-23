@@ -85,7 +85,7 @@ class ScheduleCellConfigurationTypeDialog(MDCard, ModalView):
                 self.ids.btn_8,
             )
         ].index(True)
-        print(f"Выбрана конфигурация № {chosen_ind + 1}")
+        # print(f"Выбрана конфигурация № {chosen_ind + 1}")
         self.dismiss()
 
     async def tune_configuration(self, number):
