@@ -2,7 +2,6 @@ import enum
 
 
 class WeekType(enum.Enum):
-    ABOVE = "ABOVE"
-    UNDER = "UNDER"
-    BOTH = "BOTH"
-    UNDEFINED = "UNDEFINED"
+    ABOVE = "Неделя над чертой"
+    UNDER = "Неделя под чертой"
+    BOTH = "Целая неделя"

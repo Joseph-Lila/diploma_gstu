@@ -29,6 +29,7 @@ from src.domain.commands import (
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.enums import WeekType, DayOfWeek
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -355,3 +356,10 @@ class Controller:
             await self.model.bus.handle_command(
                 CreateLocalScheduleRecord(record)
             )
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_day_of_week_selector(
+        self,
+        selector,
+    ):
+        await selector.update_variants([r.value for r in DayOfWeek])

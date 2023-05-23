@@ -45,5 +45,47 @@
             font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
             font_size: 18
 
-    MDLabel:
-        id: lbl
+    Widget:
+        size_hint_y: None
+        height: 20
+
+    MDScrollView:
+        always_overscroll: False
+
+        MDGridLayout:
+            adaptive_height: True
+            cols: 1
+            padding: 15
+            spacing: 10
+
+            BoxLayout:
+                spacing: 10
+                size_hint_y: None
+                height: 45
+
+                AnchorLayout:
+
+                    AutoCompleteLabel:
+                        id: day_of_week
+                        request_method: root.send_command_to_get_day_of_week_values
+                        recycle_view_height: 100
+                        hint_text: root.day_of_week_hint
+                        total_width: 300
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "3dp"
+
+            Button:
+                size_hint_y: None
+                height: 300
+
+            Button:
+                size_hint_y: None
+                height: 300
+
+            Button:
+                size_hint_y: None
+                height: 300

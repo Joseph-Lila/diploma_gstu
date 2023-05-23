@@ -67,10 +67,6 @@ class ScheduleCell(
                 cur_group=cur_group,
                 view_state=ViewState.EMPTY.value,
                 schedule_item_info=ScheduleItemInfo(
-                    cell_part=CellPart(
-                        week_type=WeekType.UNDEFINED.value,
-                        subgroup=Subgroup.UNDEFINED.value,
-                    ),
                     cell_pos=CellPos(day_of_week, pair_number),
                 ),
             )
