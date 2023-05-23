@@ -9,7 +9,7 @@
     MDFloatLayout:
 
         MDBoxLayout:
-            pos: 10, 620
+            pos: 10, 610
 
             Widget:
 
@@ -24,6 +24,10 @@
                     theme_text_color: "Hint"
                     on_press: root.send_command_to_get_audience_numbers_depending_on_department()
 
+                Widget:
+                    size_hint_y: None
+                    height: 10
+
                 MDIconButton:
                     icon: 'assets/images/icons8-очистить-фильтры-96.png'
                     icon_size: "30sp"
@@ -34,7 +38,7 @@
             MDCard:
                 size_hint_x: .5
                 size_hint_y: None
-                height: 108
+                height: 118
                 style: 'outlined'
                 md_bg_color: 255 / 255, 85 / 255, 126 / 255, 50 / 100
                 padding: 10
@@ -105,7 +109,7 @@
                 recycle_view_height: 100
                 hint_text: root.audience_hint_text
                 total_width: 420
-                pos: 0, 620
+                pos: 0, 610
 
         MDFloatLayout:
 

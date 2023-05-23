@@ -57,26 +57,57 @@
             cols: 1
             padding: 15
             spacing: 10
+            md_bg_color: "white"
+
+            Label:
+                text: 'Время занятия, подгруппа'
+                halign: 'left'
+                valign: 'top'
+                color: 166 / 255, 28 / 255, 182 / 255, 100 / 100
+                font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                font_size: 35
+                size_hint_y: None
+                height: 60
 
             BoxLayout:
                 spacing: 10
                 size_hint_y: None
-                height: 45
+                height: 145
+                padding: 0, 0, 0, 100
 
-                AnchorLayout:
+                AutoCompleteLabel:
+                    id: week_type
+                    request_method: root.send_command_to_get_week_type_values
+                    recycle_view_height: 100
+                    hint_text: root.week_type_hint
+                    total_width: 280
 
-                    AutoCompleteLabel:
-                        id: day_of_week
-                        request_method: root.send_command_to_get_day_of_week_values
-                        recycle_view_height: 100
-                        hint_text: root.day_of_week_hint
-                        total_width: 300
+                AutoCompleteLabel:
+                    id: day_of_week
+                    request_method: root.send_command_to_get_day_of_week_values
+                    recycle_view_height: 100
+                    hint_text: root.day_of_week_hint
+                    total_width: 280
+
+                AutoCompleteLabel:
+                    id: pair_number
+                    request_method: root.send_command_to_get_pair_number_values
+                    recycle_view_height: 100
+                    hint_text: root.pair_number_hint
+                    total_width: 280
+
+                AutoCompleteLabel:
+                    id: subgroup
+                    request_method: root.send_command_to_subgroup_values
+                    recycle_view_height: 100
+                    hint_text: root.subgroup_hint
+                    total_width: 280
 
             MDSeparator:
                 orientation: 'horizontal'
                 color: 'black'
                 pos_hint: {"center_x": .5, "center_y": .5}
-                height: "3dp"
+                height: "1dp"
 
             Button:
                 size_hint_y: None

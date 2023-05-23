@@ -3,6 +3,7 @@ import functools
 from dataclasses import astuple
 from typing import Optional, List
 
+from src import config
 from src.adapters.orm import Schedule, LocalScheduleRecord
 from src.domain.commands import (
     CreateSchedule,
@@ -29,7 +30,7 @@ from src.domain.commands import (
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
-from src.domain.enums import WeekType, DayOfWeek
+from src.domain.enums import WeekType, DayOfWeek, Subgroup
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -363,3 +364,24 @@ class Controller:
         selector,
     ):
         await selector.update_variants([r.value for r in DayOfWeek])
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_pair_number_selector(
+        self,
+        selector,
+    ):
+        await selector.update_variants([str(r) for r in range(1, config.get_pairs_quantity() + 1)])
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_week_type_selector(
+        self,
+        selector,
+    ):
+        await selector.update_variants([r.value for r in WeekType])
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_subgroup_selector(
+        self,
+        selector,
+    ):
+        await selector.update_variants([r.value for r in Subgroup])
