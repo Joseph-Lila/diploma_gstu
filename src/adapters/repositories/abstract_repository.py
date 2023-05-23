@@ -12,6 +12,14 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    async def get_workloads(
+        self,
+        year: int,
+        term: str,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     async def get_unique_years_depending_on_workload(
         self,
         term: str,
@@ -135,7 +143,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def get_workloads(
+    async def get_row_workloads(
         self,
         group_substring,
         subject_substring,

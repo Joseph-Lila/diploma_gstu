@@ -3,7 +3,9 @@ class AbstractSizeSlave:
         raise NotImplementedError
 
     def set_width(self, width):
-        raise NotImplementedError
+        self.size_hint_x = None
+        self.size_hint_y = 1
+        self.width = width
 
     def set_invisible_width(self):
         raise NotImplementedError

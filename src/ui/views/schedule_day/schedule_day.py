@@ -41,9 +41,8 @@ class ScheduleDay(
                 slave.set_width(max_width)
 
     def set_width(self, width):
-        self.size_hint_x = None
-        self.size_hint_y = 1
-        self.width = width
+        super().set_width(width)
+
         for slave in self.slaves:
             slave.width = (
                 width - self.ids.lbl_container.width - self.ids.pairs_cells_cont.width

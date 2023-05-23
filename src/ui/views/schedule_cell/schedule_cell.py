@@ -198,9 +198,7 @@ class ScheduleCell(
                 self.ids.bottom_cont.size_hint_y = 1
 
     def set_width(self, width):
-        self.size_hint_x = None
-        self.size_hint_y = 1
-        self.width = width
+        super().set_width(width)
 
     def expand_slaves_on_all_width(self):
         self.ids.top_cont.size_hint_x = 1
@@ -230,7 +228,7 @@ class ScheduleCell(
 
         if len(info_records) == 0:
             slave_states = [
-                ViewState.EMPTY.value,
+                ViewState.EDITABLE.value,
                 ViewState.INVISIBLE.value,
                 ViewState.INVISIBLE.value,
                 ViewState.INVISIBLE.value,

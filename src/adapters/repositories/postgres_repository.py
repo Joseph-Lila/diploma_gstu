@@ -307,6 +307,16 @@ class PostgresRepository(AbstractRepository):
 
     async def get_workloads(
         self,
+        year: int,
+        term: str,
+    ):
+        stmt = select(Workload).where(Workload.term == term and Workload.year == year)
+        async with self.async_session() as session:
+            items = await session.scalars(stmt)
+        return items.fetchall()
+
+    async def get_row_workloads(
+        self,
         group_substring,
         subject_substring,
         subject_type_substring,

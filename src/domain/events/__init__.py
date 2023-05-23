@@ -9,5 +9,6 @@ from .got_unique_faculties import GotUniqueFaculties
 from .got_unique_audiences import GotUniqueAudiences
 from .got_unique_subjects import GotUniqueSubjects
 from .got_unique_subject_types import GotUniqueSubjectTypes
-from .got_workloads import GotWorkloads
+from .got_row_workloads import GotRowWorkloads
 from .got_extended_schedule_records import GotExtendedScheduleRecords
+from .got_workloads import GotWorkloads

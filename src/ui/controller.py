@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import functools
 from dataclasses import astuple
 from typing import Optional, List
@@ -22,11 +23,13 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjects,
     GetUniqueSubjectTypes,
-    GetWorkloads,
+    GetRowWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
     GetExtendedScheduleRecords,
     DeleteLocalScheduleRecords,
 )
+from src.domain.commands import GetWorkloads
+from src.domain.entities import CellPos, CellPart
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -39,8 +42,8 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
-    GotWorkloads,
-    GotExtendedScheduleRecords,
+    GotRowWorkloads,
+    GotExtendedScheduleRecords, GotWorkloads,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -231,8 +234,8 @@ class Controller:
         year,
         term,
     ):
-        event: GotWorkloads = await self.model.bus.handle_command(
-            GetWorkloads(
+        event: GotRowWorkloads = await self.model.bus.handle_command(
+            GetRowWorkloads(
                 group_substring,
                 subject_substring,
                 subject_type_substring,
@@ -297,10 +300,6 @@ class Controller:
         )
         event: GotWorkloads = await self.model.bus.handle_command(
             GetWorkloads(
-                "",
-                "",
-                "",
-                "",
                 self.model.schedule_master.year,
                 self.model.schedule_master.term,
             )
@@ -315,6 +314,7 @@ class Controller:
         event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
             GetExtendedScheduleRecords(self.model.schedule_master.id)
         )
+        await self.model.schedule_master.fit_workloads_using_info_records(event.records)
         await sender.refresh_cells(event.records)
 
     @use_loop(use_loading_modal_view=True)
@@ -327,4 +327,20 @@ class Controller:
         event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
             GetExtendedScheduleRecords(self.model.schedule_master.id)
         )
+        await self.model.schedule_master.fit_workloads_using_info_records(event.records)
         await schedule_screen_view.refresh_cells(event.records)
+
+    @use_loop(use_loading_modal_view=True)
+    async def find_state_for_empty_schedule_item(
+        self,
+        cell_pos: CellPos,
+        cell_part: CellPart,
+    ) -> str:
+        for workload in self.model.schedule_master.actual_workloads:
+            """
+            For now it's needed to ensure that:
+            a) mentor to produce this lesson is free
+            b) there is at least 1 fit audience
+            c) group not attend other lesson at the moment
+            """
+            # a condition

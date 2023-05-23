@@ -21,9 +21,7 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
             return 0
 
     def set_width(self, width):
-        self.size_hint_x = None
-        self.size_hint_y = 1
-        self.width = width
+        super().set_width(width)
 
     def set_invisible_width(self):
         self.size_hint = None, None

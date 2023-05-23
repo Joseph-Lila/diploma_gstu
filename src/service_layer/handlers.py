@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List, Type, Tuple
 
 
-from src.adapters.orm import Schedule
+from src.adapters.orm import Schedule, Workload
 from src.adapters.repositories.abstract_repository import AbstractRepository
 from src.domain.commands import (
     CreateSchedule,
@@ -21,16 +21,19 @@ from src.domain.commands import (
     GetUniqueAudiencesDependingOnDepartment,
     GetUniqueSubjectTypes,
     GetUniqueSubjects,
-    GetWorkloads,
+    GetRowWorkloads,
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
     MakeLocalScheduleRecordsLikeGlobal,
     DeleteLocalScheduleRecords,
 )
 from src.domain.commands.command import Command
+from src.domain.commands import GetWorkloads
+from src.domain.entities import CellPart
 from src.domain.entities.schedule_item_info import (
     build_schedule_item_info_from_raw_data,
 )
+from src.domain.enums import Subgroup, WeekType
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -43,8 +46,8 @@ from src.domain.events import (
     GotUniqueAudiences,
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
-    GotWorkloads,
-    GotExtendedScheduleRecords,
+    GotRowWorkloads,
+    GotExtendedScheduleRecords, GotWorkloads,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -66,6 +69,27 @@ def convert_pos_into_pos_hint(window_pos: tuple, pos: tuple) -> dict:
         "x": x / window_x,
         "y": y / window_y,
     }
+
+
+async def convert_cell_part_to_hours(cell_part: CellPart):
+    # define first coefficient
+    if cell_part.subgroup == Subgroup.BOTH.value:
+        a = 1
+    elif cell_part.subgroup in [Subgroup.FIRST.value, Subgroup.SECOND.value]:
+        a = .5
+    else:
+        raise ValueError
+
+    # define second coefficient
+    if cell_part.week_type == WeekType.BOTH.value:
+        b = 1
+    elif cell_part.week_type in [WeekType.UNDER.value, WeekType.ABOVE.value]:
+        b = .5
+    else:
+        raise ValueError
+
+    # by default one cell == 2 hours per week
+    return 2 * a * b
 
 
 async def get_10_schedules(
@@ -243,11 +267,11 @@ async def get_unique_audiences_depending_on_department(
     return GotUniqueAudiences(audiences_numbers)
 
 
-async def get_workloads(
-    cmd: GetWorkloads,
+async def get_row_workloads(
+    cmd: GetRowWorkloads,
     repository: AbstractRepository,
-) -> GotWorkloads:
-    data: List[tuple] = await repository.get_workloads(
+) -> GotRowWorkloads:
+    data: List[tuple] = await repository.get_row_workloads(
         cmd.group_substring,
         cmd.subject_substring,
         cmd.subject_type_substring,
@@ -255,7 +279,18 @@ async def get_workloads(
         cmd.year,
         cmd.term,
     )
-    return GotWorkloads(data)
+    return GotRowWorkloads(data)
+
+
+async def get_workloads(
+    cmd: GetWorkloads,
+    repository: AbstractRepository,
+) -> GotWorkloads:
+    workloads: List[Workload] = await repository.get_workloads(
+        cmd.year,
+        cmd.term,
+    )
+    return GotWorkloads(workloads)
 
 
 async def get_extended_schedule_records(
@@ -348,5 +383,6 @@ COMMAND_HANDLERS = {
     GetUniqueAudiencesDependingOnDepartment: get_unique_audiences_depending_on_department,
     GetUniqueSubjects: get_unique_subjects,
     GetUniqueSubjectTypes: get_unique_subject_types,
+    GetRowWorkloads: get_row_workloads,
     GetWorkloads: get_workloads,
 }  # type: Dict[Type[Command], Callable]

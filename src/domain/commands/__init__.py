@@ -20,7 +20,8 @@ from .get_unique_audiences_depending_on_department import (
 )
 from .get_unique_subjects import GetUniqueSubjects
 from .get_unique_subject_types import GetUniqueSubjectTypes
-from .get_workloads import GetWorkloads
+from .get_row_workloads import GetRowWorkloads
 from .make_global_schedule_records_like_local import MakeGlobalScheduleRecordsLikeLocal
 from .make_local_schedule_records_like_global import MakeLocalScheduleRecordsLikeGlobal
 from .delete_local_schedule_records import DeleteLocalScheduleRecords
+from .get_workloads import GetWorkloads
