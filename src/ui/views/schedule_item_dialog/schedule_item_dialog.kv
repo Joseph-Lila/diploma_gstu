@@ -56,18 +56,50 @@
             adaptive_height: True
             cols: 1
             padding: 15
-            spacing: 10
+            spacing: 20
             md_bg_color: "white"
 
-            Label:
-                text: 'Время занятия, подгруппа'
-                halign: 'left'
-                valign: 'top'
-                color: 166 / 255, 28 / 255, 182 / 255, 100 / 100
-                font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
-                font_size: 35
+            BoxLayout:
                 size_hint_y: None
-                height: 60
+                height: 50
+
+                AnchorLayout:
+                    anchor_x: 'right'
+                    size_hint_x: .6
+
+                    MDIconButton:
+                        icon: 'clock-time-seven-outline'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+                MDLabel:
+                    text: 'Время занятия, подгруппа'
+                    halign: 'left'
+                    valign: 'top'
+                    color: 166 / 255, 28 / 255, 182 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    font_size: 35
+
+                AnchorLayout:
+                    anchor_x: 'left'
+                    size_hint_x: .6
+
+                    MDIconButton:
+                        icon: 'slash-forward-box'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "1dp"
 
             BoxLayout:
                 spacing: 10
@@ -109,14 +141,224 @@
                 pos_hint: {"center_x": .5, "center_y": .5}
                 height: "1dp"
 
-            Button:
+            BoxLayout:
                 size_hint_y: None
-                height: 300
+                height: 50
 
-            Button:
-                size_hint_y: None
-                height: 300
+                AnchorLayout:
+                    anchor_x: 'right'
+                    size_hint_x: .6
 
-            Button:
+                    MDIconButton:
+                        icon: 'human-male-board'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+                MDLabel:
+                    text: 'Преподаватель, аудитория'
+                    halign: 'left'
+                    valign: 'top'
+                    color: 166 / 255, 28 / 255, 182 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    font_size: 35
+
+                AnchorLayout:
+                    anchor_x: 'left'
+                    size_hint_x: .6
+
+                    MDIconButton:
+                        icon: 'sofa-outline'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "1dp"
+
+            MDCard:
+                spacing: 10
                 size_hint_y: None
-                height: 300
+                height: 145
+                padding: 0, 0, 0, 15
+
+                AnchorLayout:
+                    padding: 0, 0, 0, 85
+                    size_hint_x: None
+                    width: 300
+
+                    AutoCompleteLabel:
+                        id: mentor
+                        request_method: root.send_command_to_get_mentor_values
+                        recycle_view_height: 100
+                        hint_text: root.mentor_hint
+                        total_width: 300
+
+                AnchorLayout:
+                    padding: 15
+                    size_hint_x: None
+                    width: 260
+
+                    MDCard:
+                        orientation: 'vertical'
+                        spacing: 30
+
+                        AnchorLayout:
+
+                            MDLabel:
+                                halign: 'center'
+                                valign: 'center'
+                                font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                                text: 'Преподаватель свободен'
+
+                        MDSwitch:
+                            id: mentor_free
+                            active: True
+                            icon_active: "check"
+                            icon_inactive: "close"
+                            pos_hint: {'center_x': .5, 'center_y': .5}
+
+                AnchorLayout:
+                    padding: 0, 0, 0, 85
+                    size_hint_x: None
+                    width: 280
+
+                    AutoCompleteLabel:
+                        id: audience_number
+                        request_method: root.send_command_to_get_audience_number_values
+                        recycle_view_height: 100
+                        hint_text: root.audience_number_hint
+                        total_width: 280
+
+                AnchorLayout:
+                    padding: 15
+                    size_hint_x: None
+                    width: 260
+
+                    MDCard:
+                        orientation: 'vertical'
+                        spacing: 30
+
+                        MDLabel:
+                            halign: 'center'
+                            valign: 'center'
+                            font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                            text: 'В аудитории \nсвободных/всего мест'
+
+                        AnchorLayout:
+
+                            MDCard:
+                                md_bg_color: "pink"
+                                size_hint_x: .5
+
+                                MDLabel:
+                                    id: actual_students
+                                    text: '5'
+                                    halign: 'center'
+                                    valign: 'center'
+                                    font_style: 'H5'
+                                    theme_text_color: 'Secondary'
+
+                                MDLabel:
+                                    id: total_students
+                                    text: '/10'
+                                    halign: 'center'
+                                    valign: 'center'
+                                    font_style: 'Caption'
+                                    theme_text_color: 'Primary'
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "1dp"
+
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+
+                AnchorLayout:
+                    anchor_x: 'right'
+                    size_hint_x: .6
+
+                    MDIconButton:
+                        icon: 'book-variant'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+                MDLabel:
+                    text: 'Предмет, учебные группы'
+                    halign: 'left'
+                    valign: 'top'
+                    color: 166 / 255, 28 / 255, 182 / 255, 100 / 100
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    font_size: 35
+
+                AnchorLayout:
+                    anchor_x: 'left'
+                    size_hint_x: .6
+
+                    MDIconButton:
+                        icon: 'account-group-outline'
+                        icon_size: "40sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        theme_icon_color: "Custom"
+                        icon_color: 'pink'
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "1dp"
+
+            MDCard:
+                spacing: 10
+                size_hint_y: None
+                height: 145
+
+                AnchorLayout:
+                    padding: 0, 0, 0, 100
+                    size_hint_x: None
+                    width: 280
+
+                    AutoCompleteLabel:
+                        id: audience_number
+                        request_method: root.send_command_to_get_audience_number_values
+                        recycle_view_height: 100
+                        hint_text: root.audience_number_hint
+                        total_width: 280
+
+                MDSeparator:
+                    orientation: 'vertical'
+                    color: 'black'
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    height: "1dp"
+
+                BoxLayout:
+
+                    MDScrollView:
+                        always_overscroll: False
+
+                        MDStackLayout:
+                            id: groups_cont
+
+            MDSeparator:
+                orientation: 'horizontal'
+                color: 'black'
+                pos_hint: {"center_x": .5, "center_y": .5}
+                height: "1dp"
+
+            BoxLayout:
+                size_hint_y: None
+                height: 100
