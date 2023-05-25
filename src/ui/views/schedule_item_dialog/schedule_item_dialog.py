@@ -155,6 +155,12 @@ class ScheduleItemDialog(MDCard, ModalView):
                 self.touched_slave.schedule_item_info
             )
 
+            # tune clear btn
+            self.ids.clear_button.disabled = not (
+                    self.given_info_record.additional_part is not None
+                    and len(self.given_info_record.additional_part.schedule_record_ids) > 0
+            )
+
             # init required fields
             self.ids.week_type.change_text_value(
                 self.touched_slave.schedule_item_info.cell_part.week_type
@@ -260,7 +266,10 @@ class ScheduleItemDialog(MDCard, ModalView):
         pass
 
     def on_clear(self, *args):
-        # delete existing
-        # update view
-        # close dialog
-        pass
+        ak.start(
+            App.get_running_app().controller.delete_local_schedule_records(
+                self.given_info_record.additional_part.schedule_record_ids,
+                App.get_running_app().root.get_current_screen_view(),
+            )
+        )
+        self.dismiss()
