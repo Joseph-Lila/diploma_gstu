@@ -201,12 +201,21 @@
                 style: 'outlined'
                 line_color: 'silver'
 
-                MDLabel:
-                    valign: 'center'
-                    halign: 'center'
-                    text: 'Учебные группы'
-                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                BoxLayout:
                     size_hint_y: .2
+
+                    MDLabel:
+                        valign: 'center'
+                        halign: 'center'
+                        text: 'Учебные группы'
+                        font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+
+                    MDIconButton:
+                        icon: 'assets/images/icons8-обновить-96.png'
+                        icon_size: "30sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        on_press: root.send_command_to_get_groups_variants()
 
                 BoxLayout:
 
@@ -215,11 +224,9 @@
 
                         MDStackLayout:
                             id: groups_cont
+                            adaptive_height: True
                             padding: 20
                             spacing: 10
-
-                            MyChip:
-                                text: 'ИП-42'
 
         MDSeparator:
             orientation: 'horizontal'

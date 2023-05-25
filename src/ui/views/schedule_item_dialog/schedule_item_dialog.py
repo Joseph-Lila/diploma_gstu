@@ -15,6 +15,7 @@ from src.domain.entities import (
     AdditionalPart,
 )
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.ui.views import MyChip
 
 
 class ScheduleItemDialog(MDCard, ModalView):
@@ -74,81 +75,6 @@ class ScheduleItemDialog(MDCard, ModalView):
             additional_part=self.ids.mentor_free.entity,
         )
 
-    def generate_info_record(self):
-        if all(
-            [
-                self.ids.day_of_week.text,
-                self.ids.pair_number.text,
-                self.ids.week_type.text,
-                self.ids.subgroup.text,
-                self.ids.mentor.text,
-                not self.ids.mentor_free.active,
-            ]
-        ):
-            day_of_week = self.ids.day_of_week.text
-            pair_number = self.ids.pair_number.text
-            week_type = self.ids.week_type.text
-            subgroup = self.ids.subgroup.text
-            mentor_part: MentorPart = self.ids.mentor.entity
-            additional_part: AdditionalPart = self.ids.mentor_free.entity
-            return ScheduleItemInfo(
-                cell_pos=CellPos(
-                    day_of_week=day_of_week,
-                    pair_number=pair_number,
-                ),
-                cell_part=CellPart(
-                    week_type=week_type,
-                    subgroup=subgroup,
-                ),
-                mentor_part=mentor_part,
-                additional_part=additional_part,
-            )
-        elif all(
-            [
-                self.ids.day_of_week.text,
-                self.ids.pair_number.text,
-                self.ids.week_type.text,
-                self.ids.subgroup.text,
-                self.ids.mentor.text,
-                self.ids.audience_number.text,
-                len(self.ids.groups_cont.children) > 0,
-                self.ids.subject.text,
-                self.ids.subject_type.text,
-                self.ids.mentor_free.active,
-            ]
-        ):
-            day_of_week = self.ids.day_of_week.text
-            pair_number = self.ids.pair_number.text
-            week_type = self.ids.week_type.text
-            subgroup = self.ids.subgroup.text
-            audience_part: Optional[AudiencePart] = self.ids.audience_number.entity
-            groups_part: List[GroupPart] = self.ids.groups_cont.entity
-            mentor_part: MentorPart = self.ids.mentor.entity
-            subject_part: SubjectPart = SubjectPart(
-                subject_id=self.ids.subject.entity.subject_id,
-                subject=self.ids.subject.entity.subject,
-                subject_type_id=self.ids.subject_type.entity.subject_type_id,
-                subject_type=self.ids.subject_type.entity.subject_type,
-            )
-            additional_part: AdditionalPart = self.ids.mentor_free.entity
-            return ScheduleItemInfo(
-                cell_pos=CellPos(
-                    day_of_week=day_of_week,
-                    pair_number=pair_number,
-                ),
-                cell_part=CellPart(
-                    week_type=week_type,
-                    subgroup=subgroup,
-                ),
-                audience_part=audience_part,
-                groups_part=groups_part,
-                mentor_part=mentor_part,
-                subject_part=subject_part,
-                additional_part=additional_part,
-            )
-        else:
-            raise AttributeError
-
     def _set_required_fields(self):
         if self.touched_slave.schedule_item_info is not None:
             self.ids.week_type.change_text_value(
@@ -163,6 +89,31 @@ class ScheduleItemDialog(MDCard, ModalView):
             self.ids.pair_number.text = str(
                 self.touched_slave.schedule_item_info.cell_pos.pair_number
             )
+
+    def update_groups_variants(self, groups: List[GroupPart]):
+        """
+        Данная функция обновляет виджеты и entity для `groups_cont`.
+        В идеале нужно учесть предыдущий выбор и, если список новых сущностей
+        содержит те, что были выбраны ранее, их нужно сделать активными.
+
+        :param groups: List[GroupPart]
+        :return: None
+        """
+        previous_ids = [r.group_id for r in self.ids.groups_cont.entity]
+
+        self.ids.groups_cont.entity = []
+        self.ids.groups_cont.clear_widgets()
+        self.ids.actual_students.text = "0"
+
+        for group in groups:
+            new_widget = MyChip(
+                group,
+                self.ids.actual_students,
+                self.ids.groups_cont,
+            )
+            if group.group_id in previous_ids:
+                new_widget.active = True
+            self.ids.groups_cont.add_widget(new_widget)
 
     def _set_subject_part(self):
         if self.given_info_record is not None and self.given_info_record.subject_part:
@@ -216,7 +167,7 @@ class ScheduleItemDialog(MDCard, ModalView):
                     + [r.number_of_students for r in self.given_info_record.groups_part]
                 )
             )
-            # TODO: add available widgets under it
+            self.update_groups_variants(self.given_info_record.groups_part)
 
     def _set_additional_part(self):
         if self.given_info_record and self.given_info_record.additional_part:
@@ -244,6 +195,15 @@ class ScheduleItemDialog(MDCard, ModalView):
         self._set_mentor_part()
         self._set_additional_part()
         self._set_groups_part()
+
+    def send_command_to_get_groups_variants(self, *args):
+        ak.start(
+            App.get_running_app().controller.fill_groups_selector_for_schedule_item(
+                self,
+                self.given_info_record,
+                self.get_cur_info(),
+            )
+        )
 
     def send_command_to_get_week_type_values(self, *args):
         ak.start(

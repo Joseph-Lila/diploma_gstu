@@ -458,3 +458,13 @@ class Controller:
         for mentor in mentors_to_remove:
             mentors.remove(mentor)
         await selector.update_entities(mentors, "fio")
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_groups_selector_for_schedule_item(
+        self,
+        sender,
+        old_info_record: ScheduleItemInfo,
+        info_record: ScheduleItemInfo,
+    ):
+        groups = []
+        sender.update_groups_variants(groups)
