@@ -3,7 +3,7 @@ import functools
 from dataclasses import astuple
 from typing import Optional, List
 
-from src import config
+
 from src.adapters.orm import Schedule, LocalScheduleRecord
 from src.domain.commands import (
     CreateSchedule,
@@ -466,5 +466,6 @@ class Controller:
         old_info_record: ScheduleItemInfo,
         info_record: ScheduleItemInfo,
     ):
+        # TODO: implement method
         groups = []
         sender.update_groups_variants(groups)

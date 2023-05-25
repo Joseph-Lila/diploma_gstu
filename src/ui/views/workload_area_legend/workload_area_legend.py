@@ -60,7 +60,7 @@ class WorkloadAreaLegend(MDCard):
         year = schedule.year
         term = schedule.term
         ak.start(
-            App.get_running_app().controller.get_row_workloads(
+            App.get_running_app().controller.get_workloads(
                 self.schedule_view,
                 self.ids.group.text,
                 self.ids.subject.text,
