@@ -224,20 +224,6 @@ class ScheduleItemDialog(MDCard, ModalView):
         else:
             raise ValueError
 
-    def send_command_to_get_day_of_week_values(self, *args):
-        ak.start(
-            App.get_running_app().controller.fill_day_of_week_selector(
-                self.ids.day_of_week
-            )
-        )
-
-    def send_command_to_get_pair_number_values(self, *args):
-        ak.start(
-            App.get_running_app().controller.fill_pair_number_selector(
-                self.ids.pair_number
-            )
-        )
-
     def send_command_to_get_week_type_values(self, *args):
         ak.start(
             App.get_running_app().controller.fill_week_type_selector(self.ids.week_type)

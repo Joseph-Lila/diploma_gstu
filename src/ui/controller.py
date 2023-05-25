@@ -363,22 +363,6 @@ class Controller:
             await self.model.bus.handle_command(CreateLocalScheduleRecord(record))
 
     @use_loop(use_loading_modal_view=False)
-    async def fill_day_of_week_selector(
-        self,
-        selector,
-    ):
-        await selector.update_variants([r.value for r in DayOfWeek])
-
-    @use_loop(use_loading_modal_view=False)
-    async def fill_pair_number_selector(
-        self,
-        selector,
-    ):
-        await selector.update_variants(
-            [str(r) for r in range(1, config.get_pairs_quantity() + 1)]
-        )
-
-    @use_loop(use_loading_modal_view=False)
     async def fill_week_type_selector(
         self,
         selector,
