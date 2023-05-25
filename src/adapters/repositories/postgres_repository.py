@@ -528,3 +528,45 @@ class PostgresRepository(AbstractRepository):
         async with self.async_session() as session:
             query = await session.execute(stmt)
         return query.fetchall()
+
+    async def get_free_mentors_at_the_moment(
+        self,
+        mentor_id: int,
+        day_of_week: str,
+        pair_number: int,
+        week_type: str,
+        subgroup: str,
+        subject_id: int,
+        subject_type_id: int,
+    ):
+        not_allowed_week_types = [
+            week_type,
+            WeekType.BOTH.value,
+        ]
+        not_allowed_subgroups = [
+            subgroup,
+            Subgroup.BOTH.value,
+        ]
+        stmt = (
+            select(LocalScheduleRecord)
+            .filter(LocalScheduleRecord.mentor_id == mentor_id)
+            .filter(LocalScheduleRecord.day_of_week == day_of_week)
+            .filter(LocalScheduleRecord.pair_number == pair_number)
+            .filter(LocalScheduleRecord.week_type.in_(not_allowed_week_types))
+            .filter(LocalScheduleRecord.subgroup.in_(not_allowed_subgroups))
+        )
+        if subject_id != -1 and subject_type_id != -1:
+            stmt = stmt.filter(
+                (
+                    (LocalScheduleRecord.subject_id == subject_id)
+                    & (LocalScheduleRecord.subject_type_id != subject_type_id))
+                | (LocalScheduleRecord.subject_id != subject_id)
+            )
+        async with self.async_session() as session:
+            query = await session.scalars(stmt)
+        ans = query.fetchall()
+        if mentor_id == 37:
+            print(f"{subject_id = }")
+            print(f"{subject_type_id = }")
+            print(ans)
+        return len(ans) == 0

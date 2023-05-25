@@ -32,6 +32,18 @@ class ScheduleItemDialog(MDCard, ModalView):
             mentor_free=self.ids.mentor_free.active,
             schedule_record_ids=[]
         )
+        self.ids.subject.entity = SubjectPart(
+            subject_id=-1,
+            subject='',
+            subject_type_id=-1,
+            subject_type='',
+        )
+        self.ids.subject_type.entity = SubjectPart(
+            subject_id=-1,
+            subject='',
+            subject_type_id=-1,
+            subject_type='',
+        )
 
     def get_cur_info(self):
         return ScheduleItemInfo(
@@ -136,6 +148,35 @@ class ScheduleItemDialog(MDCard, ModalView):
             self.ids.subgroup.change_text_value(self.touched_slave.schedule_item_info.cell_part.subgroup)
             self.ids.day_of_week.change_text_value(self.touched_slave.schedule_item_info.cell_pos.day_of_week)
             self.ids.pair_number.change_text_value(str(self.touched_slave.schedule_item_info.cell_pos.pair_number))
+
+            # init additional fields
+            self.ids.audience_number.entity = self.given_info_record.audience_part
+            if self.given_info_record.audience_part:
+                self.ids.total_seats.text = str(self.given_info_record.audience_part.total_seats)
+                self.ids.audience_number.change_text_value(self.given_info_record.audience_part.number)
+            else:
+                self.ids.total_seats.text = '?'
+
+            self.ids.groups_cont.entity = self.given_info_record.groups_part
+            self.ids.actual_students.text = str(
+                sum([0] + [r.number_of_students for r in self.given_info_record.groups_part]))
+            # TODO: add widgets under it
+
+            self.ids.mentor.entity = self.given_info_record.mentor_part
+            if self.given_info_record.mentor_part:
+                self.ids.mentor.change_text_value(self.given_info_record.mentor_part.fio)
+
+            if self.given_info_record.subject_part:
+                self.ids.subject.entity.subject_id = self.given_info_record.subject_part.subject_id
+                self.ids.subject.entity.subject = self.given_info_record.subject_part.subject
+                self.ids.subject.change_text_value(self.given_info_record.subject_part.subject)
+
+                self.ids.subject_type.entity.subject_type_id = self.given_info_record.subject_part.subject_type_id
+                self.ids.subject_type.entity.subject_type = self.given_info_record.subject_part.subject_type
+                self.ids.subject_type.change_text_value(self.given_info_record.subject_part.subject_type)
+            self.ids.mentor_free.entity = self.given_info_record.additional_part
+            if self.given_info_record.additional_part:
+                self.ids.mentor_free.active = self.given_info_record.additional_part.mentor_free
         else:
             raise ValueError
 

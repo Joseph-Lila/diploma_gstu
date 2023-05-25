@@ -25,6 +25,7 @@ from src.domain.commands import (
     MakeGlobalScheduleRecordsLikeLocal,
     MakeLocalScheduleRecordsLikeGlobal,
     DeleteLocalScheduleRecords, CreateLocalScheduleRecord, GetMentorsForScheduleItem,
+    CheckIfMentorNotOnOtherClassAndFree,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
@@ -391,7 +392,24 @@ async def get_mentors_for_schedule_item(
     return GotMentorsEntities(mentors)
 
 
+async def check_if_mentor_not_on_other_class_and_free(
+    cmd: CheckIfMentorNotOnOtherClassAndFree,
+    repository: AbstractRepository,
+) -> bool:
+    conclusion: bool = await repository.get_free_mentors_at_the_moment(
+        cmd.mentor_id,
+        cmd.day_of_week,
+        cmd.pair_number,
+        cmd.week_type,
+        cmd.subgroup,
+        cmd.subject_id,
+        cmd.subject_type_id,
+    )
+    return conclusion
+
+
 COMMAND_HANDLERS = {
+    CheckIfMentorNotOnOtherClassAndFree: check_if_mentor_not_on_other_class_and_free,
     DeleteLocalScheduleRecords: delete_local_schedule_records,
     MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
     MakeGlobalScheduleRecordsLikeLocal: make_global_schedule_records_like_local,

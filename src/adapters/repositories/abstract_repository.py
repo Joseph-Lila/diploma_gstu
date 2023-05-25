@@ -250,7 +250,20 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     async def get_mentors_for_schedule_item(
-            self,
-            info_record: ScheduleItemInfo,
+        self,
+        info_record: ScheduleItemInfo,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_free_mentors_at_the_moment(
+        self,
+        mentor_id: int,
+        day_of_week: str,
+        pair_number: int,
+        week_type: str,
+        subgroup: str,
+        subject_id: int,
+        subject_type_id: int,
     ):
         raise NotImplementedError
