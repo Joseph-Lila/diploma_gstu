@@ -24,7 +24,9 @@ from src.domain.commands import (
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
     MakeLocalScheduleRecordsLikeGlobal,
-    DeleteLocalScheduleRecords, CreateLocalScheduleRecord, GetMentorsForScheduleItem,
+    DeleteLocalScheduleRecords,
+    CreateLocalScheduleRecord,
+    GetMentorsForScheduleItem,
     CheckIfMentorNotOnOtherClassAndFree,
 )
 from src.domain.commands.command import Command
@@ -48,7 +50,9 @@ from src.domain.events import (
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
     GotRowWorkloads,
-    GotExtendedScheduleRecords, GotWorkloads, GotMentorsEntities,
+    GotExtendedScheduleRecords,
+    GotWorkloads,
+    GotMentorsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -77,7 +81,7 @@ async def convert_cell_part_to_hours(cell_part: CellPart):
     if cell_part.subgroup == Subgroup.BOTH.value:
         a = 1
     elif cell_part.subgroup in [Subgroup.FIRST.value, Subgroup.SECOND.value]:
-        a = .5
+        a = 0.5
     else:
         raise ValueError
 
@@ -85,7 +89,7 @@ async def convert_cell_part_to_hours(cell_part: CellPart):
     if cell_part.week_type == WeekType.BOTH.value:
         b = 1
     elif cell_part.week_type in [WeekType.UNDER.value, WeekType.ABOVE.value]:
-        b = .5
+        b = 0.5
     else:
         raise ValueError
 

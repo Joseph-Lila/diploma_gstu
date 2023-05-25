@@ -26,7 +26,9 @@ from src.domain.commands import (
     GetRowWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
     GetExtendedScheduleRecords,
-    DeleteLocalScheduleRecords, CreateLocalScheduleRecord, GetMentorsForScheduleItem,
+    DeleteLocalScheduleRecords,
+    CreateLocalScheduleRecord,
+    GetMentorsForScheduleItem,
     CheckIfMentorNotOnOtherClassAndFree,
 )
 from src.domain.commands import GetWorkloads
@@ -45,7 +47,9 @@ from src.domain.events import (
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
     GotRowWorkloads,
-    GotExtendedScheduleRecords, GotWorkloads, GotMentorsEntities,
+    GotExtendedScheduleRecords,
+    GotWorkloads,
+    GotMentorsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.service_layer.handlers import convert_cell_part_to_hours
@@ -356,9 +360,7 @@ class Controller:
                 )
             )
         for record in local_records:
-            await self.model.bus.handle_command(
-                CreateLocalScheduleRecord(record)
-            )
+            await self.model.bus.handle_command(CreateLocalScheduleRecord(record))
 
     @use_loop(use_loading_modal_view=False)
     async def fill_day_of_week_selector(
@@ -372,7 +374,9 @@ class Controller:
         self,
         selector,
     ):
-        await selector.update_variants([str(r) for r in range(1, config.get_pairs_quantity() + 1)])
+        await selector.update_variants(
+            [str(r) for r in range(1, config.get_pairs_quantity() + 1)]
+        )
 
     @use_loop(use_loading_modal_view=False)
     async def fill_week_type_selector(
@@ -388,7 +392,7 @@ class Controller:
     ):
         await selector.update_variants([r.value for r in Subgroup])
 
-    @use_loop(use_loading_modal_view=True)
+    @use_loop(use_loading_modal_view=False)
     async def fill_mentors_selector_for_schedule_item(
         self,
         selector,
@@ -404,19 +408,23 @@ class Controller:
             for group in info_record.groups_part:
                 for workload in self.model.schedule_master.actual_workloads:
                     hours = await convert_cell_part_to_hours(info_record.cell_part)
-                    if not all([
-                        group.group_id == workload.group_id,
-                        info_record.subject_part.subject_id == workload.subject_id,
-                        info_record.subject_part.subject_type_id == workload.subject_type_id,
-                        hours <= workload.hours + old_hours,
-                    ]):
+                    if not all(
+                        [
+                            group.group_id == workload.group_id,
+                            info_record.subject_part.subject_id == workload.subject_id,
+                            info_record.subject_part.subject_type_id
+                            == workload.subject_type_id,
+                            hours <= workload.hours + old_hours,
+                        ]
+                    ):
                         await selector.update_variants([])
                         return
 
             # check if all the groups will fit in the provided audience
-            if sum(
-                    [group.number_of_students for group in info_record.groups_part]
-            ) > info_record.audience_part.total_seats:
+            if (
+                sum([group.number_of_students for group in info_record.groups_part])
+                > info_record.audience_part.total_seats
+            ):
                 await selector.update_variants([])
                 return
         event: GotMentorsEntities = await self.model.bus.handle_command(
@@ -425,9 +433,19 @@ class Controller:
             )
         )
         # we grab only mentors who are in actual_workloads or old_info
-        actual_mentor_ids = [r.mentor_id for r in self.model.schedule_master.actual_workloads]
-        existing_id = [old_info_record.mentor_part.mentor_id] if old_info_record.mentor_part is not None else []
-        mentors = [mentor for mentor in event.mentors if mentor.mentor_id in actual_mentor_ids + existing_id]
+        actual_mentor_ids = [
+            r.mentor_id for r in self.model.schedule_master.actual_workloads
+        ]
+        existing_id = (
+            [old_info_record.mentor_part.mentor_id]
+            if old_info_record.mentor_part is not None
+            else []
+        )
+        mentors = [
+            mentor
+            for mentor in event.mentors
+            if mentor.mentor_id in actual_mentor_ids + existing_id
+        ]
         conclusions = []
         for i in range(len(mentors)):
             # check that mentor is really free
@@ -438,13 +456,19 @@ class Controller:
                     info_record.cell_pos.pair_number,
                     info_record.cell_part.week_type,
                     info_record.cell_part.subgroup,
-                    info_record.subject_part.subject_id if info_record.subject_part else -1,
-                    info_record.subject_part.subject_type_id if info_record.subject_part else -1,
+                    info_record.subject_part.subject_id
+                    if info_record.subject_part
+                    else -1,
+                    info_record.subject_part.subject_type_id
+                    if info_record.subject_part
+                    else -1,
                 )
             )
             conclusions.append(conclusion)
-        mentors_to_remove = [mentor for i, mentor in enumerate(mentors) if not conclusions[i]]
+        mentors_to_remove = [
+            mentor for i, mentor in enumerate(mentors) if not conclusions[i]
+        ]
         for mentor in mentors_to_remove:
             print(mentor)
             mentors.remove(mentor)
-        await selector.update_entities(mentors, 'fio')
+        await selector.update_entities(mentors, "fio")

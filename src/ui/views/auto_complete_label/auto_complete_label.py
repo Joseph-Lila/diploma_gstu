@@ -52,7 +52,9 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
                 "text": variant,
                 "bg_color": (185 / 255, 162 / 255, 255 / 255, 100 / 100),
                 "divider_color": "white",
-                "on_press": lambda x=variant: self.change_text_value_and_hide_options(x),
+                "on_press": lambda x=variant: self.change_text_value_and_hide_options(
+                    x
+                ),
             }
         )
 
@@ -66,7 +68,9 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
                 "text": getattr(entity, key_),
                 "bg_color": (185 / 255, 162 / 255, 255 / 255, 100 / 100),
                 "divider_color": "white",
-                "on_press": lambda x=getattr(entity, key_): self.change_text_value_and_hide_options(x),
+                "on_press": lambda x=getattr(
+                    entity, key_
+                ): self.change_text_value_and_hide_options(x),
                 "on_release": lambda x=entity: self.change_entity(x),
             }
         )

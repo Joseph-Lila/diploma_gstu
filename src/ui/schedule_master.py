@@ -69,12 +69,15 @@ class ScheduleMaster:
                 hours = await convert_cell_part_to_hours(record.cell_part)
                 for group in record.groups_part:
                     for workload in self._actual_workloads:
-                        if all([
-                            workload.group_id == group.group_id,
-                            workload.subject_id == record.subject_part.subject_id,
-                            workload.subject_type_id == record.subject_part.subject_type_id,
-                            workload.mentor_id == record.mentor_part.mentor_id,
-                        ]):
+                        if all(
+                            [
+                                workload.group_id == group.group_id,
+                                workload.subject_id == record.subject_part.subject_id,
+                                workload.subject_type_id
+                                == record.subject_part.subject_type_id,
+                                workload.mentor_id == record.mentor_part.mentor_id,
+                            ]
+                        ):
                             workload.hours -= hours
                             key = (
                                 workload.group_id,
@@ -88,6 +91,12 @@ class ScheduleMaster:
                                     Subgroup.SECOND.value: 0,
                                     Subgroup.BOTH.value: 0,
                                 }
-                            self._actual_workloads_helper[key][record.cell_part.subgroup] += hours
+                            self._actual_workloads_helper[key][
+                                record.cell_part.subgroup
+                            ] += hours
         # clear empty workloads (where hours == 0)
-        self._actual_workloads = [workload for workload in self._actual_workloads if not abs(workload.hours) < 1e-5]
+        self._actual_workloads = [
+            workload
+            for workload in self._actual_workloads
+            if not abs(workload.hours) < 1e-5
+        ]

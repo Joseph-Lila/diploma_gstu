@@ -5,19 +5,25 @@ from kivy.uix.modalview import ModalView
 from kivymd.uix.card import MDCard
 import asynckivy as ak
 
-from src.domain.entities import CellPos, CellPart, AudiencePart, GroupPart, MentorPart, SubjectPart, AdditionalPart
+from src.domain.entities import (
+    CellPos,
+    CellPart,
+    AudiencePart,
+    GroupPart,
+    MentorPart,
+    SubjectPart,
+    AdditionalPart,
+)
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 
 
 class ScheduleItemDialog(MDCard, ModalView):
-    day_of_week_hint = 'Выберите день недели'
-    pair_number_hint = 'Выберите номер пары'
-    week_type_hint = 'Выберите тип недели'
-    subgroup_hint = 'Выберите подгруппу'
-    mentor_hint = 'Выберите преподавателя'
-    audience_number_hint = 'Выберите аудиторию'
-    subject_hint = 'Выберите предмет'
-    subject_type_hint = 'Выберите тип предмета'
+    week_type_hint = "Выберите тип недели"
+    subgroup_hint = "Выберите подгруппу"
+    mentor_hint = "Выберите преподавателя"
+    audience_number_hint = "Выберите аудиторию"
+    subject_hint = "Выберите предмет"
+    subject_type_hint = "Выберите тип предмета"
 
     def __init__(self, touched_slave, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,20 +35,19 @@ class ScheduleItemDialog(MDCard, ModalView):
     def on_kv_post(self, base_widget):
         self.ids.groups_cont.entity = []
         self.ids.mentor_free.entity = AdditionalPart(
-            mentor_free=self.ids.mentor_free.active,
-            schedule_record_ids=[]
+            mentor_free=self.ids.mentor_free.active, schedule_record_ids=[]
         )
         self.ids.subject.entity = SubjectPart(
             subject_id=-1,
-            subject='',
+            subject="",
             subject_type_id=-1,
-            subject_type='',
+            subject_type="",
         )
         self.ids.subject_type.entity = SubjectPart(
             subject_id=-1,
-            subject='',
+            subject="",
             subject_type_id=-1,
-            subject_type='',
+            subject_type="",
         )
 
     def get_cur_info(self):
@@ -63,20 +68,23 @@ class ScheduleItemDialog(MDCard, ModalView):
                 subject=self.ids.subject.entity.subject,
                 subject_type_id=self.ids.subject_type.entity.subject_type_id,
                 subject_type=self.ids.subject_type.entity.subject_type,
-            ) if self.ids.subject.entity and self.ids.subject_type.entity
+            )
+            if self.ids.subject.entity and self.ids.subject_type.entity
             else None,
             additional_part=self.ids.mentor_free.entity,
         )
 
     def generate_info_record(self):
-        if all([
-            self.ids.day_of_week.text,
-            self.ids.pair_number.text,
-            self.ids.week_type.text,
-            self.ids.subgroup.text,
-            self.ids.mentor.text,
-            not self.ids.mentor_free.active,
-        ]):
+        if all(
+            [
+                self.ids.day_of_week.text,
+                self.ids.pair_number.text,
+                self.ids.week_type.text,
+                self.ids.subgroup.text,
+                self.ids.mentor.text,
+                not self.ids.mentor_free.active,
+            ]
+        ):
             day_of_week = self.ids.day_of_week.text
             pair_number = self.ids.pair_number.text
             week_type = self.ids.week_type.text
@@ -95,18 +103,20 @@ class ScheduleItemDialog(MDCard, ModalView):
                 mentor_part=mentor_part,
                 additional_part=additional_part,
             )
-        elif all([
-            self.ids.day_of_week.text,
-            self.ids.pair_number.text,
-            self.ids.week_type.text,
-            self.ids.subgroup.text,
-            self.ids.mentor.text,
-            self.ids.audience_number.text,
-            len(self.ids.groups_cont.children) > 0,
-            self.ids.subject.text,
-            self.ids.subject_type.text,
-            self.ids.mentor_free.active,
-        ]):
+        elif all(
+            [
+                self.ids.day_of_week.text,
+                self.ids.pair_number.text,
+                self.ids.week_type.text,
+                self.ids.subgroup.text,
+                self.ids.mentor.text,
+                self.ids.audience_number.text,
+                len(self.ids.groups_cont.children) > 0,
+                self.ids.subject.text,
+                self.ids.subject_type.text,
+                self.ids.mentor_free.active,
+            ]
+        ):
             day_of_week = self.ids.day_of_week.text
             pair_number = self.ids.pair_number.text
             week_type = self.ids.week_type.text
@@ -141,42 +151,76 @@ class ScheduleItemDialog(MDCard, ModalView):
 
     def set_info_record(self):
         if self.touched_slave.schedule_item_info is not None:
-            self.given_info_record: ScheduleItemInfo = self.touched_slave.schedule_item_info
+            self.given_info_record: ScheduleItemInfo = (
+                self.touched_slave.schedule_item_info
+            )
 
             # init required fields
-            self.ids.week_type.change_text_value(self.touched_slave.schedule_item_info.cell_part.week_type)
-            self.ids.subgroup.change_text_value(self.touched_slave.schedule_item_info.cell_part.subgroup)
-            self.ids.day_of_week.change_text_value(self.touched_slave.schedule_item_info.cell_pos.day_of_week)
-            self.ids.pair_number.change_text_value(str(self.touched_slave.schedule_item_info.cell_pos.pair_number))
+            self.ids.week_type.change_text_value(
+                self.touched_slave.schedule_item_info.cell_part.week_type
+            )
+            self.ids.subgroup.change_text_value(
+                self.touched_slave.schedule_item_info.cell_part.subgroup
+            )
+            self.ids.day_of_week.text = (
+                self.touched_slave.schedule_item_info.cell_pos.day_of_week
+            )
+            self.ids.pair_number.text = str(
+                self.touched_slave.schedule_item_info.cell_pos.pair_number
+            )
 
             # init additional fields
             self.ids.audience_number.entity = self.given_info_record.audience_part
             if self.given_info_record.audience_part:
-                self.ids.total_seats.text = str(self.given_info_record.audience_part.total_seats)
-                self.ids.audience_number.change_text_value(self.given_info_record.audience_part.number)
+                self.ids.total_seats.text = "/" + str(
+                    self.given_info_record.audience_part.total_seats
+                )
+                self.ids.audience_number.change_text_value(
+                    self.given_info_record.audience_part.number
+                )
             else:
-                self.ids.total_seats.text = '?'
+                self.ids.total_seats.text = "?"
 
             self.ids.groups_cont.entity = self.given_info_record.groups_part
             self.ids.actual_students.text = str(
-                sum([0] + [r.number_of_students for r in self.given_info_record.groups_part]))
+                sum(
+                    [0]
+                    + [r.number_of_students for r in self.given_info_record.groups_part]
+                )
+            )
             # TODO: add widgets under it
 
             self.ids.mentor.entity = self.given_info_record.mentor_part
             if self.given_info_record.mentor_part:
-                self.ids.mentor.change_text_value(self.given_info_record.mentor_part.fio)
+                self.ids.mentor.change_text_value(
+                    self.given_info_record.mentor_part.fio
+                )
 
             if self.given_info_record.subject_part:
-                self.ids.subject.entity.subject_id = self.given_info_record.subject_part.subject_id
-                self.ids.subject.entity.subject = self.given_info_record.subject_part.subject
-                self.ids.subject.change_text_value(self.given_info_record.subject_part.subject)
+                self.ids.subject.entity.subject_id = (
+                    self.given_info_record.subject_part.subject_id
+                )
+                self.ids.subject.entity.subject = (
+                    self.given_info_record.subject_part.subject
+                )
+                self.ids.subject.change_text_value(
+                    self.given_info_record.subject_part.subject
+                )
 
-                self.ids.subject_type.entity.subject_type_id = self.given_info_record.subject_part.subject_type_id
-                self.ids.subject_type.entity.subject_type = self.given_info_record.subject_part.subject_type
-                self.ids.subject_type.change_text_value(self.given_info_record.subject_part.subject_type)
+                self.ids.subject_type.entity.subject_type_id = (
+                    self.given_info_record.subject_part.subject_type_id
+                )
+                self.ids.subject_type.entity.subject_type = (
+                    self.given_info_record.subject_part.subject_type
+                )
+                self.ids.subject_type.change_text_value(
+                    self.given_info_record.subject_part.subject_type
+                )
             self.ids.mentor_free.entity = self.given_info_record.additional_part
             if self.given_info_record.additional_part:
-                self.ids.mentor_free.active = self.given_info_record.additional_part.mentor_free
+                self.ids.mentor_free.active = (
+                    self.given_info_record.additional_part.mentor_free
+                )
         else:
             raise ValueError
 
@@ -196,16 +240,12 @@ class ScheduleItemDialog(MDCard, ModalView):
 
     def send_command_to_get_week_type_values(self, *args):
         ak.start(
-            App.get_running_app().controller.fill_week_type_selector(
-                self.ids.week_type
-            )
+            App.get_running_app().controller.fill_week_type_selector(self.ids.week_type)
         )
 
     def send_command_to_subgroup_values(self, *args):
         ak.start(
-            App.get_running_app().controller.fill_subgroup_selector(
-                self.ids.subgroup
-            )
+            App.get_running_app().controller.fill_subgroup_selector(self.ids.subgroup)
         )
 
     def send_command_to_get_mentor_values(self, *args):

@@ -227,16 +227,17 @@ class ScheduleCell(
                 ViewState.INVISIBLE.value,
             ]
         else:
-            parsed_info_records = [
-                astuple(record.cell_part) for record in info_records
-            ]
+            parsed_info_records = [astuple(record.cell_part) for record in info_records]
 
             for i, parsed_info_record in enumerate(parsed_info_records):
                 for j, condition in enumerate(self.CONDITIONS):
                     if parsed_info_record in condition:
                         self.slaves[j].schedule_item_info = info_records[i]
-                        slave_states[j] = ViewState.FILLED.value \
-                            if info_records[i].additional_part.mentor_free else ViewState.UNAVAILABLE.value
+                        slave_states[j] = (
+                            ViewState.FILLED.value
+                            if info_records[i].additional_part.mentor_free
+                            else ViewState.UNAVAILABLE.value
+                        )
                         for ind in condition[parsed_info_record]:
                             slave_states[ind] = ViewState.INVISIBLE.value
 
@@ -244,8 +245,12 @@ class ScheduleCell(
             if state != ViewState.EMPTY.value:
                 if self.slaves[i].schedule_item_info.cell_part is None:
                     self.slaves[i].schedule_item_info.cell_part = CellPart(
-                        week_type=WeekType.ABOVE.value if i < 2 else WeekType.UNDER.value,
-                        subgroup=Subgroup.FIRST.value if i % 2 == 0 else Subgroup.SECOND.value,
+                        week_type=WeekType.ABOVE.value
+                        if i < 2
+                        else WeekType.UNDER.value,
+                        subgroup=Subgroup.FIRST.value
+                        if i % 2 == 0
+                        else Subgroup.SECOND.value,
                     )
                 self.slaves[i].update_view_metadata(state)
 

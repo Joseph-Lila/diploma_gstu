@@ -517,14 +517,11 @@ class PostgresRepository(AbstractRepository):
         self,
         info_record: ScheduleItemInfo,
     ):
-        stmt = (
-            select(
-                Mentor.id,
-                Mentor.fio,
-                Mentor.scientific_degree,
-            )
-            .order_by(Mentor.fio)
-        )
+        stmt = select(
+            Mentor.id,
+            Mentor.fio,
+            Mentor.scientific_degree,
+        ).order_by(Mentor.fio)
         async with self.async_session() as session:
             query = await session.execute(stmt)
         return query.fetchall()
@@ -559,7 +556,8 @@ class PostgresRepository(AbstractRepository):
             stmt = stmt.filter(
                 (
                     (LocalScheduleRecord.subject_id == subject_id)
-                    & (LocalScheduleRecord.subject_type_id != subject_type_id))
+                    & (LocalScheduleRecord.subject_type_id != subject_type_id)
+                )
                 | (LocalScheduleRecord.subject_id != subject_id)
             )
         async with self.async_session() as session:
