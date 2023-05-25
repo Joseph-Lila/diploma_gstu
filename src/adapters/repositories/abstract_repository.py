@@ -1,5 +1,7 @@
 import abc
-from typing import Optional
+from typing import Optional, List
+
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
 
 
 class AbstractRepository(abc.ABC):
@@ -243,5 +245,12 @@ class AbstractRepository(abc.ABC):
     async def make_local_schedule_records_like_global(
         self,
         schedule_id: int,
+    ):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_mentors_for_schedule_item(
+            self,
+            info_record: ScheduleItemInfo,
     ):
         raise NotImplementedError

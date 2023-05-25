@@ -242,6 +242,11 @@ class ScheduleCell(
 
         for i, state in enumerate(slave_states):
             if state != ViewState.EMPTY.value:
+                if self.slaves[i].schedule_item_info.cell_part is None:
+                    self.slaves[i].schedule_item_info.cell_part = CellPart(
+                        week_type=WeekType.ABOVE.value if i < 2 else WeekType.UNDER.value,
+                        subgroup=Subgroup.FIRST.value if i % 2 == 0 else Subgroup.SECOND.value,
+                    )
                 self.slaves[i].update_view_metadata(state)
 
         self.fit_slaves()

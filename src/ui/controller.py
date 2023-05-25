@@ -26,7 +26,7 @@ from src.domain.commands import (
     GetRowWorkloads,
     MakeGlobalScheduleRecordsLikeLocal,
     GetExtendedScheduleRecords,
-    DeleteLocalScheduleRecords, CreateLocalScheduleRecord,
+    DeleteLocalScheduleRecords, CreateLocalScheduleRecord, GetMentorsForScheduleItem,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -44,9 +44,10 @@ from src.domain.events import (
     GotUniqueSubjects,
     GotUniqueSubjectTypes,
     GotRowWorkloads,
-    GotExtendedScheduleRecords, GotWorkloads,
+    GotExtendedScheduleRecords, GotWorkloads, GotMentorsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
+from src.service_layer.handlers import convert_cell_part_to_hours
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -385,3 +386,44 @@ class Controller:
         selector,
     ):
         await selector.update_variants([r.value for r in Subgroup])
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_mentors_selector_for_schedule_item(
+        self,
+        selector,
+        old_info_record: ScheduleItemInfo,
+        info_record: ScheduleItemInfo,
+    ):
+        if old_info_record is not None and old_info_record.cell_part is not None:
+            old_hours = await convert_cell_part_to_hours(old_info_record.cell_part)
+        else:
+            old_hours = 0
+        # check actual_workloads
+        if len(info_record.groups_part) > 0:
+            for group in info_record.groups_part:
+                for workload in self.model.schedule_master.actual_workloads:
+                    hours = await convert_cell_part_to_hours(info_record.cell_part)
+                    if not all([
+                        group.group_id == workload.group_id,
+                        info_record.subject_part.subject_id == workload.subject_id,
+                        info_record.subject_part.subject_type_id == workload.subject_type_id,
+                        hours <= workload.hours + old_hours,
+                    ]):
+                        print('1')
+                        await selector.update_variants([])
+                        return
+
+            # check if all the groups will fit in the provided audience
+            if sum([group.number_of_students for group in info_record.groups_part]) > info_record.audience_part.total_seats:
+                print('2')
+                await selector.update_variants([])
+                return
+        event: GotMentorsEntities = await self.model.bus.handle_command(
+            GetMentorsForScheduleItem(
+                info_record,
+            )
+        )
+        actual_mentor_ids = [r.mentor_id for r in self.model.schedule_master.actual_workloads]
+        existing_id = [old_info_record.mentor_part.mentor_id] if old_info_record.mentor_part is not None else []
+        mentors = [mentor for mentor in event.mentors if mentor.mentor_id in actual_mentor_ids + existing_id]
+        await selector.update_entities(mentors, 'fio')

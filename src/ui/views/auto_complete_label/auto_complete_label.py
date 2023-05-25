@@ -16,6 +16,7 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.entity = None
         self.opened = False
 
     def get_variants(self):
@@ -51,12 +52,29 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
                 "text": variant,
                 "bg_color": (185 / 255, 162 / 255, 255 / 255, 100 / 100),
                 "divider_color": "white",
-                "on_press": lambda x=variant: self.change_text_value_and_hide_options(
-                    x
-                ),
+                "on_press": lambda x=variant: self.change_text_value_and_hide_options(x),
+            }
+        )
+
+    def change_entity(self, entity):
+        self.entity = entity
+
+    def _add_entity(self, entity, key_: str):
+        self.ids.rv.data.append(
+            {
+                "viewclass": "OneLineListItem",
+                "text": getattr(entity, key_),
+                "bg_color": (185 / 255, 162 / 255, 255 / 255, 100 / 100),
+                "divider_color": "white",
+                "on_press": lambda x=getattr(entity, key_): self.change_text_value_and_hide_options(x),
+                "on_release": lambda x=entity: self.change_entity(x),
             }
         )
 
     async def update_variants(self, collection: List[str]):
         for element in collection:
             self._add_variant(element)
+
+    async def update_entities(self, collection: list, key_):
+        for element in collection:
+            self._add_entity(element, key_)

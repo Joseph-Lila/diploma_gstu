@@ -1,6 +1,5 @@
 from typing import Callable, Dict, List, Type, Tuple
 
-
 from src.adapters.orm import Schedule, Workload
 from src.adapters.repositories.abstract_repository import AbstractRepository
 from src.domain.commands import (
@@ -25,11 +24,12 @@ from src.domain.commands import (
     GetExtendedScheduleRecords,
     MakeGlobalScheduleRecordsLikeLocal,
     MakeLocalScheduleRecordsLikeGlobal,
-    DeleteLocalScheduleRecords, CreateLocalScheduleRecord,
+    DeleteLocalScheduleRecords, CreateLocalScheduleRecord, GetMentorsForScheduleItem,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
 from src.domain.entities import CellPart
+from src.domain.entities.mentor_part import parse_row_data_to_mentor_part
 from src.domain.entities.schedule_item_info import (
     build_schedule_item_info_from_raw_data,
 )
@@ -47,7 +47,7 @@ from src.domain.events import (
     GotUniqueSubjectTypes,
     GotUniqueSubjects,
     GotRowWorkloads,
-    GotExtendedScheduleRecords, GotWorkloads,
+    GotExtendedScheduleRecords, GotWorkloads, GotMentorsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -380,6 +380,17 @@ async def delete_local_schedule_records(
         await repository.clear_local_schedule_record(id_=id_)
 
 
+async def get_mentors_for_schedule_item(
+    cmd: GetMentorsForScheduleItem,
+    repository: AbstractRepository,
+) -> GotMentorsEntities:
+    mentor_records = await repository.get_mentors_for_schedule_item(
+        info_record=cmd.info_record
+    )
+    mentors = [parse_row_data_to_mentor_part(r) for r in mentor_records]
+    return GotMentorsEntities(mentors)
+
+
 COMMAND_HANDLERS = {
     DeleteLocalScheduleRecords: delete_local_schedule_records,
     MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
@@ -405,4 +416,5 @@ COMMAND_HANDLERS = {
     GetUniqueSubjectTypes: get_unique_subject_types,
     GetRowWorkloads: get_row_workloads,
     GetWorkloads: get_workloads,
+    GetMentorsForScheduleItem: get_mentors_for_schedule_item,
 }  # type: Dict[Type[Command], Callable]

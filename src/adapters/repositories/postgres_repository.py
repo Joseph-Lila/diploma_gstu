@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -17,6 +17,8 @@ from src.adapters.orm import (
     LocalScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
+from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.enums import WeekType, Subgroup
 
 
 class PostgresRepository(AbstractRepository):
@@ -510,3 +512,19 @@ class PostgresRepository(AbstractRepository):
         async with self.async_session() as session:
             items = await session.scalars(stmt)
         return items.all()
+
+    async def get_mentors_for_schedule_item(
+        self,
+        info_record: ScheduleItemInfo,
+    ):
+        stmt = (
+            select(
+                Mentor.id,
+                Mentor.fio,
+                Mentor.scientific_degree,
+            )
+            .order_by(Mentor.fio)
+        )
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        return query.fetchall()

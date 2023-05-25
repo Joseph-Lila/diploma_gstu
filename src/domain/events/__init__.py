@@ -12,3 +12,4 @@ from .got_unique_subject_types import GotUniqueSubjectTypes
 from .got_row_workloads import GotRowWorkloads
 from .got_extended_schedule_records import GotExtendedScheduleRecords
 from .got_workloads import GotWorkloads
+from .got_mentors_entities import GotMentorsEntities

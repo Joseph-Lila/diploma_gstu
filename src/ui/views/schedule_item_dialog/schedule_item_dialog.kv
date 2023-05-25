@@ -224,6 +224,8 @@
                             icon_active: "check"
                             icon_inactive: "close"
                             pos_hint: {'center_x': .5, 'center_y': .5}
+                            on_active:
+                                self.entity.mentor_free = self.active
 
                 AnchorLayout:
                     padding: 0, 0, 0, 85
@@ -386,6 +388,26 @@
 
                     MDFillRoundFlatButton:
                         md_bg_color: 3 / 255, 130 / 255, 0, 1
-                        disabled: not all([week_type.text, day_of_week.text, pair_number.text, subgroup.text, mentor.text, audience_number.text, subject.text, subject_type.text])
+                        disabled:
+                            not (all([
+                            week_type.text,
+                            day_of_week.text,
+                            pair_number.text,
+                            subgroup.text,
+                            mentor.text,
+                            audience_number.text,
+                            len(groups_cont.children) > 0,
+                            subject.text,
+                            subject_type.text,
+                            mentor_free.active,
+                            ]) or all([
+                            week_type.text,
+                            day_of_week.text,
+                            pair_number.text,
+                            subgroup.text,
+                            mentor.text,
+                            not mentor_free.active,
+                            ])
+                            )
                         font_size: 20
                         text: 'Сохранить'

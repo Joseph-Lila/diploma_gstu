@@ -26,3 +26,4 @@ from .make_local_schedule_records_like_global import MakeLocalScheduleRecordsLik
 from .delete_local_schedule_records import DeleteLocalScheduleRecords
 from .get_workloads import GetWorkloads
 from .create_local_schedule_record import CreateLocalScheduleRecord
+from .get_mentors_for_schedule_item import GetMentorsForScheduleItem
