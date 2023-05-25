@@ -563,8 +563,4 @@ class PostgresRepository(AbstractRepository):
         async with self.async_session() as session:
             query = await session.scalars(stmt)
         ans = query.fetchall()
-        if mentor_id == 37:
-            print(f"{subject_id = }")
-            print(f"{subject_type_id = }")
-            print(ans)
         return len(ans) == 0

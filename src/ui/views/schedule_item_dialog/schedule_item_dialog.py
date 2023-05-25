@@ -149,19 +149,8 @@ class ScheduleItemDialog(MDCard, ModalView):
         else:
             raise AttributeError
 
-    def set_info_record(self):
+    def _set_required_fields(self):
         if self.touched_slave.schedule_item_info is not None:
-            self.given_info_record: ScheduleItemInfo = (
-                self.touched_slave.schedule_item_info
-            )
-
-            # tune clear btn
-            self.ids.clear_button.disabled = not (
-                    self.given_info_record.additional_part is not None
-                    and len(self.given_info_record.additional_part.schedule_record_ids) > 0
-            )
-
-            # init required fields
             self.ids.week_type.change_text_value(
                 self.touched_slave.schedule_item_info.cell_part.week_type
             )
@@ -175,7 +164,30 @@ class ScheduleItemDialog(MDCard, ModalView):
                 self.touched_slave.schedule_item_info.cell_pos.pair_number
             )
 
-            # init additional fields
+    def _set_subject_part(self):
+        if self.given_info_record is not None and self.given_info_record.subject_part:
+            self.ids.subject.entity.subject_id = (
+                self.given_info_record.subject_part.subject_id
+            )
+            self.ids.subject.entity.subject = (
+                self.given_info_record.subject_part.subject
+            )
+            self.ids.subject.change_text_value(
+                self.given_info_record.subject_part.subject
+            )
+
+            self.ids.subject_type.entity.subject_type_id = (
+                self.given_info_record.subject_part.subject_type_id
+            )
+            self.ids.subject_type.entity.subject_type = (
+                self.given_info_record.subject_part.subject_type
+            )
+            self.ids.subject_type.change_text_value(
+                self.given_info_record.subject_part.subject_type
+            )
+
+    def _set_audience_part(self):
+        if self.given_info_record and self.given_info_record.audience_part:
             self.ids.audience_number.entity = self.given_info_record.audience_part
             if self.given_info_record.audience_part:
                 self.ids.total_seats.text = "/" + str(
@@ -187,6 +199,16 @@ class ScheduleItemDialog(MDCard, ModalView):
             else:
                 self.ids.total_seats.text = "?"
 
+    def _set_mentor_part(self):
+        if self.given_info_record and self.given_info_record.mentor_part:
+            self.ids.mentor.entity = self.given_info_record.mentor_part
+            if self.given_info_record.mentor_part:
+                self.ids.mentor.change_text_value(
+                    self.given_info_record.mentor_part.fio
+                )
+
+    def _set_groups_part(self):
+        if self.given_info_record:
             self.ids.groups_cont.entity = self.given_info_record.groups_part
             self.ids.actual_students.text = str(
                 sum(
@@ -194,41 +216,34 @@ class ScheduleItemDialog(MDCard, ModalView):
                     + [r.number_of_students for r in self.given_info_record.groups_part]
                 )
             )
-            # TODO: add widgets under it
+            # TODO: add available widgets under it
 
-            self.ids.mentor.entity = self.given_info_record.mentor_part
-            if self.given_info_record.mentor_part:
-                self.ids.mentor.change_text_value(
-                    self.given_info_record.mentor_part.fio
-                )
-
-            if self.given_info_record.subject_part:
-                self.ids.subject.entity.subject_id = (
-                    self.given_info_record.subject_part.subject_id
-                )
-                self.ids.subject.entity.subject = (
-                    self.given_info_record.subject_part.subject
-                )
-                self.ids.subject.change_text_value(
-                    self.given_info_record.subject_part.subject
-                )
-
-                self.ids.subject_type.entity.subject_type_id = (
-                    self.given_info_record.subject_part.subject_type_id
-                )
-                self.ids.subject_type.entity.subject_type = (
-                    self.given_info_record.subject_part.subject_type
-                )
-                self.ids.subject_type.change_text_value(
-                    self.given_info_record.subject_part.subject_type
-                )
+    def _set_additional_part(self):
+        if self.given_info_record and self.given_info_record.additional_part:
             self.ids.mentor_free.entity = self.given_info_record.additional_part
             if self.given_info_record.additional_part:
                 self.ids.mentor_free.active = (
                     self.given_info_record.additional_part.mentor_free
                 )
-        else:
-            raise ValueError
+
+    def set_info_record(self):
+        if self.touched_slave.schedule_item_info is not None:
+            self.given_info_record: ScheduleItemInfo = (
+                self.touched_slave.schedule_item_info
+            )
+
+            # tune clear btn
+            self.ids.clear_button.disabled = not (
+                self.given_info_record.additional_part is not None
+                and len(self.given_info_record.additional_part.schedule_record_ids) > 0
+            )
+
+        self._set_required_fields()
+        self._set_audience_part()
+        self._set_subject_part()
+        self._set_mentor_part()
+        self._set_additional_part()
+        self._set_groups_part()
 
     def send_command_to_get_week_type_values(self, *args):
         ak.start(

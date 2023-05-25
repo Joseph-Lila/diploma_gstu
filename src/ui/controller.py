@@ -392,14 +392,17 @@ class Controller:
             for group in info_record.groups_part:
                 for workload in self.model.schedule_master.actual_workloads:
                     hours = await convert_cell_part_to_hours(info_record.cell_part)
-                    if not all(
-                        [
-                            group.group_id == workload.group_id,
-                            info_record.subject_part.subject_id == workload.subject_id,
-                            info_record.subject_part.subject_type_id
-                            == workload.subject_type_id,
-                            hours <= workload.hours + old_hours,
-                        ]
+                    if (
+                        all(
+                            [
+                                group.group_id == workload.group_id,
+                                info_record.subject_part.subject_id
+                                == workload.subject_id,
+                                info_record.subject_part.subject_type_id
+                                == workload.subject_type_id,
+                            ]
+                        )
+                        and hours < workload.hours + old_hours
                     ):
                         await selector.update_variants([])
                         return
@@ -453,6 +456,5 @@ class Controller:
             mentor for i, mentor in enumerate(mentors) if not conclusions[i]
         ]
         for mentor in mentors_to_remove:
-            print(mentor)
             mentors.remove(mentor)
         await selector.update_entities(mentors, "fio")
