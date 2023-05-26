@@ -1,5 +1,5 @@
-from typing import Optional, List
-from sqlalchemy import select, delete
+from typing import Optional
+from sqlalchemy import select, delete, desc, not_, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.adapters.orm import (
@@ -17,7 +17,7 @@ from src.adapters.orm import (
     LocalScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from src.domain.entities.schedule_item_info import ScheduleItemInfo
+from src.domain.entities.mentor_part import parse_row_data_to_mentor_part
 from src.domain.enums import WeekType, Subgroup
 
 
@@ -515,20 +515,6 @@ class PostgresRepository(AbstractRepository):
 
     async def get_mentors_for_schedule_item(
         self,
-        info_record: ScheduleItemInfo,
-    ):
-        stmt = select(
-            Mentor.id,
-            Mentor.fio,
-            Mentor.scientific_degree,
-        ).order_by(Mentor.fio)
-        async with self.async_session() as session:
-            query = await session.execute(stmt)
-        return query.fetchall()
-
-    async def get_free_mentors_at_the_moment(
-        self,
-        mentor_id: int,
         day_of_week: str,
         pair_number: int,
         week_type: str,
@@ -536,31 +522,86 @@ class PostgresRepository(AbstractRepository):
         subject_id: int,
         subject_type_id: int,
     ):
-        not_allowed_week_types = [
-            week_type,
-            WeekType.BOTH.value,
-        ]
-        not_allowed_subgroups = [
-            subgroup,
-            Subgroup.BOTH.value,
-        ]
-        stmt = (
-            select(LocalScheduleRecord)
-            .filter(LocalScheduleRecord.mentor_id == mentor_id)
-            .filter(LocalScheduleRecord.day_of_week == day_of_week)
-            .filter(LocalScheduleRecord.pair_number == pair_number)
-            .filter(LocalScheduleRecord.week_type.in_(not_allowed_week_types))
-            .filter(LocalScheduleRecord.subgroup.in_(not_allowed_subgroups))
-        )
-        if subject_id != -1 and subject_type_id != -1:
-            stmt = stmt.filter(
-                (
-                    (LocalScheduleRecord.subject_id == subject_id)
-                    & (LocalScheduleRecord.subject_type_id != subject_type_id)
-                )
-                | (LocalScheduleRecord.subject_id != subject_id)
-            )
+        # prepare statement to get all mentors
+        stmt = select(
+            Mentor.id,
+            Mentor.fio,
+            Mentor.scientific_degree,
+        ).order_by(Mentor.fio)
         async with self.async_session() as session:
-            query = await session.scalars(stmt)
-        ans = query.fetchall()
-        return len(ans) == 0
+            query = await session.execute(stmt)
+        raw_mentors = query.fetchall()
+        mentors = []
+
+        # check each mentor if he/she is really free
+        for id_, fio, scientific_degree in raw_mentors:
+            if all(
+                [
+                    day_of_week,
+                    pair_number,
+                    week_type,
+                    subgroup,
+                    subject_id,
+                    subject_type_id,
+                ]
+            ):
+                not_allowed_week_types = [
+                    week_type,
+                    WeekType.BOTH.value,
+                ]
+                not_allowed_subgroups = [
+                    subgroup,
+                    Subgroup.BOTH.value,
+                ]
+                stmt = (
+                    select(func.count())
+                    .select_from(LocalScheduleRecord)
+                    .where(
+                        (
+                            (
+                                (LocalScheduleRecord.day_of_week == day_of_week)
+                                & (LocalScheduleRecord.pair_number == pair_number)
+                                & (
+                                    LocalScheduleRecord.week_type.in_(
+                                        not_allowed_week_types
+                                    )
+                                )
+                                & (
+                                    LocalScheduleRecord.subgroup.in_(
+                                        not_allowed_subgroups
+                                    )
+                                )
+                                & (LocalScheduleRecord.mentor_id == id_)
+                            )
+                            & or_(
+                                not_(
+                                    (LocalScheduleRecord.subject_id == subject_id)
+                                    & (
+                                        LocalScheduleRecord.subject_type_id
+                                        == subject_type_id
+                                    )
+                                ),
+                                (LocalScheduleRecord.mentor_free.is_(False)),
+                            )
+                        )
+                    )
+                )
+                async with self.async_session() as session:
+                    query = await session.execute(stmt)
+                if query.scalar() == 0:
+                    mentors.append(
+                        parse_row_data_to_mentor_part(id_, fio, scientific_degree)
+                    )
+        return mentors
+
+    async def get_groups_for_schedule_item(
+        self,
+    ):
+        stmt = select(
+            Group.id,
+            Group.title,
+            Group.number_of_students,
+        ).order_by(desc(Group.number_of_students))
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        return query.fetchall()

@@ -27,16 +27,15 @@ from src.domain.commands import (
     DeleteLocalScheduleRecords,
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
-    CheckIfMentorNotOnOtherClassAndFree,
+    GetGroupsForScheduleItem,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
-from src.domain.entities import CellPart
+from src.domain.entities.group_part import parse_row_data_to_group_part
 from src.domain.entities.mentor_part import parse_row_data_to_mentor_part
 from src.domain.entities.schedule_item_info import (
     build_schedule_item_info_from_raw_data,
 )
-from src.domain.enums import Subgroup, WeekType
 from src.domain.events import (
     GotSchedules,
     GotUniqueTerms,
@@ -53,6 +52,7 @@ from src.domain.events import (
     GotExtendedScheduleRecords,
     GotWorkloads,
     GotMentorsEntities,
+    GotGroupsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -369,18 +369,6 @@ async def get_mentors_for_schedule_item(
     repository: AbstractRepository,
 ) -> GotMentorsEntities:
     mentor_records = await repository.get_mentors_for_schedule_item(
-        info_record=cmd.info_record
-    )
-    mentors = [parse_row_data_to_mentor_part(r) for r in mentor_records]
-    return GotMentorsEntities(mentors)
-
-
-async def check_if_mentor_not_on_other_class_and_free(
-    cmd: CheckIfMentorNotOnOtherClassAndFree,
-    repository: AbstractRepository,
-) -> bool:
-    conclusion: bool = await repository.get_free_mentors_at_the_moment(
-        cmd.mentor_id,
         cmd.day_of_week,
         cmd.pair_number,
         cmd.week_type,
@@ -388,11 +376,19 @@ async def check_if_mentor_not_on_other_class_and_free(
         cmd.subject_id,
         cmd.subject_type_id,
     )
-    return conclusion
+    return GotMentorsEntities(mentor_records)
+
+
+async def get_groups_for_schedule_item(
+    cmd: GetGroupsForScheduleItem,
+    repository: AbstractRepository,
+) -> GotGroupsEntities:
+    group_records = await repository.get_groups_for_schedule_item()
+    groups = [parse_row_data_to_group_part(r) for r in group_records]
+    return GotGroupsEntities(groups)
 
 
 COMMAND_HANDLERS = {
-    CheckIfMentorNotOnOtherClassAndFree: check_if_mentor_not_on_other_class_and_free,
     DeleteLocalScheduleRecords: delete_local_schedule_records,
     MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
     MakeGlobalScheduleRecordsLikeLocal: make_global_schedule_records_like_local,
@@ -418,4 +414,5 @@ COMMAND_HANDLERS = {
     GetRowWorkloads: get_row_workloads,
     GetWorkloads: get_workloads,
     GetMentorsForScheduleItem: get_mentors_for_schedule_item,
+    GetGroupsForScheduleItem: get_groups_for_schedule_item,
 }  # type: Dict[Type[Command], Callable]

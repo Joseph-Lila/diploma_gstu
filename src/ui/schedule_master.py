@@ -116,7 +116,7 @@ class ScheduleMaster:
                 info_record.audience_part,
             ]
         ):
-            return False
+            return True
 
         # check if all the groups will fit in the provided audience
         if (

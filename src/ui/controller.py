@@ -29,7 +29,7 @@ from src.domain.commands import (
     DeleteLocalScheduleRecords,
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
-    CheckIfMentorNotOnOtherClassAndFree,
+    GetGroupsForScheduleItem,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -399,37 +399,20 @@ class Controller:
 
         event: GotMentorsEntities = await self.model.bus.handle_command(
             GetMentorsForScheduleItem(
-                info_record,
+                info_record.cell_pos.day_of_week,
+                info_record.cell_pos.pair_number,
+                info_record.cell_part.week_type,
+                info_record.cell_part.subgroup,
+                info_record.subject_part.subject_id if info_record.subject_part else 0,
+                info_record.subject_part.subject_type_id
+                if info_record.subject_part
+                else 0,
             )
         )
         extended_mentors = await self.model.schedule_master.get_extended_actual_mentors(
             old_info_record,
             event.mentors,
         )
-        conclusions = []
-        for i in range(len(extended_mentors)):
-            # check that mentor is really free
-            conclusion: bool = await self.model.bus.handle_command(
-                CheckIfMentorNotOnOtherClassAndFree(
-                    extended_mentors[i].mentor_id,
-                    info_record.cell_pos.day_of_week,
-                    info_record.cell_pos.pair_number,
-                    info_record.cell_part.week_type,
-                    info_record.cell_part.subgroup,
-                    info_record.subject_part.subject_id
-                    if info_record.subject_part
-                    else -1,
-                    info_record.subject_part.subject_type_id
-                    if info_record.subject_part
-                    else -1,
-                )
-            )
-            conclusions.append(conclusion)
-        mentors_to_remove = [
-            mentor for i, mentor in enumerate(extended_mentors) if not conclusions[i]
-        ]
-        for mentor in mentors_to_remove:
-            extended_mentors.remove(mentor)
         await selector.update_entities(extended_mentors, "fio")
 
     @use_loop(use_loading_modal_view=False)
@@ -439,6 +422,9 @@ class Controller:
         old_info_record: ScheduleItemInfo,
         info_record: ScheduleItemInfo,
     ):
+        event: GotMentorsEntities = await self.model.bus.handle_command(
+            GetGroupsForScheduleItem()
+        )
         # TODO: implement method
         groups = []
         sender.update_groups_variants(groups)

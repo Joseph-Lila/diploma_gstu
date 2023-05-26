@@ -27,6 +27,4 @@ from .delete_local_schedule_records import DeleteLocalScheduleRecords
 from .get_workloads import GetWorkloads
 from .create_local_schedule_record import CreateLocalScheduleRecord
 from .get_mentors_for_schedule_item import GetMentorsForScheduleItem
-from .check_if_mentor_not_on_other_class_and_free import (
-    CheckIfMentorNotOnOtherClassAndFree,
-)
+from .get_groups_for_schedule_item import GetGroupsForScheduleItem

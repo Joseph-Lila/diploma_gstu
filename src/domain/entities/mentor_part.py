@@ -8,5 +8,5 @@ class MentorPart:
     scientific_degree: str
 
 
-def parse_row_data_to_mentor_part(row_data: tuple):
-    return MentorPart(*row_data)
+def parse_row_data_to_mentor_part(id_, fio, scientific_degree):
+    return MentorPart(id_, fio, scientific_degree)
