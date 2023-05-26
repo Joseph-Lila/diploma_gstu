@@ -76,27 +76,6 @@ def convert_pos_into_pos_hint(window_pos: tuple, pos: tuple) -> dict:
     }
 
 
-async def convert_cell_part_to_hours(cell_part: CellPart):
-    # define first coefficient
-    if cell_part.subgroup == Subgroup.BOTH.value:
-        a = 1
-    elif cell_part.subgroup in [Subgroup.FIRST.value, Subgroup.SECOND.value]:
-        a = 0.5
-    else:
-        raise ValueError
-
-    # define second coefficient
-    if cell_part.week_type == WeekType.BOTH.value:
-        b = 1
-    elif cell_part.week_type in [WeekType.UNDER.value, WeekType.ABOVE.value]:
-        b = 0.5
-    else:
-        raise ValueError
-
-    # by default one cell == 2 hours per week
-    return 2 * a * b
-
-
 async def get_10_schedules(
     cmd: Get10Schedules,
     repository: AbstractRepository,

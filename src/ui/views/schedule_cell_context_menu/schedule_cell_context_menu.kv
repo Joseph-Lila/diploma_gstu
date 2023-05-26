@@ -3,7 +3,7 @@
 <ScheduleCellContextMenu>:
     radius: 0, 0, 0, 0
     size_hint: None, None
-    size: 300, 130
+    size: 300, 100
     md_bg_color: 26 / 255, 25 / 255, 25 / 255, 100 / 100
     auto_dismiss: True
     orientation: 'vertical'
@@ -15,16 +15,6 @@
     pos_hint: {"x": root.pos_hint_x, "y": root.pos_hint_y}
 
     MenuHeader:
-
-    MDTextButton:
-        id: tune_btn
-
-        text: "Настроить компоновку"
-        font_name: 'assets/fonts/Montserrat/static/Montserrat-Regular.ttf'
-        pos_hint: {"center_y": .5}
-        color: "white"
-        disabled_color: "grey"
-        on_press: root.tune_btn_event()
 
     MDSeparator:
         orientation: 'horizontal'

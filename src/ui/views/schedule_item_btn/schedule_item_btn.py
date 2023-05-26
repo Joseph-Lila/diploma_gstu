@@ -22,11 +22,19 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
 
     def set_width(self, width):
         super().set_width(width)
+        self.opacity = 1
 
     def set_invisible_width(self):
         self.size_hint = None, None
         self.size = (0, 0)
         self.opacity = 0
+
+    def _clear_entities(self):
+        self.schedule_item_info.audience_part = None
+        self.schedule_item_info.groups_part = []
+        self.schedule_item_info.mentor_part = None
+        self.schedule_item_info.subject_part = None
+        self.schedule_item_info.additional_part = None
 
     def update_view_metadata(self, view_state: str, view_type: Optional[str] = None):
         self.view_state = view_state
@@ -84,24 +92,12 @@ class ScheduleItemBtn(Button, AbstractSizeSlave):
         elif view_state == ViewState.UNAVAILABLE.value:
             self.disabled = True
             self.text = "Недоступно"
+            self._clear_entities()
         elif view_state == ViewState.EDITABLE.value:
             self.disabled = False
             self.text = "Редактировать"
             self.background_color = SubjectColor.EDITABLE.value
-        # TODO: DELETE THIS!!!
-        elif view_state == ViewState.EMPTY.value:
-            self.disabled = True
-            self.text = "ПУСТО"
-            self.background_color = "grey"
+            self._clear_entities()
         elif view_state == ViewState.INVISIBLE.value:
             self.disabled = True
             self.text = ""
-        else:
-            raise
-
-    async def get_filling_variants(self, variants: List[ScheduleItemInfo]):
-        if len(variants) == 0:
-            self.view_state = ViewState.UNAVAILABLE.value
-        else:
-            # ScheduleItemBtnDialog().open()
-            pass

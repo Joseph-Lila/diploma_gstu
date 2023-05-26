@@ -52,7 +52,6 @@ from src.domain.events import (
     GotMentorsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
-from src.service_layer.handlers import convert_cell_part_to_hours
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
 
 
@@ -383,62 +382,36 @@ class Controller:
         old_info_record: ScheduleItemInfo,
         info_record: ScheduleItemInfo,
     ):
-        if old_info_record is not None and old_info_record.cell_part is not None:
-            old_hours = await convert_cell_part_to_hours(old_info_record.cell_part)
-        else:
-            old_hours = 0
-        # check that hours are good for all the groups and groups fit in audience
-        if len(info_record.groups_part) > 0:
-            for group in info_record.groups_part:
-                for workload in self.model.schedule_master.actual_workloads:
-                    hours = await convert_cell_part_to_hours(info_record.cell_part)
-                    if (
-                        all(
-                            [
-                                group.group_id == workload.group_id,
-                                info_record.subject_part.subject_id
-                                == workload.subject_id,
-                                info_record.subject_part.subject_type_id
-                                == workload.subject_type_id,
-                            ]
-                        )
-                        and hours < workload.hours + old_hours
-                    ):
-                        await selector.update_variants([])
-                        return
+        # simple checks
+        groups_fit_in_the_audience = (
+            await self.model.schedule_master.check_if_groups_fit_in_the_audience(
+                old_info_record,
+                info_record,
+            )
+        )
+        groups_have_enough_hours = await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
+            old_info_record,
+            info_record,
+        )
+        if not all([groups_fit_in_the_audience, groups_have_enough_hours]):
+            await selector.update_variants([])
+            return
 
-            # check if all the groups will fit in the provided audience
-            if (
-                sum([group.number_of_students for group in info_record.groups_part])
-                > info_record.audience_part.total_seats
-            ):
-                await selector.update_variants([])
-                return
         event: GotMentorsEntities = await self.model.bus.handle_command(
             GetMentorsForScheduleItem(
                 info_record,
             )
         )
-        # we grab only mentors who are in actual_workloads or old_info
-        actual_mentor_ids = [
-            r.mentor_id for r in self.model.schedule_master.actual_workloads
-        ]
-        existing_id = (
-            [old_info_record.mentor_part.mentor_id]
-            if old_info_record.mentor_part is not None
-            else []
+        extended_mentors = await self.model.schedule_master.get_extended_actual_mentors(
+            old_info_record,
+            event.mentors,
         )
-        mentors = [
-            mentor
-            for mentor in event.mentors
-            if mentor.mentor_id in actual_mentor_ids + existing_id
-        ]
         conclusions = []
-        for i in range(len(mentors)):
+        for i in range(len(extended_mentors)):
             # check that mentor is really free
             conclusion: bool = await self.model.bus.handle_command(
                 CheckIfMentorNotOnOtherClassAndFree(
-                    mentors[i].mentor_id,
+                    extended_mentors[i].mentor_id,
                     info_record.cell_pos.day_of_week,
                     info_record.cell_pos.pair_number,
                     info_record.cell_part.week_type,
@@ -453,11 +426,11 @@ class Controller:
             )
             conclusions.append(conclusion)
         mentors_to_remove = [
-            mentor for i, mentor in enumerate(mentors) if not conclusions[i]
+            mentor for i, mentor in enumerate(extended_mentors) if not conclusions[i]
         ]
         for mentor in mentors_to_remove:
-            mentors.remove(mentor)
-        await selector.update_entities(mentors, "fio")
+            extended_mentors.remove(mentor)
+        await selector.update_entities(extended_mentors, "fio")
 
     @use_loop(use_loading_modal_view=False)
     async def fill_groups_selector_for_schedule_item(

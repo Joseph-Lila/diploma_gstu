@@ -16,9 +16,6 @@ from src.domain.interfaces.abstract_tuned_by_info_records import (
     AbstractTunedByInfoRecords,
 )
 from src.service_layer.handlers import convert_pos_into_pos_hint
-from src.ui.views.schedule_cell_configuration_type_dialog import (
-    ScheduleCellConfigurationTypeDialog,
-)
 from src.ui.views.schedule_item_btn import ScheduleItemBtn
 from src.ui.views.schedule_item_dialog import ScheduleItemDialog
 
@@ -82,10 +79,6 @@ class ScheduleCell(
         self.ids.bottom_cont.add_widget(self.slaves[3])
         self.fit_slaves()
 
-    def open_dialog(self, *args):
-        self.context_menu.dismiss()
-        ScheduleCellConfigurationTypeDialog(self.slaves).open()
-
     def clear(self, *args):
         self.context_menu.dismiss()
 
@@ -124,16 +117,6 @@ class ScheduleCell(
                 return True
         return False
 
-    def check_if_configuration_can_be_tuned(self):
-        for slave in self.slaves:
-            if slave.view_state not in [
-                ViewState.EDITABLE.value,
-                ViewState.INVISIBLE.value,
-                ViewState.UNAVAILABLE.value,
-            ]:
-                return False
-        return True
-
     def on_touch_up(self, touch):
         if self.collide_point(*touch.pos) and touch.button == "right":
             pos = self.to_window(*touch.pos)
@@ -144,10 +127,8 @@ class ScheduleCell(
             self.context_menu.set_data(
                 pos,
                 pos_hint,
-                self.open_dialog,
                 self.clear,
                 self.check_if_clearable(),
-                self.check_if_configuration_can_be_tuned(),
             )
             self.context_menu.open()
         elif (
@@ -173,7 +154,6 @@ class ScheduleCell(
                     slave.set_invisible_width()
                 else:
                     slave.set_width(max_width)
-
             # tune containers
             if (
                 self.slaves[0].view_state
@@ -218,7 +198,6 @@ class ScheduleCell(
 
     async def tune_using_info_records(self, info_records: List[ScheduleItemInfo]):
         slave_states = [ViewState.EDITABLE.value for _ in self.slaves]
-
         if len(info_records) == 0:
             slave_states = [
                 ViewState.EDITABLE.value,
@@ -242,16 +221,16 @@ class ScheduleCell(
                             slave_states[ind] = ViewState.INVISIBLE.value
 
         for i, state in enumerate(slave_states):
-            if state != ViewState.EMPTY.value:
-                if self.slaves[i].schedule_item_info.cell_part is None:
-                    self.slaves[i].schedule_item_info.cell_part = CellPart(
-                        week_type=WeekType.ABOVE.value
-                        if i < 2
-                        else WeekType.UNDER.value,
-                        subgroup=Subgroup.FIRST.value
-                        if i % 2 == 0
-                        else Subgroup.SECOND.value,
-                    )
-                self.slaves[i].update_view_metadata(state)
+            if self.slaves[i].schedule_item_info.cell_part is None or state in [
+                ViewState.EDITABLE.value,
+                ViewState.INVISIBLE.value,
+            ]:
+                self.slaves[i].schedule_item_info.cell_part = CellPart(
+                    week_type=WeekType.ABOVE.value if i < 2 else WeekType.UNDER.value,
+                    subgroup=Subgroup.FIRST.value
+                    if i % 2 == 0
+                    else Subgroup.SECOND.value,
+                )
+            self.slaves[i].update_view_metadata(state)
 
         self.fit_slaves()
