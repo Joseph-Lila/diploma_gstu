@@ -45,10 +45,119 @@
             font_name: 'assets/fonts/Montserrat/static/Montserrat-Italic.ttf'
             font_size: 18
 
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 1
+        orientation: 'bt-lr'
         spacing: 15
         padding: 20
+
+        BoxLayout:
+            size_hint_y: None
+            height: 75
+
+            AnchorLayout:
+
+                MDFillRoundFlatButton:
+                    id: clear_button
+                    md_bg_color: 255 / 255, 15 / 255, 15 / 255, 1
+                    font_size: 20
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    text: 'Очистить'
+                    on_press: root.on_clear()
+
+            AnchorLayout:
+
+                MDFillRoundFlatButton:
+                    md_bg_color: 3 / 255, 130 / 255, 0, 1
+                    disabled:
+                        not (all([
+                        week_type.text,
+                        day_of_week.text,
+                        pair_number.text,
+                        subgroup.text,
+                        mentor.text,
+                        audience_number.text,
+                        len(groups_cont.children) > 0,
+                        subject.text,
+                        subject_type.text,
+                        mentor_free.active,
+                        ]) or all([
+                        week_type.text,
+                        day_of_week.text,
+                        pair_number.text,
+                        subgroup.text,
+                        mentor.text,
+                        not mentor_free.active,
+                        ])
+                        )
+                    font_size: 20
+                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+                    text: 'Сохранить'
+
+        MDSeparator:
+            orientation: 'horizontal'
+            color: 'black'
+            pos_hint: {"center_x": .5, "center_y": .5}
+            height: "1dp"
+
+        BoxLayout:
+            spacing: 10
+
+            MDCard:
+                size_hint_x: .4
+                style: 'outlined'
+                line_color: 'silver'
+
+                GridLayout:
+                    cols: 1
+                    orientation: 'bt-lr'
+                    padding: 0, 0, 0, 40
+
+                    AutoCompleteLabel:
+                        id: subject_type
+                        request_method: root.send_command_to_get_subject_type_values
+                        recycle_view_height: 100
+                        hint_text: root.subject_type_hint
+                        total_width: 300
+
+                    AutoCompleteLabel:
+                        id: subject
+                        request_method: root.send_command_to_get_subject_values
+                        recycle_view_height: 100
+                        hint_text: root.subject_hint
+                        total_width: 300
+
+            MDCard:
+                orientation: 'vertical'
+                style: 'outlined'
+                line_color: 'silver'
+
+                BoxLayout:
+                    size_hint_y: .2
+
+                    MDLabel:
+                        valign: 'center'
+                        halign: 'center'
+                        text: 'Учебные группы'
+                        font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
+
+                    MDIconButton:
+                        icon: 'assets/images/icons8-обновить-96.png'
+                        icon_size: "30sp"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        theme_text_color: "Hint"
+                        on_press: root.send_command_to_get_groups_variants()
+
+                BoxLayout:
+
+                    MDScrollView:
+                        always_overscroll: False
+
+                        MDStackLayout:
+                            id: groups_cont
+                            adaptive_height: True
+                            padding: 20
+                            spacing: 10
 
         BoxLayout:
             spacing: 10
@@ -58,21 +167,23 @@
                 style: 'outlined'
                 line_color: 'silver'
 
-                BoxLayout:
-                    orientation: 'vertical'
-
-                    AutoCompleteLabel:
-                        id: mentor
-                        request_method: root.send_command_to_get_mentor_values
-                        recycle_view_height: 100
-                        hint_text: root.mentor_hint
-                        total_width: 300
+                GridLayout:
+                    cols: 1
+                    orientation: 'bt-lr'
+                    padding: 0, 0, 0, 30
 
                     AutoCompleteLabel:
                         id: audience_number
                         request_method: root.send_command_to_get_audience_number_values
                         recycle_view_height: 100
                         hint_text: root.audience_number_hint
+                        total_width: 300
+
+                    AutoCompleteLabel:
+                        id: mentor
+                        request_method: root.send_command_to_get_mentor_values
+                        recycle_view_height: 100
+                        hint_text: root.mentor_hint
                         total_width: 300
 
                 BoxLayout:
@@ -125,21 +236,23 @@
                 style: 'outlined'
                 line_color: 'silver'
 
-                BoxLayout:
-                    orientation: 'vertical'
-
-                    AutoCompleteLabel:
-                        id: week_type
-                        request_method: root.send_command_to_get_week_type_values
-                        recycle_view_height: 100
-                        hint_text: root.week_type_hint
-                        total_width: 300
+                GridLayout:
+                    cols: 1
+                    orientation: 'bt-lr'
+                    padding: 0, 0, 0, 30
 
                     AutoCompleteLabel:
                         id: subgroup
                         request_method: root.send_command_to_subgroup_values
                         recycle_view_height: 100
                         hint_text: root.subgroup_hint
+                        total_width: 300
+
+                    AutoCompleteLabel:
+                        id: week_type
+                        request_method: root.send_command_to_get_week_type_values
+                        recycle_view_height: 100
+                        hint_text: root.week_type_hint
                         total_width: 300
 
                 BoxLayout:
@@ -172,107 +285,3 @@
                             valign: 'center'
                             halign: 'center'
                             text: '?'
-
-        BoxLayout:
-            spacing: 10
-
-            MDCard:
-                orientation: 'vertical'
-                size_hint_x: .4
-                style: 'outlined'
-                line_color: 'silver'
-
-                AutoCompleteLabel:
-                    id: subject
-                    request_method: root.send_command_to_get_subject_values
-                    recycle_view_height: 100
-                    hint_text: root.subject_hint
-                    total_width: 300
-
-                AutoCompleteLabel:
-                    id: subject_type
-                    request_method: root.send_command_to_get_subject_type_values
-                    recycle_view_height: 100
-                    hint_text: root.subject_type_hint
-                    total_width: 300
-
-            MDCard:
-                orientation: 'vertical'
-                style: 'outlined'
-                line_color: 'silver'
-
-                BoxLayout:
-                    size_hint_y: .2
-
-                    MDLabel:
-                        valign: 'center'
-                        halign: 'center'
-                        text: 'Учебные группы'
-                        font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
-
-                    MDIconButton:
-                        icon: 'assets/images/icons8-обновить-96.png'
-                        icon_size: "30sp"
-                        pos_hint: {"center_x": .5, "center_y": .5}
-                        theme_text_color: "Hint"
-                        on_press: root.send_command_to_get_groups_variants()
-
-                BoxLayout:
-
-                    MDScrollView:
-                        always_overscroll: False
-
-                        MDStackLayout:
-                            id: groups_cont
-                            adaptive_height: True
-                            padding: 20
-                            spacing: 10
-
-        MDSeparator:
-            orientation: 'horizontal'
-            color: 'black'
-            pos_hint: {"center_x": .5, "center_y": .5}
-            height: "1dp"
-
-        BoxLayout:
-            size_hint_y: None
-            height: 75
-
-            AnchorLayout:
-
-                MDFillRoundFlatButton:
-                    id: clear_button
-                    md_bg_color: 255 / 255, 15 / 255, 15 / 255, 1
-                    font_size: 20
-                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
-                    text: 'Очистить'
-                    on_press: root.on_clear()
-
-            AnchorLayout:
-
-                MDFillRoundFlatButton:
-                    md_bg_color: 3 / 255, 130 / 255, 0, 1
-                    disabled:
-                        not (all([
-                        week_type.text,
-                        day_of_week.text,
-                        pair_number.text,
-                        subgroup.text,
-                        mentor.text,
-                        audience_number.text,
-                        len(groups_cont.children) > 0,
-                        subject.text,
-                        subject_type.text,
-                        mentor_free.active,
-                        ]) or all([
-                        week_type.text,
-                        day_of_week.text,
-                        pair_number.text,
-                        subgroup.text,
-                        mentor.text,
-                        not mentor_free.active,
-                        ])
-                        )
-                    font_size: 20
-                    font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
-                    text: 'Сохранить'
