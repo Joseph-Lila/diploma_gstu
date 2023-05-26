@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 
 from kivy.app import App
 from kivy.uix.modalview import ModalView
@@ -8,9 +8,7 @@ import asynckivy as ak
 from src.domain.entities import (
     CellPos,
     CellPart,
-    AudiencePart,
     GroupPart,
-    MentorPart,
     SubjectPart,
     AdditionalPart,
 )
