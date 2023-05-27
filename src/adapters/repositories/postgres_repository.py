@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import select, delete, desc, not_, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -17,7 +17,8 @@ from src.adapters.orm import (
     LocalScheduleRecord,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from src.domain.entities.mentor_part import parse_row_data_to_mentor_part
+from src.domain.entities.group_part import parse_row_data_to_group_part, GroupPart
+from src.domain.entities.mentor_part import parse_row_data_to_mentor_part, MentorPart
 from src.domain.enums import WeekType, Subgroup
 
 
@@ -521,7 +522,7 @@ class PostgresRepository(AbstractRepository):
         subgroup: str,
         subject_id: int,
         subject_type_id: int,
-    ):
+    ) -> List[MentorPart]:
         # prepare statement to get all mentors
         stmt = select(
             Mentor.id,
@@ -596,7 +597,11 @@ class PostgresRepository(AbstractRepository):
 
     async def get_groups_for_schedule_item(
         self,
-    ):
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+    ) -> List[GroupPart]:
+        # prepare statement to get all groups
         stmt = select(
             Group.id,
             Group.title,
@@ -604,4 +609,29 @@ class PostgresRepository(AbstractRepository):
         ).order_by(desc(Group.number_of_students))
         async with self.async_session() as session:
             query = await session.execute(stmt)
-        return query.fetchall()
+        raw_groups = query.fetchall()
+        groups = []
+
+        # check every group
+        for id_, title, number_of_students in raw_groups:
+            # filter by other fields (except group_id itself)
+            stmt = (
+                select(func.count())
+                .select_from(Workload)
+                .filter(Workload.group_id == id_)
+            )
+            if mentor_id:
+                stmt = stmt.filter(Workload.mentor_id == mentor_id)
+            if subject_id:
+                stmt = stmt.filter(Workload.subject_id == subject_id)
+            if subject_type_id:
+                stmt = stmt.filter(Workload.subject_type_id == subject_type_id)
+
+            async with self.async_session() as session:
+                query = await session.execute(stmt)
+            if query.scalar() == 0:
+                groups.append(
+                    parse_row_data_to_group_part(id_, title, number_of_students)
+                )
+
+        return groups

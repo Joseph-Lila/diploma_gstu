@@ -30,6 +30,7 @@ class ScheduleItemDialog(MDCard, ModalView):
         self.touched_slave = touched_slave
 
         self.set_info_record()
+        self.send_command_to_get_groups_variants()
 
     def on_kv_post(self, base_widget):
         self.ids.groups_cont.entity = []

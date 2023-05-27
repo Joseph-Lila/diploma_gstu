@@ -1,6 +1,7 @@
 import abc
 from typing import Optional, List
 
+from src.domain.entities import MentorPart, GroupPart
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 
 
@@ -257,11 +258,14 @@ class AbstractRepository(abc.ABC):
         subgroup: str,
         subject_id: int,
         subject_type_id: int,
-    ):
+    ) -> List[MentorPart]:
         raise NotImplementedError
 
     @abc.abstractmethod
     async def get_groups_for_schedule_item(
         self,
-    ):
+        subject_id: int,
+        subject_type_id: int,
+        mentor_id: int,
+    ) -> List[GroupPart]:
         raise NotImplementedError

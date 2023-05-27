@@ -1,8 +1,15 @@
 import copy
+import math
 from typing import List
 
 from src.adapters.orm import Workload
-from src.domain.entities import CellPart, MentorPart
+from src.domain.entities import (
+    CellPart,
+    MentorPart,
+    GroupPart,
+    SubjectPart,
+    AudiencePart,
+)
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 from src.domain.enums import Subgroup, WeekType
 
@@ -36,7 +43,7 @@ class ScheduleMaster:
         return self._workloads
 
     @property
-    def actual_workloads(self):
+    def actual_workloads(self) -> List[Workload]:
         return self._actual_workloads
 
     async def update_metadata(
@@ -106,23 +113,28 @@ class ScheduleMaster:
     @staticmethod
     async def check_if_groups_fit_in_the_audience(
         old_record: ScheduleItemInfo,
-        info_record: ScheduleItemInfo,
+        groups_part: List[GroupPart],
+        audience_part: AudiencePart,
+        cell_part: CellPart,
     ) -> bool:
         if not all(
             [
-                info_record,
                 old_record,
-                len(info_record.groups_part) > 0,
-                info_record.audience_part,
+                len(groups_part) > 0,
+                audience_part,
+                cell_part,
             ]
         ):
             return True
 
         # check if all the groups will fit in the provided audience
-        if (
-            sum([group.number_of_students for group in info_record.groups_part])
-            > info_record.audience_part.total_seats
-        ):
+        if cell_part.subgroup in [Subgroup.FIRST.value, Subgroup.SECOND.value]:
+            needed_seats = sum(
+                [math.ceil(group.number_of_students / 2) for group in groups_part]
+            )
+        else:
+            needed_seats = sum([group.number_of_students for group in groups_part])
+        if needed_seats > audience_part.total_seats:
             return False
 
         return True
@@ -130,21 +142,22 @@ class ScheduleMaster:
     async def check_if_groups_workloads_have_enough_hours(
         self,
         old_record: ScheduleItemInfo,
-        info_record: ScheduleItemInfo,
+        cell_part: CellPart,
+        subject_part: SubjectPart,
+        groups_part: List[GroupPart],
     ):
-        if info_record and info_record.cell_part and info_record.subject_part:
-            hours = await self.convert_cell_part_to_hours(info_record.cell_part)
+        if cell_part and subject_part and groups_part is not None:
+            hours = await self.convert_cell_part_to_hours(cell_part)
             old_hours = await self.get_old_hours(old_record)
 
-            for group in info_record.groups_part:
+            for group in groups_part:
                 for workload in self.actual_workloads:
                     if (
                         all(
                             [
                                 group.group_id == workload.group_id,
-                                info_record.subject_part.subject_id
-                                == workload.subject_id,
-                                info_record.subject_part.subject_type_id
+                                subject_part.subject_id == workload.subject_id,
+                                subject_part.subject_type_id
                                 == workload.subject_type_id,
                             ]
                         )
@@ -195,7 +208,7 @@ class ScheduleMaster:
         self,
         old_info: ScheduleItemInfo,
         extended_mentors: List[MentorPart],
-    ):
+    ) -> List[MentorPart]:
         mentor_ids = [r.mentor_id for r in self.actual_workloads]
         if old_info and old_info.mentor_part:
             mentor_ids.append(old_info.mentor_part.mentor_id)
@@ -204,3 +217,17 @@ class ScheduleMaster:
             mentor for mentor in extended_mentors if mentor.mentor_id in mentor_ids
         ]
         return mentors
+
+    async def get_extended_actual_groups(
+        self,
+        old_info: ScheduleItemInfo,
+        extended_groups: List[GroupPart],
+    ) -> List[GroupPart]:
+        group_ids = [r.group_id for r in self.actual_workloads]
+        if old_info and old_info.groups_part:
+            group_ids.extend([group.group_id for group in old_info.groups_part])
+
+        groups = [
+            group for group in extended_groups if group.group_id in set(group_ids)
+        ]
+        return groups

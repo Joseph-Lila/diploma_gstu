@@ -383,9 +383,12 @@ async def get_groups_for_schedule_item(
     cmd: GetGroupsForScheduleItem,
     repository: AbstractRepository,
 ) -> GotGroupsEntities:
-    group_records = await repository.get_groups_for_schedule_item()
-    groups = [parse_row_data_to_group_part(r) for r in group_records]
-    return GotGroupsEntities(groups)
+    group_records = await repository.get_groups_for_schedule_item(
+        cmd.subject_id,
+        cmd.subject_type_id,
+        cmd.mentor_id,
+    )
+    return GotGroupsEntities(group_records)
 
 
 COMMAND_HANDLERS = {

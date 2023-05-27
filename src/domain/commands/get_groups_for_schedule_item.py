@@ -7,4 +7,6 @@ from src.domain.entities.schedule_item_info import ScheduleItemInfo
 
 @dataclass
 class GetGroupsForScheduleItem(Command):
-    pass
+    subject_id: int
+    subject_type_id: int
+    mentor_id: int

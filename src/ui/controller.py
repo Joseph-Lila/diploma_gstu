@@ -50,6 +50,7 @@ from src.domain.events import (
     GotExtendedScheduleRecords,
     GotWorkloads,
     GotMentorsEntities,
+    GotGroupsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -386,12 +387,16 @@ class Controller:
         groups_fit_in_the_audience = (
             await self.model.schedule_master.check_if_groups_fit_in_the_audience(
                 old_info_record,
-                info_record,
+                info_record.groups_part,
+                info_record.audience_part,
+                info_record.cell_part,
             )
         )
         groups_have_enough_hours = await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
             old_info_record,
-            info_record,
+            info_record.cell_part,
+            info_record.subject_part,
+            info_record.groups_part,
         )
         if not all([groups_fit_in_the_audience, groups_have_enough_hours]):
             await selector.update_variants([])
@@ -422,9 +427,35 @@ class Controller:
         old_info_record: ScheduleItemInfo,
         info_record: ScheduleItemInfo,
     ):
-        event: GotMentorsEntities = await self.model.bus.handle_command(
-            GetGroupsForScheduleItem()
+        # returns groups from filtered workloads
+        event: GotGroupsEntities = await self.model.bus.handle_command(
+            GetGroupsForScheduleItem(
+                info_record.subject_part.subject_id if info_record.subject_part else 0,
+                info_record.subject_part.subject_type_id
+                if info_record.subject_part
+                else 0,
+                info_record.mentor_part.mentor_id if info_record.mentor_part else 0,
+            )
         )
-        # TODO: implement method
-        groups = []
-        sender.update_groups_variants(groups)
+        # filters using actual_workloads
+        extended_groups = await self.model.schedule_master.get_extended_actual_groups(
+            old_info_record,
+            event.groups,
+        )
+        # check if groups have enough hours and fit in the audience
+        final_groups = []
+        for group in extended_groups:
+            groups_part = [group]
+            if await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
+                old_info_record,
+                info_record.cell_part,
+                info_record.subject_part,
+                groups_part,
+            ) and await self.model.schedule_master.check_if_groups_fit_in_the_audience(
+                old_info_record,
+                groups_part,
+                info_record.audience_part,
+                info_record.cell_part,
+            ):
+                final_groups.append(group)
+        sender.update_groups_variants(extended_groups)
