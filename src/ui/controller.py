@@ -30,6 +30,7 @@ from src.domain.commands import (
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
     GetGroupsForScheduleItem,
+    GetAudiencesForScheduleItem,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -51,6 +52,7 @@ from src.domain.events import (
     GotWorkloads,
     GotMentorsEntities,
     GotGroupsEntities,
+    GotAudiencesEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -421,6 +423,39 @@ class Controller:
         await selector.update_entities(extended_mentors, "fio")
 
     @use_loop(use_loading_modal_view=False)
+    async def fill_audience_selector_for_schedule_item(
+        self,
+        selector,
+        old_info_record: ScheduleItemInfo,
+        info_record: ScheduleItemInfo,
+    ):
+        # get allowed and free audiences
+        event: GotAudiencesEntities = await self.model.bus.handle_command(
+            GetAudiencesForScheduleItem(
+                info_record.cell_pos.day_of_week,
+                info_record.cell_pos.pair_number,
+                info_record.cell_part.week_type,
+                info_record.cell_part.subgroup,
+                info_record.subject_part.subject_id if info_record.subject_part else 0,
+                info_record.subject_part.subject_type_id
+                if info_record.subject_part
+                else 0,
+            )
+        )
+
+        # check if groups fit in the audience
+        final_audiences = []
+        for audience in event.audiences:
+            if await self.model.schedule_master.check_if_groups_fit_in_the_audience(
+                old_info_record,
+                info_record.groups_part,
+                audience,
+                info_record.cell_part,
+            ):
+                final_audiences.append(audience)
+        await selector.update_entities(final_audiences, "number")
+
+    @use_loop(use_loading_modal_view=False)
     async def fill_groups_selector_for_schedule_item(
         self,
         sender,
@@ -458,4 +493,4 @@ class Controller:
                 info_record.cell_part,
             ):
                 final_groups.append(group)
-        sender.update_groups_variants(extended_groups)
+        sender.update_groups_variants(final_groups)

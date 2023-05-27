@@ -50,6 +50,10 @@ class ScheduleItemDialog(MDCard, ModalView):
             subject_type="",
         )
 
+    def change_total_seats_value(self, *args):
+        self.ids.total_seats.text = str(self.ids.audience_number.entity.total_seats)
+        self.send_command_to_get_groups_variants()
+
     def get_cur_info(self):
         return ScheduleItemInfo(
             cell_pos=CellPos(
@@ -108,6 +112,8 @@ class ScheduleItemDialog(MDCard, ModalView):
             new_widget = MyChip(
                 group,
                 self.ids.actual_students,
+                self.ids.total_seats,
+                self.ids.subgroup,
                 self.ids.groups_cont,
             )
             if group.group_id in previous_ids:
@@ -206,7 +212,9 @@ class ScheduleItemDialog(MDCard, ModalView):
 
     def send_command_to_get_week_type_values(self, *args):
         ak.start(
-            App.get_running_app().controller.fill_week_type_selector(self.ids.week_type)
+            App.get_running_app().controller.fill_week_type_selector(
+                self.ids.week_type,
+            )
         )
 
     def send_command_to_subgroup_values(self, *args):
@@ -224,7 +232,13 @@ class ScheduleItemDialog(MDCard, ModalView):
         )
 
     def send_command_to_get_audience_number_values(self, *args):
-        pass
+        ak.start(
+            App.get_running_app().controller.fill_audience_selector_for_schedule_item(
+                self.ids.audience_number,
+                self.given_info_record,
+                self.get_cur_info(),
+            )
+        )
 
     def send_command_to_get_subject_values(self, *args):
         pass

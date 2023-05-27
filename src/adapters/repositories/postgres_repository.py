@@ -15,8 +15,11 @@ from src.adapters.orm import (
     SubjectType,
     ScheduleRecord,
     LocalScheduleRecord,
+    SubjectAudience,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
+from src.domain.entities import AudiencePart
+from src.domain.entities.audience_part import parse_row_data_to_audience_part
 from src.domain.entities.group_part import parse_row_data_to_group_part, GroupPart
 from src.domain.entities.mentor_part import parse_row_data_to_mentor_part, MentorPart
 from src.domain.enums import WeekType, Subgroup
@@ -594,6 +597,37 @@ class PostgresRepository(AbstractRepository):
                         parse_row_data_to_mentor_part(id_, fio, scientific_degree)
                     )
         return mentors
+
+    async def get_audiences_for_schedule_item(
+        self,
+        day_of_week: str,
+        pair_number: int,
+        week_type: str,
+        subgroup: str,
+        subject_id: int,
+        subject_type_id: int,
+    ) -> List[AudiencePart]:
+        stmt = (
+            select(
+                Audience.id,
+                Audience.number,
+                Audience.number_of_seats,
+            )
+            .select_from(SubjectAudience)
+            .join(Audience)
+            .distinct()
+            .order_by(desc(Audience.number_of_seats))
+        )
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        raw_audiences = query.fetchall()
+        audiences = []
+
+        for id_, number, number_of_seats in raw_audiences:
+            audiences.append(
+                parse_row_data_to_audience_part(id_, number, number_of_seats)
+            )
+        return audiences
 
     async def get_groups_for_schedule_item(
         self,

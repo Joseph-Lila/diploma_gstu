@@ -34,13 +34,16 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
         self.pos = self.pos[0], self.pos[1] + self.recycle_view_height
         self.ids.rv.data = []
 
-    def change_text_value_and_hide_options(self, new_value: str):
+    def change_text_value_and_hide_options(self, new_value: str, entity=None):
         self.opened = False
         self._clear_variants()
-        self.change_text_value(new_value)
+        self.change_text_value(new_value, entity=entity)
 
-    def change_text_value(self, new_value: str):
+    def change_text_value(self, new_value: str, entity=None):
         self.ids.label.text = new_value
+
+        if entity is not None:
+            self.change_entity(entity)
 
         if self.change_text_request is not None:
             self.change_text_request()
@@ -70,8 +73,7 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
                 "divider_color": "white",
                 "on_press": lambda x=getattr(
                     entity, key_
-                ): self.change_text_value_and_hide_options(x),
-                "on_release": lambda x=entity: self.change_entity(x),
+                ), y=entity: self.change_text_value_and_hide_options(x, y),
             }
         )
 

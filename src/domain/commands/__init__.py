@@ -28,3 +28,4 @@ from .get_workloads import GetWorkloads
 from .create_local_schedule_record import CreateLocalScheduleRecord
 from .get_mentors_for_schedule_item import GetMentorsForScheduleItem
 from .get_groups_for_schedule_item import GetGroupsForScheduleItem
+from .get_audiences_for_schedule_item import GetAudiencesForScheduleItem

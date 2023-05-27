@@ -174,6 +174,7 @@
 
                     AutoCompleteLabel:
                         id: audience_number
+                        change_text_request: root.change_total_seats_value
                         request_method: root.send_command_to_get_audience_number_values
                         recycle_view_height: 100
                         hint_text: root.audience_number_hint
@@ -244,6 +245,7 @@
                     AutoCompleteLabel:
                         id: subgroup
                         request_method: root.send_command_to_subgroup_values
+                        change_text_request: root.send_command_to_get_groups_variants
                         recycle_view_height: 100
                         hint_text: root.subgroup_hint
                         total_width: 300
@@ -284,4 +286,4 @@
                             id: pair_number
                             valign: 'center'
                             halign: 'center'
-                            text: '?'
+                            text: '0'
