@@ -1,7 +1,10 @@
 import math
 
+from kivy.core.window import Window
+from kivy.metrics import dp, sp
 from kivy.properties import ObjectProperty
 from kivymd.uix.chip import MDChip
+from kivymd.uix.snackbar import Snackbar
 
 from src.domain.enums import Subgroup
 
@@ -40,6 +43,12 @@ class MyChip(MDChip):
             and int(self.students_cnt_label.text) > int(self.audience_widget.text)
         ):
             self.active = False
+            Snackbar(
+                text="Недостаточно свободных мест в аудитории!",
+                snackbar_animation_dir="Right",
+                bg_color="pink",
+                font_size=sp(18),
+            ).open()
 
     def put_entity_to_parent(self, active_value: int):
         if self.master:

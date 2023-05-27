@@ -538,64 +538,63 @@ class PostgresRepository(AbstractRepository):
         mentors = []
 
         # check each mentor if he/she is really free
-        for id_, fio, scientific_degree in raw_mentors:
-            if all(
-                [
-                    day_of_week,
-                    pair_number,
-                    week_type,
-                    subgroup,
-                    subject_id,
-                    subject_type_id,
-                ]
-            ):
-                not_allowed_week_types = [
-                    week_type,
-                    WeekType.BOTH.value,
-                ]
-                not_allowed_subgroups = [
-                    subgroup,
-                    Subgroup.BOTH.value,
-                ]
-                stmt = (
-                    select(func.count())
-                    .select_from(LocalScheduleRecord)
-                    .where(
-                        (
+        if subgroup and week_type:
+            not_allowed_week_types = [
+                week_type,
+                WeekType.BOTH.value,
+            ]
+            not_allowed_subgroups = [
+                subgroup,
+                Subgroup.BOTH.value,
+            ]
+            for id_, fio, scientific_degree in raw_mentors:
+                if all(
+                    [
+                        day_of_week,
+                        pair_number,
+                        subject_id,
+                        subject_type_id,
+                    ]
+                ):
+                    stmt = (
+                        select(func.count())
+                        .select_from(LocalScheduleRecord)
+                        .where(
                             (
-                                (LocalScheduleRecord.day_of_week == day_of_week)
-                                & (LocalScheduleRecord.pair_number == pair_number)
-                                & (
-                                    LocalScheduleRecord.week_type.in_(
-                                        not_allowed_week_types
-                                    )
-                                )
-                                & (
-                                    LocalScheduleRecord.subgroup.in_(
-                                        not_allowed_subgroups
-                                    )
-                                )
-                                & (LocalScheduleRecord.mentor_id == id_)
-                            )
-                            & or_(
-                                not_(
-                                    (LocalScheduleRecord.subject_id == subject_id)
+                                (
+                                    (LocalScheduleRecord.day_of_week == day_of_week)
+                                    & (LocalScheduleRecord.pair_number == pair_number)
                                     & (
-                                        LocalScheduleRecord.subject_type_id
-                                        == subject_type_id
+                                        LocalScheduleRecord.week_type.in_(
+                                            not_allowed_week_types
+                                        )
                                     )
-                                ),
-                                (LocalScheduleRecord.mentor_free.is_(False)),
+                                    & (
+                                        LocalScheduleRecord.subgroup.in_(
+                                            not_allowed_subgroups
+                                        )
+                                    )
+                                    & (LocalScheduleRecord.mentor_id == id_)
+                                )
+                                & or_(
+                                    not_(
+                                        (LocalScheduleRecord.subject_id == subject_id)
+                                        & (
+                                            LocalScheduleRecord.subject_type_id
+                                            == subject_type_id
+                                        )
+                                    ),
+                                    (LocalScheduleRecord.mentor_free.is_(False)),
+                                )
                             )
                         )
                     )
-                )
-                async with self.async_session() as session:
-                    query = await session.execute(stmt)
-                if query.scalar() == 0:
-                    mentors.append(
-                        parse_row_data_to_mentor_part(id_, fio, scientific_degree)
-                    )
+                    async with self.async_session() as session:
+                        query = await session.execute(stmt)
+                    if query.scalar() == 0:
+                        mentors.append(
+                            parse_row_data_to_mentor_part(id_, fio, scientific_degree)
+                        )
         return mentors
 
     async def get_audiences_for_schedule_item(
@@ -615,18 +614,79 @@ class PostgresRepository(AbstractRepository):
             )
             .select_from(SubjectAudience)
             .join(Audience)
-            .distinct()
-            .order_by(desc(Audience.number_of_seats))
         )
+        # we grab only allowed audiences for current subject
+        if subject_id > 0 and subject_type_id > 0:
+            stmt = stmt.filter(SubjectAudience.subject_id == subject_id).filter(
+                SubjectAudience.subject_type_id == subject_type_id
+            )
+        stmt = stmt.distinct().order_by(desc(Audience.number_of_seats))
         async with self.async_session() as session:
             query = await session.execute(stmt)
         raw_audiences = query.fetchall()
-        audiences = []
 
-        for id_, number, number_of_seats in raw_audiences:
-            audiences.append(
-                parse_row_data_to_audience_part(id_, number, number_of_seats)
-            )
+        # check if audience is really free
+        audiences = []
+        if week_type and subgroup:
+            not_allowed_week_types = [
+                week_type,
+                WeekType.BOTH.value,
+            ]
+            not_allowed_subgroups = [
+                subgroup,
+                Subgroup.BOTH.value,
+            ]
+            for id_, number, number_of_seats in raw_audiences:
+                if all(
+                    [
+                        day_of_week,
+                        pair_number,
+                        subject_id,
+                        subject_type_id,
+                    ]
+                ):
+                    stmt = (
+                        select(func.count())
+                        .select_from(LocalScheduleRecord)
+                        .where(
+                            (
+                                (
+                                    (LocalScheduleRecord.day_of_week == day_of_week)
+                                    & (LocalScheduleRecord.pair_number == pair_number)
+                                    & (
+                                        LocalScheduleRecord.week_type.in_(
+                                            not_allowed_week_types
+                                        )
+                                    )
+                                    & (
+                                        LocalScheduleRecord.subgroup.in_(
+                                            not_allowed_subgroups
+                                        )
+                                    )
+                                    & (LocalScheduleRecord.audience_id == id_)
+                                )
+                                & not_(
+                                    (LocalScheduleRecord.subject_id == subject_id)
+                                    & (
+                                        LocalScheduleRecord.subject_type_id
+                                        == subject_type_id
+                                    )
+                                )
+                            )
+                        )
+                    )
+                    async with self.async_session() as session:
+                        query = await session.execute(stmt)
+                    if query.scalar() == 0:
+                        audiences.append(
+                            parse_row_data_to_audience_part(
+                                id_, number, number_of_seats
+                            )
+                        )
+                else:
+                    audiences.append(
+                        parse_row_data_to_audience_part(id_, number, number_of_seats)
+                    )
         return audiences
 
     async def get_groups_for_schedule_item(
