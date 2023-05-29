@@ -86,7 +86,9 @@ class ScheduleScreenView(MDScreen):
 
     def save_schedule(self, *args):
         self.file_tab_options_dialog.dismiss()
-        # TODO save local changes (ask before it)
+        ak.start(
+            App.get_running_app().controller.save_edited_schedule_metadata()
+        )
 
     def auto_filling(self, *args):
         self.file_tab_options_dialog.dismiss()

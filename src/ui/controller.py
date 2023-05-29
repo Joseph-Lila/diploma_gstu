@@ -32,7 +32,7 @@ from src.domain.commands import (
     GetGroupsForScheduleItem,
     GetAudiencesForScheduleItem,
     GetSubjectsForScheduleItem,
-    GetSubjectTypesForScheduleItem,
+    GetSubjectTypesForScheduleItem, MakeLocalScheduleRecordsLikeGlobal,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -309,6 +309,26 @@ class Controller:
         await self.model.schedule_master.update_metadata(*astuple(schedule))
         await self.model.bus.handle_command(
             MakeGlobalScheduleRecordsLikeLocal(self.model.schedule_master.id)
+        )
+        event: GotWorkloads = await self.model.bus.handle_command(
+            GetWorkloads(
+                self.model.schedule_master.year,
+                self.model.schedule_master.term,
+            )
+        )
+        await self.model.schedule_master.set_workloads(event.data)
+
+    @use_loop(use_loading_modal_view=True)
+    async def save_edited_schedule_metadata(self):
+        await self.model.bus.handle_command(
+            MakeLocalScheduleRecordsLikeGlobal(
+                self.model.schedule_master.id,
+            )
+        )
+        await self.model.schedule_master.update_metadata(
+            self.model.schedule_master.id,
+            self.model.schedule_master.year,
+            self.model.schedule_master.term,
         )
         event: GotWorkloads = await self.model.bus.handle_command(
             GetWorkloads(
