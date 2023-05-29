@@ -18,10 +18,11 @@ from src.adapters.orm import (
     SubjectAudience,
 )
 from src.adapters.repositories.abstract_repository import AbstractRepository
-from src.domain.entities import AudiencePart
+from src.domain.entities import AudiencePart, SubjectPart
 from src.domain.entities.audience_part import parse_row_data_to_audience_part
 from src.domain.entities.group_part import parse_row_data_to_group_part, GroupPart
 from src.domain.entities.mentor_part import parse_row_data_to_mentor_part, MentorPart
+from src.domain.entities.subject_part import parse_row_data_to_subject_part
 from src.domain.enums import WeekType, Subgroup
 
 
@@ -552,8 +553,8 @@ class PostgresRepository(AbstractRepository):
                     [
                         day_of_week,
                         pair_number,
-                        subject_id,
-                        subject_type_id,
+                        subject_id > 0,
+                        subject_type_id > 0,
                     ]
                 ):
                     stmt = (
@@ -641,8 +642,8 @@ class PostgresRepository(AbstractRepository):
                     [
                         day_of_week,
                         pair_number,
-                        subject_id,
-                        subject_type_id,
+                        subject_id > 0,
+                        subject_type_id > 0,
                     ]
                 ):
                     stmt = (
@@ -714,18 +715,122 @@ class PostgresRepository(AbstractRepository):
                 .select_from(Workload)
                 .filter(Workload.group_id == id_)
             )
-            if mentor_id:
+            if mentor_id > 0:
                 stmt = stmt.filter(Workload.mentor_id == mentor_id)
-            if subject_id:
+            if subject_id > 0:
                 stmt = stmt.filter(Workload.subject_id == subject_id)
-            if subject_type_id:
+            if subject_type_id > 0:
                 stmt = stmt.filter(Workload.subject_type_id == subject_type_id)
 
             async with self.async_session() as session:
                 query = await session.execute(stmt)
-            if query.scalar() == 0:
+            if query.scalar() != 0:
                 groups.append(
                     parse_row_data_to_group_part(id_, title, number_of_students)
                 )
 
         return groups
+
+    async def get_subjects_for_schedule_item(
+        self,
+        mentor_id: int,
+        audience_id: int,
+    ) -> List[SubjectPart]:
+        stmt = (
+            select(
+                Subject.id,
+                Subject.title,
+            )
+            .select_from(Workload)
+            .join(Subject)
+        )
+        if mentor_id > 0:
+            stmt = stmt.filter(Workload.mentor_id == mentor_id)
+        stmt = stmt.distinct().order_by(Subject.title)
+
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        raw_subjects = query.fetchall()
+        subject_parts: List[SubjectPart] = []
+
+        for subject_id, subject_title in raw_subjects:
+            if audience_id > 0:
+                stmt = (
+                    select(func.count())
+                    .select_from(SubjectAudience)
+                    .filter(SubjectAudience.subject_id == subject_id)
+                    .filter(SubjectAudience.audience_id == audience_id)
+                )
+                async with self.async_session() as session:
+                    query = await session.execute(stmt)
+                if query.scalar() != 0:
+                    subject_parts.append(
+                        parse_row_data_to_subject_part(
+                            subject_id,
+                            0,
+                            subject_title,
+                            0,
+                        )
+                    )
+            else:
+                subject_parts.append(
+                    parse_row_data_to_subject_part(
+                        subject_id,
+                        0,
+                        subject_title,
+                        0,
+                    )
+                )
+        return subject_parts
+
+    async def get_subject_types_for_schedule_item(
+        self,
+        mentor_id: int,
+        audience_id: int,
+    ) -> List[SubjectPart]:
+        stmt = (
+            select(
+                SubjectType.id,
+                SubjectType.title,
+            )
+            .select_from(Workload)
+            .join(SubjectType)
+        )
+        if mentor_id > 0:
+            stmt = stmt.filter(Workload.mentor_id == mentor_id)
+        stmt = stmt.distinct().order_by(SubjectType.title)
+
+        async with self.async_session() as session:
+            query = await session.execute(stmt)
+        raw_subjects = query.fetchall()
+        subject_parts: List[SubjectPart] = []
+
+        for subject_type_id, subject_type_title in raw_subjects:
+            if audience_id > 0:
+                stmt = (
+                    select(func.count())
+                    .select_from(SubjectAudience)
+                    .filter(SubjectAudience.subject_type_id == subject_type_id)
+                    .filter(SubjectAudience.audience_id == audience_id)
+                )
+                async with self.async_session() as session:
+                    query = await session.execute(stmt)
+                if query.scalar() != 0:
+                    subject_parts.append(
+                        parse_row_data_to_subject_part(
+                            0,
+                            subject_type_id,
+                            0,
+                            subject_type_title,
+                        )
+                    )
+            else:
+                subject_parts.append(
+                    parse_row_data_to_subject_part(
+                        0,
+                        subject_type_id,
+                        0,
+                        subject_type_title,
+                    )
+                )
+        return subject_parts

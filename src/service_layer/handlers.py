@@ -28,7 +28,7 @@ from src.domain.commands import (
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
     GetGroupsForScheduleItem,
-    GetAudiencesForScheduleItem,
+    GetAudiencesForScheduleItem, GetSubjectsForScheduleItem, GetSubjectTypesForScheduleItem,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
@@ -54,7 +54,7 @@ from src.domain.events import (
     GotWorkloads,
     GotMentorsEntities,
     GotGroupsEntities,
-    GotAudiencesEntities,
+    GotAudiencesEntities, GotSubjectsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -408,6 +408,28 @@ async def get_audiences_for_schedule_item(
     return GotAudiencesEntities(audience_records)
 
 
+async def get_subjects_for_schedule_item(
+    cmd: GetSubjectsForScheduleItem,
+    repository: AbstractRepository,
+) -> GotSubjectsEntities:
+    subject_records = await repository.get_subjects_for_schedule_item(
+        cmd.mentor_id,
+        cmd.audience_id,
+    )
+    return GotSubjectsEntities(subject_records)
+
+
+async def get_subject_types_for_schedule_item(
+    cmd: GetSubjectTypesForScheduleItem,
+    repository: AbstractRepository,
+) -> GotSubjectsEntities:
+    subject_records = await repository.get_subject_types_for_schedule_item(
+        cmd.mentor_id,
+        cmd.audience_id,
+    )
+    return GotSubjectsEntities(subject_records)
+
+
 COMMAND_HANDLERS = {
     DeleteLocalScheduleRecords: delete_local_schedule_records,
     MakeLocalScheduleRecordsLikeGlobal: make_local_schedule_records_like_global,
@@ -436,4 +458,6 @@ COMMAND_HANDLERS = {
     GetMentorsForScheduleItem: get_mentors_for_schedule_item,
     GetGroupsForScheduleItem: get_groups_for_schedule_item,
     GetAudiencesForScheduleItem: get_audiences_for_schedule_item,
+    GetSubjectsForScheduleItem: get_subjects_for_schedule_item,
+    GetSubjectTypesForScheduleItem: get_subject_types_for_schedule_item,
 }  # type: Dict[Type[Command], Callable]

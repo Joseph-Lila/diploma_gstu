@@ -1,7 +1,7 @@
 import abc
 from typing import Optional, List
 
-from src.domain.entities import MentorPart, GroupPart, AudiencePart
+from src.domain.entities import MentorPart, GroupPart, AudiencePart, SubjectPart
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
 
 
@@ -280,4 +280,20 @@ class AbstractRepository(abc.ABC):
         subject_id: int,
         subject_type_id: int,
     ) -> List[AudiencePart]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_subjects_for_schedule_item(
+            self,
+            mentor_id: int,
+            audience_id: int,
+    ) -> List[SubjectPart]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def get_subject_types_for_schedule_item(
+        self,
+        mentor_id: int,
+        audience_id: int,
+    ) -> List[SubjectPart]:
         raise NotImplementedError

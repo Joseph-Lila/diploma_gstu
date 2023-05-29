@@ -29,3 +29,5 @@ from .create_local_schedule_record import CreateLocalScheduleRecord
 from .get_mentors_for_schedule_item import GetMentorsForScheduleItem
 from .get_groups_for_schedule_item import GetGroupsForScheduleItem
 from .get_audiences_for_schedule_item import GetAudiencesForScheduleItem
+from .get_subjects_for_schedule_item import GetSubjectsForScheduleItem
+from .get_subject_types_for_schedule_item import GetSubjectTypesForScheduleItem

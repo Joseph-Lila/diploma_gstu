@@ -15,3 +15,4 @@ from .got_workloads import GotWorkloads
 from .got_mentors_entities import GotMentorsEntities
 from .got_groups_entities import GotGroupsEntities
 from .got_audiences_entities import GotAudiencesEntities
+from .got_subjects_entities import GotSubjectsEntities

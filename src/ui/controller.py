@@ -30,7 +30,7 @@ from src.domain.commands import (
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
     GetGroupsForScheduleItem,
-    GetAudiencesForScheduleItem,
+    GetAudiencesForScheduleItem, GetSubjectsForScheduleItem, GetSubjectTypesForScheduleItem,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -52,7 +52,7 @@ from src.domain.events import (
     GotWorkloads,
     GotMentorsEntities,
     GotGroupsEntities,
-    GotAudiencesEntities,
+    GotAudiencesEntities, GotSubjectsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -494,3 +494,59 @@ class Controller:
             ):
                 final_groups.append(group)
         sender.update_groups_variants(final_groups)
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_subject_selector_for_schedule_item(
+        self,
+        selector,
+        old_info_record: ScheduleItemInfo,
+        info_record: ScheduleItemInfo,
+    ):
+        # get allowed subjects (according to other provided data)
+        event: GotSubjectsEntities = await self.model.bus.handle_command(
+            GetSubjectsForScheduleItem(
+                info_record.mentor_part.mentor_id if info_record.mentor_part else 0,
+                info_record.audience_part.audience_id if info_record.audience_part else 0,
+            )
+        )
+
+        final_subject_parts = []
+
+        # check if for all group there are enough hours
+        for subject_part in event.subject_parts:
+            if await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
+                old_info_record,
+                info_record.cell_part,
+                subject_part,
+                info_record.groups_part,
+            ):
+                final_subject_parts.append(subject_part)
+        await selector.update_entities(final_subject_parts, "subject")
+
+    @use_loop(use_loading_modal_view=False)
+    async def fill_subject_type_selector_for_schedule_item(
+        self,
+        selector,
+        old_info_record: ScheduleItemInfo,
+        info_record: ScheduleItemInfo,
+    ):
+        # get allowed subjects (according to other provided data)
+        event: GotSubjectsEntities = await self.model.bus.handle_command(
+            GetSubjectTypesForScheduleItem(
+                info_record.mentor_part.mentor_id if info_record.mentor_part else 0,
+                info_record.audience_part.audience_id if info_record.audience_part else 0,
+            )
+        )
+
+        final_subject_parts = []
+
+        # check if for all group there are enough hours
+        for subject_part in event.subject_parts:
+            if await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
+                old_info_record,
+                info_record.cell_part,
+                subject_part,
+                info_record.groups_part,
+            ):
+                final_subject_parts.append(subject_part)
+        await selector.update_entities(final_subject_parts, "subject_type")

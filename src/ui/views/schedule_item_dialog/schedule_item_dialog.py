@@ -241,10 +241,22 @@ class ScheduleItemDialog(MDCard, ModalView):
         )
 
     def send_command_to_get_subject_values(self, *args):
-        pass
+        ak.start(
+            App.get_running_app().controller.fill_subject_selector_for_schedule_item(
+                self.ids.subject,
+                self.given_info_record,
+                self.get_cur_info(),
+            )
+        )
 
     def send_command_to_get_subject_type_values(self, *args):
-        pass
+        ak.start(
+            App.get_running_app().controller.fill_subject_type_selector_for_schedule_item(
+                self.ids.subject,
+                self.given_info_record,
+                self.get_cur_info(),
+            )
+        )
 
     def on_save(self, *args):
         # delete existing
