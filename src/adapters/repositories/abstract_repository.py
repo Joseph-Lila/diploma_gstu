@@ -284,9 +284,9 @@ class AbstractRepository(abc.ABC):
 
     @abc.abstractmethod
     async def get_subjects_for_schedule_item(
-            self,
-            mentor_id: int,
-            audience_id: int,
+        self,
+        mentor_id: int,
+        audience_id: int,
     ) -> List[SubjectPart]:
         raise NotImplementedError
 
@@ -294,6 +294,7 @@ class AbstractRepository(abc.ABC):
     async def get_subject_types_for_schedule_item(
         self,
         mentor_id: int,
+        subject_id: int,
         audience_id: int,
     ) -> List[SubjectPart]:
         raise NotImplementedError

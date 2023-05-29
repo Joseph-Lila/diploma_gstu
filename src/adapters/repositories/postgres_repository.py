@@ -548,15 +548,15 @@ class PostgresRepository(AbstractRepository):
                 subgroup,
                 Subgroup.BOTH.value,
             ]
-            for id_, fio, scientific_degree in raw_mentors:
-                if all(
-                    [
-                        day_of_week,
-                        pair_number,
-                        subject_id > 0,
-                        subject_type_id > 0,
-                    ]
-                ):
+            if all(
+                [
+                    day_of_week,
+                    pair_number,
+                    subject_id > 0,
+                    subject_type_id > 0,
+                ]
+            ):
+                for id_, fio, scientific_degree in raw_mentors:
                     stmt = (
                         select(func.count())
                         .select_from(LocalScheduleRecord)
@@ -596,6 +596,11 @@ class PostgresRepository(AbstractRepository):
                         mentors.append(
                             parse_row_data_to_mentor_part(id_, fio, scientific_degree)
                         )
+            else:
+                for id_, fio, scientific_degree in raw_mentors:
+                    mentors.append(
+                        parse_row_data_to_mentor_part(id_, fio, scientific_degree)
+                    )
         return mentors
 
     async def get_audiences_for_schedule_item(
@@ -786,6 +791,7 @@ class PostgresRepository(AbstractRepository):
     async def get_subject_types_for_schedule_item(
         self,
         mentor_id: int,
+        subject_id: int,
         audience_id: int,
     ) -> List[SubjectPart]:
         stmt = (
@@ -798,12 +804,16 @@ class PostgresRepository(AbstractRepository):
         )
         if mentor_id > 0:
             stmt = stmt.filter(Workload.mentor_id == mentor_id)
+        if subject_id > 0:
+            stmt = stmt.filter(Workload.subject_id == subject_id)
         stmt = stmt.distinct().order_by(SubjectType.title)
 
         async with self.async_session() as session:
             query = await session.execute(stmt)
         raw_subjects = query.fetchall()
         subject_parts: List[SubjectPart] = []
+
+        print(f"{raw_subjects = }")
 
         for subject_type_id, subject_type_title in raw_subjects:
             if audience_id > 0:

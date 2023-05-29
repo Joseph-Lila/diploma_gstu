@@ -252,7 +252,7 @@ class ScheduleItemDialog(MDCard, ModalView):
     def send_command_to_get_subject_type_values(self, *args):
         ak.start(
             App.get_running_app().controller.fill_subject_type_selector_for_schedule_item(
-                self.ids.subject,
+                self.ids.subject_type,
                 self.given_info_record,
                 self.get_cur_info(),
             )

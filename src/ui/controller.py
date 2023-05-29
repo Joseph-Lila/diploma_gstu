@@ -30,7 +30,9 @@ from src.domain.commands import (
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
     GetGroupsForScheduleItem,
-    GetAudiencesForScheduleItem, GetSubjectsForScheduleItem, GetSubjectTypesForScheduleItem,
+    GetAudiencesForScheduleItem,
+    GetSubjectsForScheduleItem,
+    GetSubjectTypesForScheduleItem,
 )
 from src.domain.commands import GetWorkloads
 from src.domain.entities.schedule_item_info import ScheduleItemInfo
@@ -52,7 +54,8 @@ from src.domain.events import (
     GotWorkloads,
     GotMentorsEntities,
     GotGroupsEntities,
-    GotAudiencesEntities, GotSubjectsEntities,
+    GotAudiencesEntities,
+    GotSubjectsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 from src.ui.views.loading_modal_dialog import LoadingModalDialog
@@ -506,7 +509,9 @@ class Controller:
         event: GotSubjectsEntities = await self.model.bus.handle_command(
             GetSubjectsForScheduleItem(
                 info_record.mentor_part.mentor_id if info_record.mentor_part else 0,
-                info_record.audience_part.audience_id if info_record.audience_part else 0,
+                info_record.audience_part.audience_id
+                if info_record.audience_part
+                else 0,
             )
         )
 
@@ -534,7 +539,10 @@ class Controller:
         event: GotSubjectsEntities = await self.model.bus.handle_command(
             GetSubjectTypesForScheduleItem(
                 info_record.mentor_part.mentor_id if info_record.mentor_part else 0,
-                info_record.audience_part.audience_id if info_record.audience_part else 0,
+                info_record.subject_part.subject_id if info_record.subject_part else 0,
+                info_record.audience_part.audience_id
+                if info_record.audience_part
+                else 0,
             )
         )
 
@@ -542,6 +550,7 @@ class Controller:
 
         # check if for all group there are enough hours
         for subject_part in event.subject_parts:
+            print(f"{subject_part = }")
             if await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
                 old_info_record,
                 info_record.cell_part,

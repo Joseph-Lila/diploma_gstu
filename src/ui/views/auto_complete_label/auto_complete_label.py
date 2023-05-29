@@ -82,5 +82,6 @@ class AutoCompleteLabel(MDBoxLayout, AbstractAutoCompleteElement):
             self._add_variant(element)
 
     async def update_entities(self, collection: list, key_):
+        print(f"update entities with: {collection}")
         for element in collection:
             self._add_entity(element, key_)

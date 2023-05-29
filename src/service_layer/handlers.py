@@ -28,7 +28,9 @@ from src.domain.commands import (
     CreateLocalScheduleRecord,
     GetMentorsForScheduleItem,
     GetGroupsForScheduleItem,
-    GetAudiencesForScheduleItem, GetSubjectsForScheduleItem, GetSubjectTypesForScheduleItem,
+    GetAudiencesForScheduleItem,
+    GetSubjectsForScheduleItem,
+    GetSubjectTypesForScheduleItem,
 )
 from src.domain.commands.command import Command
 from src.domain.commands import GetWorkloads
@@ -54,7 +56,8 @@ from src.domain.events import (
     GotWorkloads,
     GotMentorsEntities,
     GotGroupsEntities,
-    GotAudiencesEntities, GotSubjectsEntities,
+    GotAudiencesEntities,
+    GotSubjectsEntities,
 )
 from src.domain.events.got_unique_departments import GotUniqueDepartments
 
@@ -425,6 +428,7 @@ async def get_subject_types_for_schedule_item(
 ) -> GotSubjectsEntities:
     subject_records = await repository.get_subject_types_for_schedule_item(
         cmd.mentor_id,
+        cmd.subject_id,
         cmd.audience_id,
     )
     return GotSubjectsEntities(subject_records)
