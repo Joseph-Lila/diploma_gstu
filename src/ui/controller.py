@@ -367,6 +367,44 @@ class Controller:
         for record in local_records:
             await self.model.bus.handle_command(CreateLocalScheduleRecord(record))
 
+    @use_loop(use_loading_modal_view=True)
+    async def delete_and_create_local_schedule_records(
+        self,
+        ids: List[int],
+        schedule_screen_view,
+        new_record: ScheduleItemInfo,
+    ):
+        # delete
+        await self.model.bus.handle_command(DeleteLocalScheduleRecords(ids=ids))
+
+        # create
+        local_records = []
+        for i, group in enumerate(new_record.groups_part):
+            local_records.append(
+                LocalScheduleRecord(
+                    schedule_id=self.model.schedule_master.id,
+                    day_of_week=new_record.cell_pos.day_of_week,
+                    pair_number=new_record.cell_pos.pair_number,
+                    subject_id=new_record.subject_part.subject_id,
+                    subject_type_id=new_record.subject_part.subject_type_id,
+                    mentor_id=new_record.mentor_part.mentor_id,
+                    audience_id=new_record.audience_part.audience_id,
+                    group_id=group.group_id,
+                    week_type=new_record.cell_part.week_type,
+                    subgroup=new_record.cell_part.subgroup,
+                    mentor_free=True,
+                )
+            )
+        for record in local_records:
+            await self.model.bus.handle_command(CreateLocalScheduleRecord(record))
+
+        # update ui
+        event: GotExtendedScheduleRecords = await self.model.bus.handle_command(
+            GetExtendedScheduleRecords(self.model.schedule_master.id)
+        )
+        await self.model.schedule_master.fit_workloads_using_info_records(event.records)
+        await schedule_screen_view.refresh_cells(event.records)
+
     @use_loop(use_loading_modal_view=False)
     async def fill_week_type_selector(
         self,

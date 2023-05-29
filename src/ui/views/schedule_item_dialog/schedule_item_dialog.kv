@@ -77,7 +77,7 @@
                         subgroup.text,
                         mentor.text,
                         audience_number.text,
-                        len(groups_cont.children) > 0,
+                        len([r for r in groups_cont.children if r.active]) > 0,
                         subject.text,
                         subject_type.text,
                         mentor_free.active,
@@ -93,6 +93,7 @@
                     font_size: 20
                     font_name: 'assets/fonts/Montserrat/static/Montserrat-Light.ttf'
                     text: 'Сохранить'
+                    on_press: root.on_save()
 
         MDSeparator:
             orientation: 'horizontal'

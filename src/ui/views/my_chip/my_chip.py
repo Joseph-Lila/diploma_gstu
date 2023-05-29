@@ -1,6 +1,5 @@
 import math
 
-from kivy.core.window import Window
 from kivy.metrics import dp, sp
 from kivy.properties import ObjectProperty
 from kivymd.uix.chip import MDChip

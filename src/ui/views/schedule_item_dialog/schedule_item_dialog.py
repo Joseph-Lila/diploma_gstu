@@ -181,6 +181,11 @@ class ScheduleItemDialog(MDCard, ModalView):
                 self.ids.mentor_free.active = (
                     self.given_info_record.additional_part.mentor_free
                 )
+        elif self.given_info_record:
+            self.given_info_record.additional_part = AdditionalPart(
+                mentor_free=True,
+                schedule_record_ids=[],
+            )
 
     def set_info_record(self):
         if self.touched_slave.schedule_item_info is not None:
@@ -259,11 +264,14 @@ class ScheduleItemDialog(MDCard, ModalView):
         )
 
     def on_save(self, *args):
-        # delete existing
-        # create new
-        # update view
-        # close dialog
-        pass
+        ak.start(
+            App.get_running_app().controller.delete_and_create_local_schedule_records(
+                self.given_info_record.additional_part.schedule_record_ids,
+                App.get_running_app().root.get_current_screen_view(),
+                self.get_cur_info(),
+            )
+        )
+        self.dismiss()
 
     def on_clear(self, *args):
         ak.start(
