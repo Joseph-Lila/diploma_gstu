@@ -608,7 +608,6 @@ class Controller:
 
         # check if for all group there are enough hours
         for subject_part in event.subject_parts:
-            print(f"{subject_part = }")
             if await self.model.schedule_master.check_if_groups_workloads_have_enough_hours(
                 old_info_record,
                 info_record.cell_part,

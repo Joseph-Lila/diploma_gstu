@@ -9,17 +9,12 @@
     BoxLayout:
         orientation: 'vertical'
 
-        MDRecycleView:
-            id: recycle_cont
+        MDScrollView:
 
-            viewclass: 'ThreeLineListItem'
-            key_viewclass: 'viewclass'
-            pos_hint: {"center_x": .5, "center_y": .5}
-
-            MDRecycleGridLayout:
-                default_size_hint: 1, None
-                adaptive_height: True
+            MDGridLayout:
+                id: box
                 cols: 1
+                adaptive_height: True
 
     MDBoxLayout:
         size_hint_y: None

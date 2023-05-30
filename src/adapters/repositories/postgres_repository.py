@@ -813,8 +813,6 @@ class PostgresRepository(AbstractRepository):
         raw_subjects = query.fetchall()
         subject_parts: List[SubjectPart] = []
 
-        print(f"{raw_subjects = }")
-
         for subject_type_id, subject_type_title in raw_subjects:
             if audience_id > 0:
                 stmt = (
