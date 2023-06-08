@@ -20,6 +20,19 @@ services:
     networks:
       - net
 
+  test_db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=student
+      - POSTGRES_PASSWORD=student
+      - POSTGRES_DB=test_db
+    ports:
+      - '5432:5432'
+    networks:
+      - net
+
 networks:
  net:
   driver: bridge
